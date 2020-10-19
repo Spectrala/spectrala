@@ -45,7 +45,7 @@ export default class Dashboard extends React.Component {
 
     render() {
         return (
-            <Container fluid style={{background:"#FF0000"}}>
+            <Container fluid>
                 <Row style={{height:'80px'}}>
                     {this.getNavbar()}
                 </Row>
