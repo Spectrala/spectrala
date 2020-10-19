@@ -2,9 +2,6 @@ import React from 'react';
 import {Redirect} from 'react-router-dom';
 import {Button, Container, Col, Navbar, Spinner } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
-import WebcamView from './camera_implementations/webcam';
-// import Capture from './camera/capture';
-
 
 export default class Dashboard extends React.Component {
 
@@ -12,7 +9,6 @@ export default class Dashboard extends React.Component {
 
     componentDidMount() {
         this.authSequence()   
-        //Comment
     }
 
     authSequence = async () => {
@@ -27,8 +23,8 @@ export default class Dashboard extends React.Component {
                     {/* <Navbar.Brand>Spectrala</Navbar.Brand> */}
                     
                 </Navbar>
-                <Col style={{height:'1200px', width:'1200px'}}>
-                    <WebcamView/>
+                <Col>
+                    <Button>Click me</Button>
                 </Col>
             </Container>            
         );
