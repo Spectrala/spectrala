@@ -1,6 +1,6 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
-import {Button, Container, Col, Navbar, Spinner, Nav, Form, FormControl, NavDropdown} from 'react-bootstrap';
+import {Button, Container, Col, Navbar, Spinner, Nav, Form, FormControl, NavDropdown, Row} from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import CameraView from './camera';
 // import Capture from './camera/capture';
@@ -21,6 +21,7 @@ export default class Dashboard extends React.Component {
 
     getNavbar = () => {
         return (
+
             <Navbar bg="light" variant="light" fixed="top" >
                 <Navbar.Brand href="#home"> 
                     <img style={{height:'40px'}} src={logo} alt="logo" />
@@ -44,11 +45,11 @@ export default class Dashboard extends React.Component {
 
     render() {
         return (
-            <Container>
-                <div style={{height:"100px"}}>
+            <Container fluid style={{background:"#FF0000"}}>
+                <Row style={{height:'80px'}}>
                     {this.getNavbar()}
-                </div>
-                <Col style={{width:"2000px"}}>
+                </Row>
+                <Col>
                     <CameraView/>
                 </Col>
             </Container>            
