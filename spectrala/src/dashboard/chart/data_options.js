@@ -9,7 +9,7 @@ export default class DataOptions extends React.Component {
     render() {
         return (
             <Card>
-                <Card.Header as="h5" style={{height:"64px"}}>Data options</Card.Header> 
+                <Card.Header as="h5" style={{height:"64px", display:"flex",alignItems:"center"}}>Data options</Card.Header> 
                 <div style={{height:this.props.height}}>
                     <InputGroup className="mb-3">
                         <InputGroup.Prepend>

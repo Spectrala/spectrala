@@ -48,10 +48,10 @@ export default class Dashboard extends React.Component {
                     {this.getNavbar()}
                 </Row>
                 <Col>
-                    <Row style={{display:'flex', justifyContent:'center', paddingBottom:'16px'}}>
+                    <Row xs xl = {1} style={{display:'flex', justifyContent:'center', paddingBottom:'16px'}}>
                         <CameraView height={200}/>
                     </Row>
-                    <Row style={{display:'flex', justifyContent:'center'}}>
+                    <Row xs xl = {1} style={{display:'flex', justifyContent:'center'}}>
                         <SpectrumChart height={400}/>
                     </Row>
                 </Col>

@@ -10,7 +10,7 @@ export default class SpectrumChart extends React.Component {
 
     getHeader = () => {
         return (
-            <Card.Header as="h5" style={{height:"64px"}}>Spectrum</Card.Header> 
+            <Card.Header as="h5" style={{height:"64px", display:"flex",alignItems:"center"}}>Spectrum</Card.Header> 
         )
     }
 
