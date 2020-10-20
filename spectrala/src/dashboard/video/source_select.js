@@ -5,13 +5,27 @@ import PropTypes from 'prop-types';
 export default class SourceSelect extends React.Component {
 
     state = {
-        webcamIsSelected: this.props.webcamIsDefault
+        webcamIsSelected: this.props.webcamIsDefault,
+        hostedStreamLocation: {'port':'','ip':''}
+    }
+
+    /**
+     * Pass the necessary info from this class back to the host 
+     *  webcamIsSelected: bool -- true if the source is selected to be the 
+     *                            webcam, false if Mobile/Raspberry Pi is selected.
+     *  hostedStreamLocation: object -- port and IP of the hosted stream. {'port':'','ip':''}
+     */
+    handleChange = () => {
+        this.props.onChange({
+            'webcamIsSelected': this.state.webcamIsSelected,
+            'hostedStreamLocation': this.state.hostedStreamLocation,
+        });
     }
 
     /**
      * Returns the proper bootstrap variant (https://react-bootstrap.github.io/components/alerts#examples)
      * depending on whether or not the interface element is selected
-     * @param {Whether or not the given interface element is selected} isSelected bool
+     * @param {bool} isSelected Whether or not the given interface element is selected
      */
     getVariant = (isSelected) => {
         return isSelected ? this.props.selectedVariant : this.props.unselectedVariant
@@ -19,12 +33,13 @@ export default class SourceSelect extends React.Component {
 
     /**
      * Responds to the click of a source button and updates the state of webcamIsSelected if necessary.
-     * @param {true if the button being used is the webcam button} buttonIsWebcam bool
+     * @param {bool} buttonIsWebcam true if the button being used is the webcam button
      */
     toggleSelectedButton = (buttonIsWebcam) => {
         // Only update state if necessary
         if (buttonIsWebcam !== this.state.webcamIsSelected) {
             this.setState({webcamIsSelected: buttonIsWebcam})
+            this.handleChange()
         }
     }
 
@@ -64,12 +79,24 @@ export default class SourceSelect extends React.Component {
         )
     }
 
+    /**
+     * Handle change of a text field for the stream ip and port
+     * @param {string} field key of the mobileOptions dictionary to modify
+     * @param {string} newValue value to assign the given field to
+     */
+    changeMobileField = (field, newValue) => {
+        var mobileOptions = this.state.hostedStreamLocation
+        mobileOptions[field] = newValue
+        this.setState({mobileOptions: mobileOptions})
+        this.handleChange()
+    }
+
     getMobileIPSelector = () => {
         return (
-            <div style={{display: 'flex', justifyContent:"space-between"}}>
-                <FormControl type="text" placeholder="Stream IP (e.g. 123.456.7.89)"/>
-                <FormControl type="text" placeholder="Stream Port (e.g. 4789)"/>
-            </div>
+            <>
+                <FormControl type="text" placeholder="Stream IP (e.g. 123.456.7.89)" onChange={(text) => { this.changeMobileField('ip',text)}}/>
+                <FormControl type="text" placeholder="Stream Port (e.g. 4789)" onChange={(text) => { this.changeMobileField('port',text)}}/>
+            </>
         )
     }
     
@@ -88,7 +115,7 @@ export default class SourceSelect extends React.Component {
                         {this.getSourceButtonGroup()}
                     </Row>
                 </Col>
-                <Col xs lg={5} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Col xs lg={6} style={{display: 'flex', justifyContent: 'flex-end'}}>
                     {this.getExpandedSelector()}
                 </Col>
             </Row>
@@ -97,12 +124,14 @@ export default class SourceSelect extends React.Component {
 }
 
 SourceSelect.propTypes = {
+    onChange: PropTypes.func,
     selectedVariant: PropTypes.string,
     unselectedVariant: PropTypes.string,
     webcamIsDefault: PropTypes.bool,
 }
 
 SourceSelect.defaultProps = {
+    onChange: () => {console.warn("Unimplemented onChange for SourceSelect")},
     selectedVariant: "dark",
     unselectedVariant: "outline-dark",
     webcamIsDefault: false,
