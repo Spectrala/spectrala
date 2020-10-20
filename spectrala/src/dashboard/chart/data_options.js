@@ -55,7 +55,11 @@ export default class DataOptions extends React.Component {
 
                 </div>
 
-                <Card.Footer style={{display:"flex", justifyContent: "flex-end"}}><Button variant='outline-secondary'>Reset defaults</Button></Card.Footer> 
+                <Card.Footer style={{display:"flex", justifyContent: "flex-end"}}>
+                        <Button variant='primary'>Save as calibration</Button>
+                        <div style={{width: '10px'}}/>
+                        <Button variant='primary'>Export</Button>
+                </Card.Footer> 
             </Card>
         )
     }

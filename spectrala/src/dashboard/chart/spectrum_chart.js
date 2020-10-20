@@ -19,44 +19,7 @@ export default class SpectrumChart extends React.Component {
         return (
             <Card.Footer>
                 <Row style={{display: 'flex'}}>
-                    <Col>
-                        <InputGroup>
-                            <InputGroup.Prepend>
-                                <InputGroup.Text>Low Energy</InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <FormControl
-                                placeholder="X pct."
-                                aria-label="X percentage"
-                            />
-                            <FormControl
-                                placeholder="Y pct."
-                                aria-label="Y percentage"
-                            />
-                        </InputGroup>
-                    </Col>
-                    <Col>
-                        <InputGroup>
-                            <InputGroup.Prepend>
-                                <InputGroup.Text>High Energy</InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <FormControl
-                                placeholder="X pct."
-                                aria-label="X percentage"
-                            />
-                            <FormControl
-                                placeholder="Y pct."
-                                aria-label="Y percentage"
-                            />
-                        </InputGroup>
-                    </Col>
-                    
-                    <Col xs xl={4} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                        <Button variant="outline-primary" style={{alignItems:"center"}}>
-                            Save Snapshot
-                        </Button>
-                    </Col>
-                    
-                    
+                    <label>Some adjustment tools for calibration</label>
                 </Row>
             </Card.Footer> 
         )
