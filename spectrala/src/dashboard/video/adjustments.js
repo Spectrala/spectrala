@@ -1,8 +1,5 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
-import {Button, Container, Col, Navbar, Spinner, Card, ButtonGroup, Dropdown, Row, InputGroup, FormControl} from 'react-bootstrap';
-import placeholder from './camera_implementations/rainbow_placeholder.jpg';
-
+import {Button, Card, InputGroup, FormControl} from 'react-bootstrap';
 
 export default class VideoOptions extends React.Component {
 

@@ -1,6 +1,5 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
-import {Button, Container, Col, Navbar, Spinner, Card, ButtonGroup, Dropdown, Row, InputGroup, FormControl} from 'react-bootstrap';
+import {Button, Card, InputGroup, FormControl} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 export default class DataOptions extends React.Component {

@@ -1,11 +1,10 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
-import {Button, Container, Col, Navbar, Spinner, Card, ButtonGroup, Dropdown, Row, InputGroup, FormControl} from 'react-bootstrap';
-import WebcamView from "./camera_implementations/webcam";
-import placeholder from './camera_implementations/rainbow_placeholder.jpg';
-import VideoOptions from "./video_options";
-import { CameraFill } from 'react-bootstrap-icons';
+import {Button, Col, Card, Row, InputGroup, FormControl} from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import SourceSelect from './source_select';
+import WebcamView from "./camera_implementations/webcam";
+import VideoOptions from "./adjustments";
+import { CameraFill } from 'react-bootstrap-icons';
 
 export default class CameraView extends React.Component {
 
@@ -16,28 +15,7 @@ export default class CameraView extends React.Component {
     getHeader = () => {
         return (
             <Card.Header as="h5" style={{height:"64px"}}>
-                <Row style={{display: 'flex', justifyContent:'space-between'}}>
-                    <Col>
-                        <Row >
-                            <label style={{paddingLeft: '10px',paddingRight: '10px', alignItems: 'center', display: 'flex', height:"38px"}}>Source</label>
-                            <ButtonGroup style={{height:"38px"}}>
-                                <Button variant="dark">Webcam</Button>
-                                <Button variant="outline-dark">Mobile/Raspberry Pi</Button>
-                            </ButtonGroup>
-                        </Row>
-                    </Col>
-                    <Col xs lg={2} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                        <Dropdown>
-                            <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                                HD Webcam 2
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">Macintosh HD Webcam</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    </Col>
-                </Row>
+                {<SourceSelect/>}
             </Card.Header> 
         )
     }

@@ -1,6 +1,5 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
-import {Button, Container, Col, Navbar, Spinner, Nav, Form, FormControl, NavDropdown, Row} from 'react-bootstrap';
+import {Container, Col, Navbar, Nav, NavDropdown, Row} from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import CameraView from './video/camera';
 import SpectrumChart from './chart/spectrum_chart'
@@ -8,14 +7,6 @@ import SpectrumChart from './chart/spectrum_chart'
 export default class Dashboard extends React.Component {
 
     state = {};
-
-    componentDidMount() {
-        this.authSequence()
-    }
-
-    authSequence = async () => {
-        console.log("Hello, world")
-    }
 
     getNavbar = () => {
         return (

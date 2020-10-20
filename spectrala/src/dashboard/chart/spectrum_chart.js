@@ -1,6 +1,5 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
-import {Button, Container, Col, Navbar, Spinner, Card, ButtonGroup, Dropdown, Row, InputGroup, FormControl} from 'react-bootstrap';
+import {Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import DataOptions from './data_options';
 import spectrum from './spectrum_chart.png';
@@ -32,7 +31,7 @@ export default class SpectrumChart extends React.Component {
                 <Col xs lg ={8}>
                     <Card>
                         {this.getHeader()}
-                        <img height={this.props.height} src={spectrum}/>
+                        <img height={this.props.height} src={spectrum} alt={"Dummy spectrum"}/>
                         {this.getFooter()}
                     </Card>
                 </Col>
