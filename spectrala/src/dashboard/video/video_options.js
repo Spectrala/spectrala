@@ -1,7 +1,6 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
 import {Button, Container, Col, Navbar, Spinner, Card, ButtonGroup, Dropdown, Row, InputGroup, FormControl} from 'react-bootstrap';
-import WebcamView from "./camera_implementations/webcam";
 import placeholder from './camera_implementations/rainbow_placeholder.jpg';
 import PropTypes from 'prop-types';
 
