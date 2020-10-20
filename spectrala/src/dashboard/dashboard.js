@@ -3,7 +3,7 @@ import {Redirect} from 'react-router-dom';
 import {Button, Container, Col, Navbar, Spinner, Nav, Form, FormControl, NavDropdown, Row} from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import CameraView from './video/camera';
-
+import SpectrumChart from './chart/spectrum_chart'
 
 export default class Dashboard extends React.Component {
 
@@ -48,11 +48,11 @@ export default class Dashboard extends React.Component {
                     {this.getNavbar()}
                 </Row>
                 <Col>
-                    <Row style={{display:'flex', justifyContent:'center', paddingBottom:'1px'}}>
-                        <CameraView height={300}/>
+                    <Row style={{display:'flex', justifyContent:'center', paddingBottom:'16px'}}>
+                        <CameraView height={200}/>
                     </Row>
                     <Row style={{display:'flex', justifyContent:'center'}}>
-                        <CameraView height={300}/>
+                        <SpectrumChart height={400}/>
                     </Row>
                 </Col>
             </Container>            

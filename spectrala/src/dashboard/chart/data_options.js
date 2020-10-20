@@ -1,23 +1,15 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
 import {Button, Container, Col, Navbar, Spinner, Card, ButtonGroup, Dropdown, Row, InputGroup, FormControl} from 'react-bootstrap';
-import placeholder from './camera_implementations/rainbow_placeholder.jpg';
 import PropTypes from 'prop-types';
 
-
-export default class VideoOptions extends React.Component {
-
-    state = {
-        videoPreferences: {},
-    }
+export default class DataOptions extends React.Component {
 
 
     render() {
         return (
             <Card>
-                <Card.Header as="h5" style={{height:"64px", justifyContent:"space-between", alignItems:'center',display:'flex'}}>Adjustments
-                    <Button variant='outline-secondary'>Reset defaults</Button>
-                </Card.Header> 
+                <Card.Header as="h5" style={{height:"64px"}}>Data options</Card.Header> 
                 <div style={{height:this.props.height}}>
                     <InputGroup className="mb-3">
                         <InputGroup.Prepend>
@@ -62,12 +54,14 @@ export default class VideoOptions extends React.Component {
                     </InputGroup>
 
                 </div>
+
+                <Card.Footer style={{display:"flex", justifyContent: "flex-end"}}><Button variant='outline-secondary'>Reset defaults</Button></Card.Footer> 
             </Card>
         )
     }
 }
 
 
-VideoOptions.propTypes = {
+DataOptions.propTypes = {
     height: PropTypes.number
 }
