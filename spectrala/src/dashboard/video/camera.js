@@ -100,7 +100,7 @@ export default class CameraView extends React.Component {
                     </Card>
                 </Col>
                 <Col xs lg ={3}>
-                    <VideoOptions height={this.props.height}/>
+                    <VideoOptions/>
                 </Col>
             </Row>
         )

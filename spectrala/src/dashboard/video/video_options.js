@@ -2,7 +2,6 @@ import React from 'react';
 import {Redirect} from 'react-router-dom';
 import {Button, Container, Col, Navbar, Spinner, Card, ButtonGroup, Dropdown, Row, InputGroup, FormControl} from 'react-bootstrap';
 import placeholder from './camera_implementations/rainbow_placeholder.jpg';
-import PropTypes from 'prop-types';
 
 
 export default class VideoOptions extends React.Component {
@@ -14,11 +13,11 @@ export default class VideoOptions extends React.Component {
 
     render() {
         return (
-            <Card>
+            <Card style={{height:"100%"}}>
                 <Card.Header as="h5" style={{height:"64px", justifyContent:"space-between", alignItems:'center',display:'flex'}}>Adjustments
                     <Button variant='outline-secondary'>Reset defaults</Button>
                 </Card.Header> 
-                <div style={{height:this.props.height}}>
+                <div style={{height:"100%"}}>
                     <InputGroup className="mb-3">
                         <InputGroup.Prepend>
                         <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
@@ -65,9 +64,4 @@ export default class VideoOptions extends React.Component {
             </Card>
         )
     }
-}
-
-
-VideoOptions.propTypes = {
-    height: PropTypes.number
 }
