@@ -3,6 +3,7 @@ import {Redirect} from 'react-router-dom';
 import {Button, Container, Col, Navbar, Spinner, Card, ButtonGroup, Dropdown, Row, InputGroup, FormControl} from 'react-bootstrap';
 import WebcamView from "./camera_implementations/webcam";
 import placeholder from './camera_implementations/rainbow_placeholder.jpg';
+import PropTypes from 'prop-types';
 
 
 export default class VideoOptions extends React.Component {
@@ -16,7 +17,7 @@ export default class VideoOptions extends React.Component {
         return (
             <Card>
                 <Card.Header as="h5" style={{height:"64px"}}>Adjustments</Card.Header> 
-                <div>
+                <div style={{height:this.props.height}}>
                     <InputGroup className="mb-3">
                         <InputGroup.Prepend>
                         <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
@@ -59,16 +60,15 @@ export default class VideoOptions extends React.Component {
                         </InputGroup.Append>
                     </InputGroup>
 
-                    <InputGroup>
-                        <InputGroup.Prepend>
-                        <InputGroup.Text>With textarea</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl as="textarea" aria-label="With textarea" />
-                    </InputGroup>
                 </div>
 
-                <Card.Footer>More info</Card.Footer> 
+                <Card.Footer style={{display:"flex", justifyContent: "flex-end"}}><Button variant='outline-secondary'>Reset defaults</Button></Card.Footer> 
             </Card>
         )
     }
+}
+
+
+VideoOptions.propTypes = {
+    height: PropTypes.number
 }

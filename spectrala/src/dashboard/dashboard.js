@@ -11,8 +11,7 @@ export default class Dashboard extends React.Component {
     state = {};
 
     componentDidMount() {
-        this.authSequence()   
-        //Comment
+        this.authSequence()
     }
 
     authSequence = async () => {
@@ -50,7 +49,7 @@ export default class Dashboard extends React.Component {
                     {this.getNavbar()}
                 </Row>
                 <Col>
-                    <CameraView/>
+                    <CameraView height={300}/>
                 </Col>
             </Container>            
         );

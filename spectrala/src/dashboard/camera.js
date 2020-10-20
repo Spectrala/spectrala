@@ -1,10 +1,11 @@
 import React from 'react';
 import {Redirect} from 'react-router-dom';
-import {Button, Container, Col, Navbar, Spinner, Card, ButtonGroup, Dropdown, Row} from 'react-bootstrap';
+import {Button, Container, Col, Navbar, Spinner, Card, ButtonGroup, Dropdown, Row, InputGroup, FormControl} from 'react-bootstrap';
 import WebcamView from "./camera_implementations/webcam";
 import placeholder from './camera_implementations/rainbow_placeholder.jpg';
 import VideoOptions from "./video_options";
 import { CameraFill } from 'react-bootstrap-icons';
+import PropTypes from 'prop-types';
 
 export default class CameraView extends React.Component {
 
@@ -45,13 +46,38 @@ export default class CameraView extends React.Component {
         return (
             <Card.Footer>
                 <Row style={{display: 'flex'}}>
-                    <Col xs={2} md={2} lg={2} xl={2}>
-                        <label style={{paddingLeft: '10px', alignItems: 'center', display: 'flex', height:"38px"}}>Low energy</label>
+                    <Col>
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>Low Energy</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <FormControl
+                                placeholder="X pct."
+                                aria-label="X percentage"
+                            />
+                            <FormControl
+                                placeholder="Y pct."
+                                aria-label="Y percentage"
+                            />
+                        </InputGroup>
                     </Col>
-                    <Col style={{display: 'flex', justifyContent: 'flex-start'}}>
-                    <label style={{paddingLeft: '10px', alignItems: 'center', display: 'flex', height:"38px"}}>High energy</label>
+                    <Col>
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>High Energy</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <FormControl
+                                placeholder="X pct."
+                                aria-label="X percentage"
+                            />
+                            <FormControl
+                                placeholder="Y pct."
+                                aria-label="Y percentage"
+                            />
+                        </InputGroup>
                     </Col>
-                    <Col xs={4} md={4} lg={4} xl={4} style={{display: 'flex', justifyContent: 'flex-end'}}>
+                    
+                    <Col xs xl={4} style={{display: 'flex', justifyContent: 'flex-end'}}>
                         <Button variant="outline-primary" style={{alignItems:"center"}}>
                             <CameraFill/> Save Snapshot
                         </Button>
@@ -69,14 +95,19 @@ export default class CameraView extends React.Component {
                 <Col xs lg ={8}>
                     <Card>
                         {this.getHeader()}
-                        <WebcamView/>
+                        <WebcamView height={this.props.height}/>
                         {this.getFooter()}
                     </Card>
                 </Col>
                 <Col xs lg ={3}>
-                    <VideoOptions/>
+                    <VideoOptions height={this.props.height}/>
                 </Col>
             </Row>
         )
     }
+}
+
+
+CameraView.propTypes = {
+    height: PropTypes.number
 }
