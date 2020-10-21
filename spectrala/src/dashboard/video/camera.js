@@ -3,6 +3,7 @@ import {Button, Col, Card, Row, InputGroup, FormControl} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import SourceSelect from './source_select';
 import WebcamView from "./camera_implementations/webcam";
+import MobileView from "./camera_implementations/mobile";
 import VideoOptions from "./adjustments";
 import { CameraFill } from 'react-bootstrap-icons';
 
@@ -10,12 +11,16 @@ export default class CameraView extends React.Component {
 
     state = {
         videoPreferences: {},
+        selectedSource: {
+            'webcamIsSelected': this.props.webcamIsDefault,
+            'hostedStreamLocation': {'port':'','ip':''},
+        }
     }
 
     getHeader = () => {
         return (
             <Card.Header as="h5" style={{height:"64px"}}>
-                {<SourceSelect/>}
+                {<SourceSelect onChange={this.onSourceSelectChange} webcamIsSelected={this.state.selectedSource.webcamIsSelected}/>}
             </Card.Header> 
         )
     }
@@ -67,13 +72,26 @@ export default class CameraView extends React.Component {
         )
     }
 
+
+    getCameraView = () => {
+        if (this.state.selectedSource.webcamIsSelected) {
+            return (<WebcamView height={this.props.height}/>)
+        } else {
+            return (<MobileView height={this.props.height} ip={this.state.selectedSource.hostedStreamLocation.ip} port={this.state.selectedSource.hostedStreamLocation.port}/>)
+        }
+    }
+
+    onSourceSelectChange = (data) => {
+        this.setState({selectedSource: data})
+    }
+
     render() {
         return (
             <Row style={{justifyContent: 'center', display: 'flex'}}>
                 <Col xs lg ={8}>
                     <Card>
                         {this.getHeader()}
-                        <WebcamView height={this.props.height}/>
+                        {this.getCameraView()}
                         {this.getFooter()}
                     </Card>
                 </Col>
@@ -87,5 +105,10 @@ export default class CameraView extends React.Component {
 
 
 CameraView.propTypes = {
-    height: PropTypes.number
+    height: PropTypes.number,
+    webcamIsDefault: PropTypes.bool,
+}
+
+CameraView.defaultProps = {
+    webcamIsDefault: false,
 }

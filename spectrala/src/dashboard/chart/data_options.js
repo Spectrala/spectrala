@@ -39,7 +39,7 @@ export default class DataOptions extends React.Component {
                             https://example.com/users/
                         </InputGroup.Text>
                         </InputGroup.Prepend>
-                        <FormControl id="basic-url" aria-describedby="basic-addon3" />
+                        <FormControl id="basic-url3" aria-describedby="basic-addon3" />
                     </InputGroup>
 
                     <InputGroup className="mb-3">

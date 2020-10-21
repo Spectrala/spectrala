@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 export default class SourceSelect extends React.Component {
 
     state = {
-        webcamIsSelected: this.props.webcamIsDefault,
+        webcamIsSelected: this.props.webcamIsSelected,
         hostedStreamLocation: {'port':'','ip':''}
     }
 
@@ -23,6 +23,16 @@ export default class SourceSelect extends React.Component {
     }
 
     /**
+     * Set state within promise for use with await for synchronous state changes
+     * @param {object} state 
+     */
+    setStateAsync(state) {
+        return new Promise((resolve) => {
+          this.setState(state, resolve)
+        });
+    }
+    
+    /**
      * Returns the proper bootstrap variant (https://react-bootstrap.github.io/components/alerts#examples)
      * depending on whether or not the interface element is selected
      * @param {bool} isSelected Whether or not the given interface element is selected
@@ -35,10 +45,10 @@ export default class SourceSelect extends React.Component {
      * Responds to the click of a source button and updates the state of webcamIsSelected if necessary.
      * @param {bool} buttonIsWebcam true if the button being used is the webcam button
      */
-    toggleSelectedButton = (buttonIsWebcam) => {
+    toggleSelectedButton = async (buttonIsWebcam) => {
         // Only update state if necessary
         if (buttonIsWebcam !== this.state.webcamIsSelected) {
-            this.setState({webcamIsSelected: buttonIsWebcam})
+            await this.setStateAsync({webcamIsSelected: buttonIsWebcam})
             this.handleChange()
         }
     }
@@ -94,8 +104,8 @@ export default class SourceSelect extends React.Component {
     getMobileIPSelector = () => {
         return (
             <>
-                <FormControl type="text" placeholder="Stream IP (e.g. 123.456.7.89)" onChange={(text) => { this.changeMobileField('ip',text)}}/>
-                <FormControl type="text" placeholder="Stream Port (e.g. 4789)" onChange={(text) => { this.changeMobileField('port',text)}}/>
+                <FormControl type="text" placeholder="Stream IP (e.g. 123.456.7.89)" value={this.state.hostedStreamLocation.ip} onChange={(event) => { this.changeMobileField('ip',event.target.value)}}/>
+                <FormControl type="text" placeholder="Stream Port (e.g. 4789)" value={this.state.hostedStreamLocation.port} onChange={(event) => { this.changeMobileField('port',event.target.value)}}/>
             </>
         )
     }
@@ -127,12 +137,11 @@ SourceSelect.propTypes = {
     onChange: PropTypes.func,
     selectedVariant: PropTypes.string,
     unselectedVariant: PropTypes.string,
-    webcamIsDefault: PropTypes.bool,
+    webcamIsSelected: PropTypes.bool,
 }
 
 SourceSelect.defaultProps = {
     onChange: () => {console.warn("Unimplemented onChange for SourceSelect")},
     selectedVariant: "dark",
     unselectedVariant: "outline-dark",
-    webcamIsDefault: false,
 }
