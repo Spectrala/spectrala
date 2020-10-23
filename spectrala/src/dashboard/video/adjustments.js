@@ -12,7 +12,7 @@ export default class VideoOptions extends React.Component {
         return (
             <Card style={{height:"100%"}}>
                 <Card.Header as="h5" style={{height:"64px", justifyContent:"space-between", alignItems:'center',display:'flex'}}>Adjustments
-                    <Button variant='outline-secondary'>Reset defaults</Button>
+                    <Button variant='outline-secondary'>Reset</Button>
                 </Card.Header> 
                 <div style={{height:"100%"}}>
                     <InputGroup className="mb-3">
