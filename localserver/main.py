@@ -3,6 +3,7 @@ import logging
 import webbrowser
 from pathlib import Path
 
+import wx
 import cherrypy
 from cherrypy._cpnative_server import CPHTTPServer
 
@@ -27,6 +28,60 @@ def preferred_browser():
             pass
     # otherwise use the default browser
     return default
+
+
+def open_in_browser():
+    preferred_browser().open(
+        config.LOCAL_BASE_URL, new=config.BROWSER_NEW_BEHAVIOR, autoraise=True
+    )
+
+
+RUNNING_MESSAGE = """\
+Spectrala is running locally.
+You can open it in your browser at
+'{}'
+or press the button below.
+Google Chrome or a Chromium derivative is preferred.
+Keep this window open while you are using Spectrala.\
+""".format(
+    config.LOCAL_BASE_URL
+)
+
+
+class MainFrame(wx.Frame):
+    def __init__(self, parent, title):
+        wx.Frame.__init__(self, parent, title=title)
+
+        self.CreateStatusBar()
+
+        # Now create the Panel to put the other controls on.
+        panel = wx.Panel(self)
+
+        # and a few controls
+        text = wx.StaticText(panel, label=RUNNING_MESSAGE)
+        browser_btn = wx.Button(panel, label="Open in Browser")
+
+        # bind the button events to handlers
+        self.Bind(wx.EVT_BUTTON, self.OpenInBrowser, browser_btn)
+
+        # Use a sizer to layout the controls, stacked vertically and with
+        # a 10 pixel border around each
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(text, 0, wx.ALL, 10)
+        sizer.Add(browser_btn, 0, wx.ALL, 10)
+        panel.SetSizer(sizer)
+        panel.Layout()
+
+    def OpenInBrowser(self, evt):
+        open_in_browser()
+
+
+class MainApp(wx.App):
+    def OnInit(self):
+        frame = MainFrame(None, "Spectrala")
+        self.SetTopWindow(frame)
+        frame.Show(True)
+        return True
 
 
 class ServerRoot:
@@ -61,10 +116,13 @@ def main(args, dir_root=None):
     preferred_browser().open(
         config.LOCAL_BASE_URL, new=config.BROWSER_NEW_BEHAVIOR, autoraise=True
     )
-    cherrypy.engine.block()  # This will be blocking on a small GUI thread in the future.
-    # cherrypy.engine.stop() # Exit webserver cleanly
-    # cherrypy.engine.exit() # Required for clean exit when running as a pyinst bundle
+    # cherrypy.engine.block()  # We block on the GUI thread below, so we exit when the window exits.
+    app = MainApp(redirect=False)
+    app.MainLoop()
+    cherrypy.engine.stop()  # Exit webserver cleanly
+    cherrypy.engine.exit()  # Required for clean exit when running as a pyinst bundle
+    return 0
 
 
 if __name__ == "__main__":
-    main(sys.argv[0:], Path(sys.argv[0]).parent)
+    sys.exit(main(sys.argv[0:], Path(sys.argv[0]).parent))
