@@ -38,9 +38,11 @@ def open_in_browser():
 
 RUNNING_MESSAGE = """\
 Spectrala is running locally.
-You can open it in your browser at
+You can open it in your browser at the URL
+
 \t{}
-or press the button below.
+
+Alternatively, press the button below.
 Google Chrome or a Chromium derivative is preferred.
 Keep this window open while you are using Spectrala.\
 """.format(
@@ -50,27 +52,24 @@ Keep this window open while you are using Spectrala.\
 
 class MainFrame(wx.Frame):
     def __init__(self, parent, title):
-        wx.Frame.__init__(self, parent, title=title)
-
+        wx.Frame.__init__(
+            self,
+            parent,
+            title=title,
+            # Prevent resizing
+            style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX),
+        )
         self.CreateStatusBar()
-
-        # Now create the Panel to put the other controls on.
         panel = wx.Panel(self)
-
-        # and a few controls
         text = wx.StaticText(panel, label=RUNNING_MESSAGE)
         browser_btn = wx.Button(panel, label="Open in Browser")
-
-        # bind the button events to handlers
         self.Bind(wx.EVT_BUTTON, self.OpenInBrowser, browser_btn)
-
-        # Use a sizer to layout the controls, stacked vertically and with
-        # a 10 pixel border around each
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(text, 0, wx.ALL, 10)
-        sizer.Add(browser_btn, 0, wx.ALL, 10)
+        sizer.Add(text, 0, wx.ALL, 20)
+        sizer.Add(browser_btn, 0, wx.ALIGN_CENTER | wx.ALL, 5)
         panel.SetSizer(sizer)
         panel.Layout()
+        self.SetSize(wx.Size(400, 300))
 
     def OpenInBrowser(self, evt):
         open_in_browser()
