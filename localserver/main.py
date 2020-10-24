@@ -32,7 +32,7 @@ def preferred_browser():
 class ServerRoot:
     @cherrypy.expose
     def index(self):
-        raise cherrypy.HTTPRedirect("/test.html")
+        raise cherrypy.HTTPRedirect("/index.html")
 
 
 def main(args, dir_root=None):
