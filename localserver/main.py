@@ -39,7 +39,7 @@ def open_in_browser():
 RUNNING_MESSAGE = """\
 Spectrala is running locally.
 You can open it in your browser at
-'{}'
+\t{}
 or press the button below.
 Google Chrome or a Chromium derivative is preferred.
 Keep this window open while you are using Spectrala.\
