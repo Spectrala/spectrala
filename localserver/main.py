@@ -3,7 +3,7 @@ import logging
 import webbrowser
 from pathlib import Path
 
-import wx
+import tkinter as tk
 import cherrypy
 from cherrypy._cpnative_server import CPHTTPServer
 
@@ -30,7 +30,7 @@ def preferred_browser():
     return default
 
 
-def open_in_browser():
+def open_in_browser(*args, **kwargs):
     preferred_browser().open(
         config.LOCAL_BASE_URL, new=config.BROWSER_NEW_BEHAVIOR, autoraise=True
     )
@@ -48,40 +48,35 @@ Keep this window open while you are using Spectrala.\
 )
 
 
-class MainFrame(wx.Frame):
-    def __init__(self, parent, title):
-        wx.Frame.__init__(self, parent, title=title)
+class Application(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.master = master
+        self.pack()
+        self.create_widgets()
+        self.grid(padx=20)
 
-        self.CreateStatusBar()
+    def create_widgets(self):
+        self.text = tk.Text(
+            self,
+            width=max(map(len, RUNNING_MESSAGE.splitlines())),
+            height=RUNNING_MESSAGE.count("\n"),
+        )
+        self.text.insert("1.0", RUNNING_MESSAGE)
+        self.text.tag_configure("big", font=("Verdana", 24, "bold"))
+        self.text.grid(row=0, column=0, pady=10)
 
-        # Now create the Panel to put the other controls on.
-        panel = wx.Panel(self)
-
-        # and a few controls
-        text = wx.StaticText(panel, label=RUNNING_MESSAGE)
-        browser_btn = wx.Button(panel, label="Open in Browser")
-
-        # bind the button events to handlers
-        self.Bind(wx.EVT_BUTTON, self.OpenInBrowser, browser_btn)
-
-        # Use a sizer to layout the controls, stacked vertically and with
-        # a 10 pixel border around each
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(text, 0, wx.ALL, 10)
-        sizer.Add(browser_btn, 0, wx.ALL, 10)
-        panel.SetSizer(sizer)
-        panel.Layout()
-
-    def OpenInBrowser(self, evt):
-        open_in_browser()
+        self.open_btn = tk.Button(self)
+        self.open_btn["text"] = "Open in Browser"
+        self.open_btn["command"] = open_in_browser
+        self.open_btn.grid(row=1, column=0, pady=10)
 
 
-class MainApp(wx.App):
-    def OnInit(self):
-        frame = MainFrame(None, "Spectrala")
-        self.SetTopWindow(frame)
-        frame.Show(True)
-        return True
+def block_on_gui():
+    root = tk.Tk()
+    root.title("Spectrala")
+    app = Application(master=root)
+    app.mainloop()
 
 
 class ServerRoot:
@@ -117,8 +112,7 @@ def main(args, dir_root=None):
         config.LOCAL_BASE_URL, new=config.BROWSER_NEW_BEHAVIOR, autoraise=True
     )
     # cherrypy.engine.block()  # We block on the GUI thread below, so we exit when the window exits.
-    app = MainApp(redirect=False)
-    app.MainLoop()
+    block_on_gui()
     cherrypy.engine.stop()  # Exit webserver cleanly
     cherrypy.engine.exit()  # Required for clean exit when running as a pyinst bundle
     return 0
