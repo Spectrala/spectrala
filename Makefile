@@ -6,8 +6,9 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
 app: pyinst
+	rm --recursive --force dist
 	mkdir -p dist
-	cp -R localserver/dist/spectrala dist/
+	cp -R localserver/dist/spectrala dist
 .PHONY: app
 
 pyinst: webapp_prod
