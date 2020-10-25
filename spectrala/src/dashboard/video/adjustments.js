@@ -7,7 +7,7 @@ export default class VideoOptions extends React.Component {
 
 
     // Todo: handle this data, including saving it to user defaults
-
+    // Todo: left edge of control can go past 0. Looks bad given left alignment is strictly at 15px everywhere else.
     state = {
         videoPreferences: {
             brightness:54,
