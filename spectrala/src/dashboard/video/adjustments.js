@@ -1,6 +1,6 @@
 import React from 'react';
-import {Button, Card, InputGroup, FormControl} from 'react-bootstrap';
-import Slider, { Range } from 'rc-slider';
+import {Button, Card} from 'react-bootstrap';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 export default class VideoOptions extends React.Component {
@@ -15,7 +15,6 @@ export default class VideoOptions extends React.Component {
             hue:93,
             saturation:50,
         },
-        value: 44,
     }
 
     sliders = ["brightness","contrast","hue","saturation"]    
@@ -29,8 +28,10 @@ export default class VideoOptions extends React.Component {
 
 
 
-    handleChange = (x) => {
-        this.setState({value: x})
+    handleChange = (property, newValue) => {
+        var preferences = this.state.videoPreferences
+        preferences[property] = newValue
+        this.setState({videoPreferences: preferences})
     }
 
 
@@ -41,7 +42,7 @@ export default class VideoOptions extends React.Component {
         return (
             <div style={{height:"100%", paddingLeft:"15px", paddingRight:"15px"}} key={idx}>
                 <label style={{paddingTop:"10px"}}>{title}</label>
-                <Slider animation={false} onChange={(x) => {this.setState({property: x})}} value={value}/>
+                <Slider onChange={(newValue) => this.handleChange(property, newValue)} value={value}/>
             </div>
         )
     }
@@ -55,7 +56,6 @@ export default class VideoOptions extends React.Component {
     }
 
     render() {
-        const {value} = this.state
         return (
             <Card style={{height:"100%"}}>
                 <Card.Header as="h5" style={{height:"64px", justifyContent:"space-between", alignItems:'center',display:'flex',paddingLeft:"15px",paddingRight:"15px"}}>Adjustments
