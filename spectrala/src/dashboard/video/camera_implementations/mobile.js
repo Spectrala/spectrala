@@ -32,4 +32,17 @@ MobileView.propTypes = {
     ip: PropTypes.string,
     port: PropTypes.string,
     height: PropTypes.number,
+    onChange: PropTypes.func,
+    // lowEnergy: PropTypes.object,
+    // highEnergy: PropTypes.object,
 }
+
+
+/**
+ * Do we want this?
+ * lowEnergy: {
+ *   xpct: float
+ *   ypct: float
+ * }
+ * 
+ */
