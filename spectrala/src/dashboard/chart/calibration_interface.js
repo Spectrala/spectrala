@@ -60,7 +60,7 @@ export default class CalibrationLine extends React.Component {
                     {
                         axis: 'x',
                         value: data[0].data[5].x,
-                        lineStyle: { stroke: '#b0413e', strokeWidth: 2 },
+                        lineStyle: { stroke: '#000', strokeWidth: 2 },
                         legend: '402nm',
                     },
                 ]}
@@ -82,38 +82,20 @@ export default class CalibrationLine extends React.Component {
                 }}
                 enableCrosshair={true}
                 crosshairType={'bottom'}
-                // enableSlices={"x"}
-                // sliceTooltip={({ slice }) => {
-                //     return (
-
-                //         <div
-                //             style={{
-                //                 color: '#333',
-                //                 padding: '3px 0',
-                //             }}
-                //             onMouseDown={() => {
-                //                 console.log("Mouse down")
-                //             }}
-                //             onMouseEnter={() => {
-                //                 console.log("Mouse onMouseEnter")
-                //             }}
-                //             onClick={() => {
-                //                 console.log("click")
-                //             }}
-                //         >
-                //             612nm
-                //         </div>
-                //         // <div
-                //         //     style={{
-                //         //         background: 'white',
-                //         //         padding: '3px 9px',
-                //         //         border: '1px solid #ccc',
-                //         //     }}
-                //         // >
-                            
-                //         // </div>
-                //     )
-                // }}
+                tooltip={() => {
+                    return (
+                        <div
+                            style={{
+                                color: '#333',
+                                background: 'white',
+                                padding: '3px 9px',
+                                border: '1px solid #ccc',
+                            }}
+                        >
+                            612nm
+                        </div>
+                    )
+                }}
             />
         )
     }
