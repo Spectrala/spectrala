@@ -6,26 +6,29 @@ import spectrum from './spectrum_chart.png';
 import {ResponsiveLine} from '@nivo/line';
 import {data} from './sample_data';
 
-const MyResponsiveLine = () => {
+const CalibrationLine = () => {
+    var bottomAxis = {
+        tickSize: 5,
+        tickPadding: 5,
+        tickRotation: 0,
+        format: '.2f',
+        legend: 'wavelength (nm)',
+        legendOffset: 36,
+        legendPosition: 'middle'
+    }
+    bottomAxis = null;
+    
     return (
         <ResponsiveLine
         data={data}
-        margin={{ top: 15, right: 15, bottom: 50, left: 60 }}
+        margin={{ top: 15, right: 15, bottom: 15, left: 60 }}
         xScale={{ type: 'linear', min: 'auto', max: 'auto'  }}
         yScale={{ type: 'linear', min: '0', max: '100' }}
         yFormat=" >-.2f"
         curve="monotoneX"
         axisTop={null}
         axisRight={null}
-        axisBottom={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            format: '.2f',
-            legend: 'wavelength (nm)',
-            legendOffset: 36,
-            legendPosition: 'middle'
-        }}
+        axisBottom={bottomAxis}
         axisLeft={{
             tickSize: 5,
             tickPadding: 5,
@@ -35,7 +38,15 @@ const MyResponsiveLine = () => {
             legendOffset: -40,
             legendPosition: 'middle'
         }}
-        enableGridX={true}
+        markers={[
+            {
+                axis: 'x',
+                value: data[0].data[5].x,
+                lineStyle: { stroke: '#b0413e', strokeWidth: 2 },
+                legend: '402nm peak',
+            },
+        ]}
+        enableGridX={false}
         colors={{ scheme: 'spectral' }}
         lineWidth={1}
         pointSize={4}
@@ -80,9 +91,9 @@ export default class SpectrumChart extends React.Component {
                     <Card>
                         {this.getHeader()}
                         <div style={{height: this.props.height}}>
-                            {MyResponsiveLine()}
+                            {CalibrationLine()}
                         </div>
-                        {this.getFooter()}
+                        {/* {this.getFooter()} */}
                     </Card>
                 </Col>
                 <Col xs lg ={3}>
