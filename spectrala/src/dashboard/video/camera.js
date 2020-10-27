@@ -14,7 +14,8 @@ export default class CameraView extends React.Component {
         selectedSource: {
             'webcamIsSelected': this.props.webcamIsDefault,
             'hostedStreamLocation': {'port':'','ip':''},
-        }
+        },
+        isOversaturated: true,
     }
 
     getHeader = () => {
@@ -85,16 +86,23 @@ export default class CameraView extends React.Component {
         this.setState({selectedSource: data})
     }
 
+    getOversaturationAlert = () => {
+        if (this.state.isOversaturated) 
+            return (
+                <Alert variant={'warning'} style={{marginBottom:"0px"}}>
+                            Oversaturation detected. This message will disappear when the problem is resolved.{' '}
+                            <Alert.Link href="#">Learn more</Alert.Link>. 
+                        </Alert> 
+            );
+    }
+
     render() {
         return (
             <Row style={{justifyContent: 'center', display: 'flex'}}>
                 <Col xs lg ={8}>
                     <Card style={{display: 'flex', background:'FF0'}}>
                         {this.getHeader()}
-                        <Alert variant={'warning'} style={{marginBottom:"0px"}}>
-                            Oversaturation detected. This message will disappear when the problem is resolved.{' '}
-                            <Alert.Link href="#">Learn more</Alert.Link>. 
-                        </Alert>    
+                        {this.getOversaturationAlert()}   
                         {this.getCameraView()}
                         {this.getFooter()}
                     </Card>

@@ -16,12 +16,12 @@ const CalibrationLine = () => {
         legendOffset: 36,
         legendPosition: 'middle'
     }
-    bottomAxis = null;
+    // bottomAxis = null;
     
     return (
         <ResponsiveLine
         data={data}
-        margin={{ top: 15, right: 15, bottom: 15, left: 60 }}
+        margin={{ top: 15, right: 15, bottom: bottomAxis ? 50 : 15, left: 60 }}
         xScale={{ type: 'linear', min: 'auto', max: 'auto'  }}
         yScale={{ type: 'linear', min: '0', max: '100' }}
         yFormat=" >-.2f"
