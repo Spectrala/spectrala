@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Card, InputGroup, FormControl} from 'react-bootstrap';
+import {Card, InputGroup, FormControl} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 export default class DataOptions extends React.Component {
@@ -8,7 +8,7 @@ export default class DataOptions extends React.Component {
     render() {
         return (
             <Card>
-                <Card.Header as="h5" style={{height:"64px", display:"flex",alignItems:"center"}}>Data options</Card.Header> 
+                <Card.Header as="h5" style={{height:"64px", display:"flex",alignItems:"center",paddingLeft:"15px",paddingRight:"15px"}}>Data options</Card.Header> 
                 <div style={{height:this.props.height}}>
                     <InputGroup className="mb-3">
                         <InputGroup.Prepend>
@@ -54,11 +54,6 @@ export default class DataOptions extends React.Component {
 
                 </div>
 
-                <Card.Footer style={{display:"flex", justifyContent: "flex-end"}}>
-                        <Button variant='primary'>Save as calibration</Button>
-                        <div style={{width: '10px'}}/>
-                        <Button variant='primary'>Export</Button>
-                </Card.Footer> 
             </Card>
         )
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Col, Card, Row, InputGroup, FormControl} from 'react-bootstrap';
+import {Button, Col, Card, Row, InputGroup, FormControl, Alert} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import SourceSelect from './source_select';
 import WebcamView from "./camera_implementations/webcam";
@@ -14,14 +14,15 @@ export default class CameraView extends React.Component {
         selectedSource: {
             'webcamIsSelected': this.props.webcamIsDefault,
             'hostedStreamLocation': {'port':'','ip':''},
-        }
+        },
+        isOversaturated: true,
     }
 
     getHeader = () => {
         return (
             <Card.Header as="h5" style={{height:"64px"}}>
                 {<SourceSelect onChange={this.onSourceSelectChange} webcamIsSelected={this.state.selectedSource.webcamIsSelected}/>}
-            </Card.Header> 
+            </Card.Header>
         )
     }
 
@@ -85,12 +86,23 @@ export default class CameraView extends React.Component {
         this.setState({selectedSource: data})
     }
 
+    getOversaturationAlert = () => {
+        if (this.state.isOversaturated) 
+            return (
+                <Alert variant={'warning'} style={{marginBottom:"0px"}}>
+                            Oversaturation detected. This message will disappear when the problem is resolved.{' '}
+                            <Alert.Link href="#">Learn more</Alert.Link>. 
+                        </Alert> 
+            );
+    }
+
     render() {
         return (
             <Row style={{justifyContent: 'center', display: 'flex'}}>
                 <Col xs lg ={8}>
-                    <Card>
+                    <Card style={{display: 'flex', background:'FF0'}}>
                         {this.getHeader()}
+                        {this.getOversaturationAlert()}   
                         {this.getCameraView()}
                         {this.getFooter()}
                     </Card>

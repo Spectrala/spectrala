@@ -119,7 +119,7 @@ export default class SourceSelect extends React.Component {
             <Row style={{display: 'flex', justifyContent:'space-between'}}>
                 <Col>
                     <Row >
-                        <label style={{paddingLeft: '10px',paddingRight: '10px', alignItems: 'center', display: 'flex', height:"38px"}}>
+                        <label style={{paddingLeft: '15px',paddingRight: '15px', alignItems: 'center', display: 'flex', height:"38px"}}>
                             Source
                         </label>
                         {this.getSourceButtonGroup()}
