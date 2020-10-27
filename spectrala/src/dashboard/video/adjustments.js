@@ -38,7 +38,6 @@ export default class VideoOptions extends React.Component {
     sliderControl = (idx, property) => {
         const value = this.state.videoPreferences[property]
         const title = this.titles[property]
-        console.log(idx)
         return (
             <div style={{height:"100%", paddingLeft:"15px", paddingRight:"15px"}} key={idx}>
                 <label style={{paddingTop:"10px"}}>{title}</label>

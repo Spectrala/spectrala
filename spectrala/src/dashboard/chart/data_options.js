@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Card, InputGroup, FormControl} from 'react-bootstrap';
+import {Card, InputGroup, FormControl} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 export default class DataOptions extends React.Component {
