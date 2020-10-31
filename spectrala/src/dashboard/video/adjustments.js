@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Card} from 'react-bootstrap';
+import {Button, Card, Form} from 'react-bootstrap';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -41,7 +41,9 @@ export default class VideoOptions extends React.Component {
         return (
             <div style={{height:"100%", paddingLeft:"15px", paddingRight:"15px"}} key={idx}>
                 <label style={{paddingTop:"10px"}}>{title}</label>
-                <Slider onChange={(newValue) => this.handleChange(property, newValue)} value={value}/>
+                <Form.Control type="range" custom onChange={(newValue) => {
+                    this.handleChange(property, newValue.target.value)
+                }} value={value}/>
             </div>
         )
     }

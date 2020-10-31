@@ -12,7 +12,7 @@ export default class CameraView extends React.Component {
     state = {
         videoPreferences: {},
         selectedSource: {
-            'webcamIsSelected': this.props.webcamIsDefault,
+            'selectedSourceIndex': this.props.defaultSourceIndex,
             'hostedStreamLocation': {'port':'','ip':''},
         },
         isOversaturated: true,
@@ -21,7 +21,7 @@ export default class CameraView extends React.Component {
     getHeader = () => {
         return (
             <Card.Header as="h5" style={{height:"64px"}}>
-                {<SourceSelect onChange={this.onSourceSelectChange} webcamIsSelected={this.state.selectedSource.webcamIsSelected}/>}
+                {<SourceSelect onChange={this.onSourceSelectChange} defaultSourceIndex={this.state.selectedSource.selectedSourceIndex}/>}
             </Card.Header>
         )
     }
@@ -90,9 +90,9 @@ export default class CameraView extends React.Component {
         if (this.state.isOversaturated) 
             return (
                 <Alert variant={'warning'} style={{marginBottom:"0px"}}>
-                            Oversaturation detected. This message will disappear when the problem is resolved.{' '}
-                            <Alert.Link href="#">Learn more</Alert.Link>. 
-                        </Alert> 
+                    Oversaturation detected. This message will disappear when the problem is resolved.{' '}
+                    <Alert.Link href="#">Learn more</Alert.Link>. 
+                </Alert> 
             );
     }
 
@@ -118,9 +118,9 @@ export default class CameraView extends React.Component {
 
 CameraView.propTypes = {
     height: PropTypes.number,
-    webcamIsDefault: PropTypes.bool,
+    defaultSourceIndex: PropTypes.number,
 }
 
 CameraView.defaultProps = {
-    webcamIsDefault: false,
+    defaultSourceIndex: 0,
 }

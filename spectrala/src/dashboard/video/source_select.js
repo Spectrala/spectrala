@@ -1,13 +1,19 @@
 import React from 'react';
-import {Button, FormControl, Col, ButtonGroup, Dropdown, Row} from 'react-bootstrap';
+import {Button, FormControl, Col, ButtonGroup, Dropdown, Row, Form} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 export default class SourceSelect extends React.Component {
 
     state = {
-        webcamIsSelected: this.props.webcamIsSelected,
+        selectedSourceIndex: this.props.defaultSourceIndex,
         hostedStreamLocation: {'port':'','ip':''}
     }
+
+    source_options = [
+        "Webcam",
+        "Mobile/Raspberry Pi",
+        "File Upload"
+    ]
 
     /**
      * Pass the necessary info from this class back to the host 
@@ -17,7 +23,7 @@ export default class SourceSelect extends React.Component {
      */
     handleChange = () => {
         this.props.onChange({
-            'webcamIsSelected': this.state.webcamIsSelected,
+            'selectedSourceIndex': this.state.selectedSourceIndex,
             'hostedStreamLocation': this.state.hostedStreamLocation,
         });
     }
@@ -37,36 +43,39 @@ export default class SourceSelect extends React.Component {
      * depending on whether or not the interface element is selected
      * @param {bool} isSelected Whether or not the given interface element is selected
      */
-    getVariant = (isSelected) => {
-        return isSelected ? this.props.selectedVariant : this.props.unselectedVariant
+    getVariant = (idx) => {
+        return idx == this.state.selectedSourceIndex ? this.props.selectedVariant : this.props.unselectedVariant
     }
 
     /**
      * Responds to the click of a source button and updates the state of webcamIsSelected if necessary.
      * @param {bool} buttonIsWebcam true if the button being used is the webcam button
      */
-    toggleSelectedButton = async (buttonIsWebcam) => {
+    toggleSelectedButton = async (idx) => {
         // Only update state if necessary
-        if (buttonIsWebcam !== this.state.webcamIsSelected) {
-            await this.setStateAsync({webcamIsSelected: buttonIsWebcam})
+        if (idx !== this.state.selectedSourceIndex) {
+            await this.setStateAsync({selectedSourceIndex: idx})
             this.handleChange()
         }
     }
 
     /**
-     * Returns the Mobile/Raspberry Pi and Webcam buttons for switching the video source
+     * Returns the buttons for switching the video source
      */
     getSourceButtonGroup = () => {
         return (
             <ButtonGroup style={{height:"38px"}}>
-                <Button 
-                    variant={this.getVariant(!this.state.webcamIsSelected)}
-                    onClick={() => this.toggleSelectedButton(false)}
-                >Mobile/Raspberry Pi</Button>
-                <Button 
-                    variant={this.getVariant(this.state.webcamIsSelected)}
-                    onClick={() => this.toggleSelectedButton(true)}
-                >Webcam</Button>
+                {
+                    this.source_options.map((name, idx) => {
+                        return (
+                            <Button 
+                                key = {idx}
+                                variant={this.getVariant(idx)}
+                                onClick={() => this.toggleSelectedButton(idx)}
+                            >{name}</Button>
+                        )
+                    })
+                }
             </ButtonGroup>
         )
     }
@@ -109,9 +118,29 @@ export default class SourceSelect extends React.Component {
             </>
         )
     }
+
+    getFileSelector = () => {
+        return (
+            <Form style={{height:"38px", display:"flex"}}>
+                <Form.File 
+                    size="sm"
+                    id="custom-file"
+                    label="Custom file input"
+                    custom
+                    />
+            </Form>
+        );
+    }
     
-    getExpandedSelector = () => {
-        return this.state.webcamIsSelected ? this.getWebcamSelector() : this.getMobileIPSelector()
+    getExpandedSelector = (idx) => {
+        var name = this.source_options[idx];
+        if (name == "Webcam") {
+            return this.getWebcamSelector()
+        } else if (name == "Mobile/Raspberry Pi") {
+            return this.getMobileIPSelector()
+        } else if (name == "File Upload") {
+            return this.getFileSelector()
+        }
     }
 
     render() {
@@ -126,7 +155,7 @@ export default class SourceSelect extends React.Component {
                     </Row>
                 </Col>
                 <Col xs lg={6} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                    {this.getExpandedSelector()}
+                    {this.getExpandedSelector(this.state.selectedSourceIndex)}
                 </Col>
             </Row>
         )
@@ -137,7 +166,7 @@ SourceSelect.propTypes = {
     onChange: PropTypes.func,
     selectedVariant: PropTypes.string,
     unselectedVariant: PropTypes.string,
-    webcamIsSelected: PropTypes.bool,
+    defaultSourceIndex: PropTypes.number,
 }
 
 SourceSelect.defaultProps = {
