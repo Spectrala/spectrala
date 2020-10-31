@@ -9,12 +9,6 @@ export default class SourceSelect extends React.Component {
         hostedStreamLocation: {'port':'','ip':''}
     }
 
-    source_options = [
-        "Webcam",
-        "Mobile/Raspberry Pi",
-        "File Upload"
-    ]
-
     /**
      * Pass the necessary info from this class back to the host 
      *  webcamIsSelected: bool -- true if the source is selected to be the 
@@ -66,7 +60,7 @@ export default class SourceSelect extends React.Component {
         return (
             <ButtonGroup style={{height:"38px"}}>
                 {
-                    this.source_options.map((name, idx) => {
+                    this.props.sourceOptions.map((name, idx) => {
                         return (
                             <Button 
                                 key = {idx}
@@ -133,7 +127,7 @@ export default class SourceSelect extends React.Component {
     }
     
     getExpandedSelector = (idx) => {
-        var name = this.source_options[idx];
+        var name = this.props.sourceOptions[idx];
         if (name == "Webcam") {
             return this.getWebcamSelector()
         } else if (name == "Mobile/Raspberry Pi") {
@@ -167,6 +161,7 @@ SourceSelect.propTypes = {
     selectedVariant: PropTypes.string,
     unselectedVariant: PropTypes.string,
     defaultSourceIndex: PropTypes.number,
+    sourceOptions: PropTypes.array,
 }
 
 SourceSelect.defaultProps = {

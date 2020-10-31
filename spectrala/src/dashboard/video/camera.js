@@ -18,10 +18,16 @@ export default class CameraView extends React.Component {
         isOversaturated: true,
     }
 
+    sourceOptions = [
+        "Webcam",
+        "Mobile/Raspberry Pi",
+        "File Upload"
+    ]
+
     getHeader = () => {
         return (
             <Card.Header as="h5" style={{height:"64px"}}>
-                {<SourceSelect onChange={this.onSourceSelectChange} defaultSourceIndex={this.state.selectedSource.selectedSourceIndex}/>}
+                {<SourceSelect onChange={this.onSourceSelectChange} sourceOptions={this.sourceOptions} defaultSourceIndex={this.state.selectedSource.selectedSourceIndex}/>}
             </Card.Header>
         )
     }
@@ -75,10 +81,13 @@ export default class CameraView extends React.Component {
 
 
     getCameraView = () => {
-        if (this.state.selectedSource.webcamIsSelected) {
+        var name = this.sourceOptions[this.state.selectedSource.selectedSourceIndex];
+        if (name == "Webcam") {
             return (<WebcamView height={this.props.height}/>)
-        } else {
+        } else if (name == "Mobile/Raspberry Pi") {
             return (<MobileView height={this.props.height} ip={this.state.selectedSource.hostedStreamLocation.ip} port={this.state.selectedSource.hostedStreamLocation.port}/>)
+        } else if (name == "File Upload") {
+            return <label style={{height: this.props.height}}>TODO: put a view here</label>
         }
     }
 
