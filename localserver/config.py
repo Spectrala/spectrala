@@ -22,7 +22,7 @@ def is_pyinst_bundled():
 
 BIND_ADDR = "0.0.0.0"  # Listen on local network as well as loopback
 BIND_PORT = 9559
-LOCAL_BASE_URL = "http://" + "localhost" + ":" + str(BIND_PORT)
+LOCAL_BASE_URL = "http://" + "127.0.0.1" + ":" + str(BIND_PORT)
 
 if is_dev():
     CHERRYPY_ENVIRONMENT = None  # Debug
