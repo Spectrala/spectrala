@@ -9,6 +9,7 @@ export default class CalibrationLine extends React.Component {
     state = {
         isSelecting: false
     }
+    
     showsBottomAxis = () => {
         return false
     }
