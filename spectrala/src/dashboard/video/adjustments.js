@@ -1,6 +1,5 @@
 import React from 'react';
 import {Button, Card, Form} from 'react-bootstrap';
-import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 export default class VideoOptions extends React.Component {
