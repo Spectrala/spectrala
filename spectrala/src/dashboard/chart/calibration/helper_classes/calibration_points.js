@@ -12,11 +12,10 @@ export default class CalibrationPoints {
 
     isCurrentlyPlacing = () => {
         var isPlacing = false;
-        this.calibrationPoints.map((point, idx) => {
+        this.calibrationPoints.forEach((point, idx) => {
             if (point.isBeingPlaced) {
                 isPlacing = true;
             }
-            return null;
         });
         return isPlacing;
     };
@@ -41,5 +40,16 @@ export default class CalibrationPoints {
     setWavelength = (point, value) => {
         point.setWavelength(value);
         this.onChange();
+    };
+
+    getSetPoints = () => {
+        var descriptions = [];
+        this.calibrationPoints.forEach((point, idx) => {
+            const description = point.getPlacementDescription();
+            if (description) {
+                descriptions.push(description);
+            }
+        });
+        return descriptions;
     };
 }

@@ -12,7 +12,7 @@ export default class SpectrumChart extends React.Component {
     state = {
         calibrationPoints: new CalibrationPoints(
             [
-                new CalibrationPoint(303, 0.8, false),
+                new CalibrationPoint(303, 0.3670886075949367, false),
                 new CalibrationPoint(421, null, true),
             ],
             (() => this.onCalibrationPointChange())
@@ -49,7 +49,7 @@ export default class SpectrumChart extends React.Component {
                     <Card>
                         {this.getHeader()}
                         <div style={{ height: this.props.height }}>
-                            <CalibrationLine rawData={data} />
+                            <CalibrationLine rawData={data} calibrationPoints={this.state.calibrationPoints} />
                         </div>
                     </Card>
                 </Col>

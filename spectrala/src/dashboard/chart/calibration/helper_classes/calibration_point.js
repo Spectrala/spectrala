@@ -1,15 +1,23 @@
 export default class CalibrationPoint {
-
     constructor(wavelength, placement, isBeingPlaced) {
         this.wavelength = wavelength;
         this.placement = placement;
         this.isBeingPlaced = isBeingPlaced;
     }
 
-
     hasBeenPlaced = () => {
         // Has not been placed if value is null.
         return !!this.placement;
+    };
+
+    getPlacementDescription = () => {
+        if (!this.hasBeenPlaced()) {
+            return null;
+        }
+        return {
+            'wavelength': this.wavelength + 'nm',
+            'placement': this.placement,
+        };
     };
 
     getDescription = () => {
@@ -22,20 +30,23 @@ export default class CalibrationPoint {
     };
 
     setWavelength = (wavelength) => {
-        this.wavelength = wavelength
-        this.setPlacement(null)
-    }
+        this.wavelength = wavelength;
+        this.setPlacement(null);
+    };
 
     setPlacementStatus = (beingPlaced) => {
-        this.isBeingPlaced = beingPlaced
-    }
+        this.isBeingPlaced = beingPlaced;
+    };
 
     setPlacement = (x) => {
-        this.placement = x
-    }
+        this.placement = x;
+    };
 
     wavelengthIsValid = () => {
-        return !isNaN(this.wavelength) && this.wavelength >= 300 && this.wavelength <= 800 
-    }
+        return (
+            !isNaN(this.wavelength) &&
+            this.wavelength >= 300 &&
+            this.wavelength <= 800
+        );
+    };
 }
-

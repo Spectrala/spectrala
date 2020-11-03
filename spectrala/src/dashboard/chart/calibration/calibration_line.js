@@ -2,7 +2,7 @@ import React from 'react';
 import { data } from '../sample_data';
 import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
-
+import CalibrationPoints from './helper_classes/calibration_points';
 /* 
 TODO: Make this inherit from a more generic type of line. 
 Shouldn't have to import ResponsiveLine for both calibration 
@@ -37,11 +37,33 @@ export default class CalibrationLine extends React.Component {
         return this.props.rawData;
     };
 
+    getPlacedMarkers = () => {
+        return this.props.calibrationPoints
+            .getSetPoints()
+            .map((description) => {
+                return {
+                    axis: 'x',
+                    value: description['placement'],
+                    lineStyle: {
+                        stroke: '#000',
+                        strokeWidth: 2,
+                        background: 'white',
+                        padding: '3px 9px',
+                        border: '1px solid #ccc',
+                    },
+                    legend: description['wavelength'],
+                };
+            });
+    };
+
     // bottomAxis = null;
     render() {
+        var shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
+        shouldShowCrosshair = true;
         return (
             <ResponsiveLine
                 data={data}
+                animate={false}
                 margin={{
                     top: 15,
                     right: 15,
@@ -64,14 +86,7 @@ export default class CalibrationLine extends React.Component {
                     legendOffset: -40,
                     legendPosition: 'middle',
                 }}
-                markers={[
-                    {
-                        axis: 'x',
-                        value: data[0].data[5].x,
-                        lineStyle: { stroke: '#000', strokeWidth: 2 },
-                        legend: '402nm',
-                    },
-                ]}
+                markers={this.getPlacedMarkers()}
                 enableGridX={false}
                 colors={{ scheme: 'spectral' }}
                 lineWidth={1}
@@ -88,21 +103,25 @@ export default class CalibrationLine extends React.Component {
                     const xClick = point.data.x;
                     console.log(`User clicked x=${xClick}`);
                 }}
-                enableCrosshair={true}
                 crosshairType={'bottom'}
+                enableCrosshair={shouldShowCrosshair}
                 tooltip={() => {
-                    return (
-                        <div
-                            style={{
-                                color: '#333',
-                                background: 'white',
-                                padding: '3px 9px',
-                                border: '1px solid #ccc',
-                            }}
-                        >
-                            612nm
-                        </div>
-                    );
+                    if (shouldShowCrosshair) {
+                        return (
+                            <div
+                                style={{
+                                    color: '#333',
+                                    background: 'white',
+                                    padding: '3px 9px',
+                                    border: '1px solid #ccc',
+                                }}
+                            >
+                                612nm
+                            </div>
+                        );
+                    }
+                    return null
+                    
                 }}
             />
         );
@@ -111,4 +130,5 @@ export default class CalibrationLine extends React.Component {
 
 CalibrationLine.propTypes = {
     rawData: PropTypes.array.isRequired,
+    calibrationPoints: PropTypes.object.isRequired,
 };
