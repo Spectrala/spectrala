@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Col, Navbar, Nav, NavDropdown, Row } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import CameraView from './video/camera';
-import SpectrumChart from './chart/spectrum_chart';
+import SpectrumChart from './chart/calibration/calibration_interface';
 
 export default class Dashboard extends React.Component {
     state = {};

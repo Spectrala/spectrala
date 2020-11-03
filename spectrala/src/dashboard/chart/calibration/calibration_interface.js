@@ -1,11 +1,30 @@
 import React from 'react';
 import { Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import CalibrationPointsControl from './calibration/data_options';
-import { data } from './sample_data';
-import CalibrationLine from './calibration/calibration_line';
+import CalibrationPointsControl from './points_control';
+import { data } from '../sample_data';
+import CalibrationLine from './calibration_line';
+import CalibrationPoints from './helper_classes/calibration_points'
+import CalibrationPoint from './helper_classes/calibration_point'
 
 export default class SpectrumChart extends React.Component {
+
+    state = {
+        calibrationPoints: new CalibrationPoints(
+            [
+                new CalibrationPoint(303, 0.8, false),
+                new CalibrationPoint(421, null, true),
+            ],
+            (() => this.onCalibrationPointChange())
+        ),
+    }
+
+    onCalibrationPointChange = () => {
+        // The value is already changed, just need to trigger the refresh.
+        // Force refresh is not reccomended, so this will do the trick.
+        this.setState({calibrationPoints: this.state.calibrationPoints})
+    }
+    
     getHeader = () => {
         return (
             <Card.Header
@@ -35,7 +54,7 @@ export default class SpectrumChart extends React.Component {
                     </Card>
                 </Col>
                 <Col xs lg={3}>
-                    <CalibrationPointsControl height={this.props.height} />
+                    <CalibrationPointsControl height={this.props.height} calibrationPoints={this.state.calibrationPoints}/>
                 </Col>
             </Row>
         );

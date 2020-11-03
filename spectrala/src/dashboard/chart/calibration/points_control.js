@@ -137,7 +137,7 @@ export default class CalibrationPointsControl extends React.Component {
                         paddingRight: '15px',
                     }}
                 >
-                    Set calibration points
+                    Set points
                     <DropdownButton
                         title="CFL Bulb"
                         variant="primary-link"
@@ -160,16 +160,9 @@ export default class CalibrationPointsControl extends React.Component {
 CalibrationPointsControl.propTypes = {
     height: PropTypes.number,
     maximumPoints: PropTypes.number,
-    calibrationPoints: PropTypes.object,
+    calibrationPoints: PropTypes.object.isRequired,
 };
 
 CalibrationPointsControl.defaultProps = {
     maximumPoints: 5,
-    calibrationPoints: new CalibrationPoints(
-        [
-            new CalibrationPoint(303, 0.8, false),
-            new CalibrationPoint(421, null, true),
-        ],
-        () => console.log('onChange')
-    ),
 };
