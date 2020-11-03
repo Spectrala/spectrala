@@ -86,7 +86,7 @@ export default class CalibrationLine extends React.Component {
                 useMesh={true}
                 onClick={(point, event) => {
                     const xClick = point.data.x;
-                    console.log(`User clicked ${xClick}nm`);
+                    console.log(`User clicked x=${xClick}`);
                 }}
                 enableCrosshair={true}
                 crosshairType={'bottom'}
