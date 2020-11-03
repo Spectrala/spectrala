@@ -56,6 +56,28 @@ export default class CalibrationLine extends React.Component {
             });
     };
 
+    getTooltip = () => {
+        // var point = this.props.calibrationPoints.getPointBeingPlaced();
+        // if (!point) {
+        //     return;
+        // }
+        // var label = point.getWavelengthDescription();
+        // console.log(label);
+        // label = 'HELLO';
+        return (
+            <div
+                style={{
+                    color: '#333',
+                    background: 'white',
+                    padding: '3px 9px',
+                    border: '1px solid #ccc',
+                }}
+            >
+                asdf
+            </div>
+        );
+    };
+
     // bottomAxis = null;
     render() {
         var shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
@@ -105,24 +127,7 @@ export default class CalibrationLine extends React.Component {
                 }}
                 crosshairType={'bottom'}
                 enableCrosshair={shouldShowCrosshair}
-                tooltip={() => {
-                    if (shouldShowCrosshair) {
-                        return (
-                            <div
-                                style={{
-                                    color: '#333',
-                                    background: 'white',
-                                    padding: '3px 9px',
-                                    border: '1px solid #ccc',
-                                }}
-                            >
-                                612nm
-                            </div>
-                        );
-                    }
-                    return null
-                    
-                }}
+                tooltip={this.getTooltip()}
             />
         );
     }

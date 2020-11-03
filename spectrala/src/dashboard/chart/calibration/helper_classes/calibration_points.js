@@ -10,20 +10,28 @@ export default class CalibrationPoints {
         return this.calibrationPoints.length;
     };
 
-    isCurrentlyPlacing = () => {
-        var isPlacing = false;
+    getPointBeingPlaced = () => {
+        var pointBeingPlaced = null;
         this.calibrationPoints.forEach((point, idx) => {
             if (point.isBeingPlaced) {
-                isPlacing = true;
+                pointBeingPlaced = point;
             }
         });
-        return isPlacing;
+        return pointBeingPlaced;
+    }
+
+    isCurrentlyPlacing = () => {
+        return !!this.getPointBeingPlaced();
     };
 
     removeOption = (idx) => {
         this.calibrationPoints.splice(idx, 1);
         this.onChange();
     };
+
+    handlePlacement = (xPosition) => {
+        console.log(xPosition);
+    }
 
     addOption = () => {
         this.calibrationPoints.push(new CalibrationPoint(null, null, false));
@@ -45,7 +53,7 @@ export default class CalibrationPoints {
     getSetPoints = () => {
         var descriptions = [];
         this.calibrationPoints.forEach((point, idx) => {
-            const description = point.getPlacementDescription();
+            const description = point.getPlacementLocationDescription();
             if (description) {
                 descriptions.push(description);
             }

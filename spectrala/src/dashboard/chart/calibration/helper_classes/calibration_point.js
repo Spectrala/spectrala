@@ -10,17 +10,21 @@ export default class CalibrationPoint {
         return !!this.placement;
     };
 
-    getPlacementDescription = () => {
+    getWavelengthDescription = () => {
+        return this.wavelength + 'nm';
+    };
+
+    getPlacementLocationDescription = () => {
         if (!this.hasBeenPlaced()) {
             return null;
         }
         return {
-            'wavelength': this.wavelength + 'nm',
-            'placement': this.placement,
+            wavelength: this.getWavelengthDescription(),
+            placement: this.placement,
         };
     };
 
-    getDescription = () => {
+    getPlacementStatusDescription = () => {
         if (this.isBeingPlaced) {
             return 'Placing';
         } else if (this.hasBeenPlaced()) {

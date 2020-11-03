@@ -31,7 +31,7 @@ export default class CalibrationPointsControl extends React.Component {
                             >
                                 <InputGroup.Prepend>
                                     <InputGroup.Text>
-                                        {point.getDescription()}
+                                        {point.getPlacementStatusDescription()}
                                     </InputGroup.Text>
                                 </InputGroup.Prepend>
                                 <FormControl
