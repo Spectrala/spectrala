@@ -82,11 +82,11 @@ export default class CameraView extends React.Component {
 
     getCameraView = () => {
         var name = this.sourceOptions[this.state.selectedSource.selectedSourceIndex];
-        if (name == "Webcam") {
+        if (name === "Webcam") {
             return (<WebcamView height={this.props.height}/>)
-        } else if (name == "Mobile/Raspberry Pi") {
+        } else if (name === "Mobile/Raspberry Pi") {
             return (<MobileView height={this.props.height} ip={this.state.selectedSource.hostedStreamLocation.ip} port={this.state.selectedSource.hostedStreamLocation.port}/>)
-        } else if (name == "File Upload") {
+        } else if (name === "File Upload") {
             return <label style={{height: this.props.height}}>TODO: put a view here</label>
         }
     }

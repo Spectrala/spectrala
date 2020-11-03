@@ -1,8 +1,7 @@
 import React from 'react';
-import {ResponsiveLine} from '@nivo/line';
 import {data} from './sample_data';
 import PropTypes from 'prop-types';
-
+import {ResponsiveLine} from '@nivo/line'
 
 export default class CalibrationLine extends React.Component {
 

@@ -1,54 +1,58 @@
 import React from 'react';
-import {Col, Card, Row } from 'react-bootstrap';
+import { Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import DataOptions from './data_options';
-import {ResponsiveLine} from '@nivo/line';
-import {data} from './sample_data';
-import CalibrationLine from './calibration_interface'
+import CalibrationPointsControl from './data_options';
+import { data } from './sample_data';
+import CalibrationLine from './calibration_interface';
 
 export default class SpectrumChart extends React.Component {
-
-
-
     getHeader = () => {
         return (
-            <Card.Header as="h5" style={{height:"64px", display:"flex",alignItems:"center",paddingLeft:"15px",paddingRight:"15px"}}>Calibration</Card.Header> 
-        )
-    }
-
+            <Card.Header
+                as="h5"
+                style={{
+                    height: '64px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    paddingLeft: '15px',
+                    paddingRight: '15px',
+                }}
+            >
+                Calibration
+            </Card.Header>
+        );
+    };
 
     getFooter = () => {
         return (
             <Card.Footer>
-                <Row style={{display: 'flex'}}>
+                <Row style={{ display: 'flex' }}>
                     <label>Some adjustment tools for calibration</label>
                 </Row>
-            </Card.Footer> 
-        )
-    }
-
+            </Card.Footer>
+        );
+    };
 
     render() {
         return (
-            <Row style={{justifyContent: 'center', display: 'flex'}}>
-                <Col xs lg ={8}>
+            <Row style={{ justifyContent: 'center', display: 'flex' }}>
+                <Col xs lg={8}>
                     <Card>
                         {this.getHeader()}
-                        <div style={{height: this.props.height}}>
-                            <CalibrationLine rawData={data}/>
+                        <div style={{ height: this.props.height }}>
+                            <CalibrationLine rawData={data} />
                         </div>
                         {/* {this.getFooter()} */}
                     </Card>
                 </Col>
-                <Col xs lg ={3}>
-                    <DataOptions height={this.props.height}/>
+                <Col xs lg={3}>
+                    <CalibrationPointsControl height={this.props.height} />
                 </Col>
             </Row>
-        )
+        );
     }
 }
 
-
 SpectrumChart.propTypes = {
-    height: PropTypes.number
-}
+    height: PropTypes.number,
+};
