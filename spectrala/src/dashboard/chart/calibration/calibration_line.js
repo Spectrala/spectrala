@@ -1,18 +1,22 @@
 import React from 'react';
-import {data} from '../sample_data';
+import { data } from '../sample_data';
 import PropTypes from 'prop-types';
-import {ResponsiveLine} from '@nivo/line'
+import { ResponsiveLine } from '@nivo/line';
 
+/* 
+TODO: Make this inherit from a more generic type of line. 
+Shouldn't have to import ResponsiveLine for both calibration 
+and displaying spectra.
+*/
 export default class CalibrationLine extends React.Component {
-
     state = {
-        isSelecting: false
-    }
-    
+        isSelecting: false,
+    };
+
     showsBottomAxis = () => {
-        return false
-    }
-    
+        return false;
+    };
+
     getBottomAxis = () => {
         if (!this.showsBottomAxis()) {
             return null;
@@ -24,23 +28,27 @@ export default class CalibrationLine extends React.Component {
             format: '.2f',
             legend: 'wavelength (nm)',
             legendOffset: 36,
-            legendPosition: 'middle'
-        }
-        return bottomAxis
-    }
-
+            legendPosition: 'middle',
+        };
+        return bottomAxis;
+    };
 
     getData = () => {
-        return this.props.rawData
-    }
+        return this.props.rawData;
+    };
 
     // bottomAxis = null;
     render() {
         return (
-                <ResponsiveLine
+            <ResponsiveLine
                 data={data}
-                margin={{ top: 15, right: 15, bottom: this.showsBottomAxis() ? 50 : 15, left: 60 }}
-                xScale={{ type: 'linear', min: 'auto', max: 'auto'  }}
+                margin={{
+                    top: 15,
+                    right: 15,
+                    bottom: this.showsBottomAxis() ? 50 : 15,
+                    left: 60,
+                }}
+                xScale={{ type: 'linear', min: 'auto', max: 'auto' }}
                 yScale={{ type: 'linear', min: '0', max: '100' }}
                 yFormat=" >-.2f"
                 curve="monotoneX"
@@ -54,7 +62,7 @@ export default class CalibrationLine extends React.Component {
                     format: '.0f',
                     legend: 'intensity',
                     legendOffset: -40,
-                    legendPosition: 'middle'
+                    legendPosition: 'middle',
                 }}
                 markers={[
                     {
@@ -77,8 +85,8 @@ export default class CalibrationLine extends React.Component {
                 areaOpacity={0.1}
                 useMesh={true}
                 onClick={(point, event) => {
-                    const xClick = point.data.x
-                    console.log(`User clicked ${xClick}nm`)
+                    const xClick = point.data.x;
+                    console.log(`User clicked ${xClick}nm`);
                 }}
                 enableCrosshair={true}
                 crosshairType={'bottom'}
@@ -94,14 +102,13 @@ export default class CalibrationLine extends React.Component {
                         >
                             612nm
                         </div>
-                    )
+                    );
                 }}
             />
-        )
+        );
     }
-
 }
 
 CalibrationLine.propTypes = {
-    rawData: PropTypes.array.isRequired
-}
+    rawData: PropTypes.array.isRequired,
+};

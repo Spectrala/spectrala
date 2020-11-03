@@ -1,5 +1,3 @@
-
-
 export default class CalibrationPoint {
 
     constructor(wavelength, placement, isBeingPlaced) {

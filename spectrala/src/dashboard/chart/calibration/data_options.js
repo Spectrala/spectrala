@@ -9,60 +9,68 @@ import {
 } from 'react-bootstrap';
 import { XCircle, Pencil } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
-import CalibrationPoint from './calibration_point';
+import CalibrationPoint from './helper_classes/calibration_point';
+import CalibrationPoints from './helper_classes/calibration_points';
 
 export default class CalibrationPointsControl extends React.Component {
-    state = {
-        calibrationPoints: this.props.calibrationPoints,
-    };
     getCalibrationBoxes = () => {
         return (
             <>
                 <div style={{ height: '15px' }} />
-                {this.state.calibrationPoints.map((point, idx) => {
-                    return (
-                        <InputGroup
-                            className="mb-3"
-                            key={idx}
-                            style={{
-                                paddingLeft: '15px',
-                                paddingRight: '15px',
-                                display: 'flex',
-                            }}
-                        >
-                            <InputGroup.Prepend>
-                                <InputGroup.Text>
-                                    {point.getDescription()}
-                                </InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <FormControl
-                                value={point.wavelength ? point.wavelength : ''}
-                                aria-label={`Calibration point ${idx + 1}`}
-                                aria-describedby="basic-addon2"
-                                onChange={(event) => {
-                                    var points = this.state.calibrationPoints;
-                                    points[idx].setWavelength(event.target.value);
-                                    this.setState({
-                                        calibrationPoints: points,
-                                    });
+                {this.props.calibrationPoints.calibrationPoints.map(
+                    (point, idx) => {
+                        return (
+                            <InputGroup
+                                className="mb-3"
+                                key={idx}
+                                style={{
+                                    paddingLeft: '15px',
+                                    paddingRight: '15px',
+                                    display: 'flex',
                                 }}
-                                isInvalid={!point.wavelengthIsValid()}
-                            />
-
-                            <InputGroup.Append>
-                                {this.getEditButton(point, idx)}
-                                <Button
-                                    variant="outline-secondary"
-                                    onClick={() => {
-                                        this.removeOption(idx);
+                            >
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text>
+                                        {point.getDescription()}
+                                    </InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <FormControl
+                                    value={
+                                        point.wavelength ? point.wavelength : ''
+                                    }
+                                    aria-label={`Calibration point ${idx + 1}`}
+                                    aria-describedby="basic-addon2"
+                                    onChange={(event) => {
+                                        this.props.calibrationPoints.setWavelength(
+                                            point,
+                                            event.target.value
+                                        );
                                     }}
-                                >
-                                    <XCircle style={{display: 'flex', alignSelf: 'flex-center'}}/>
-                                </Button>
-                            </InputGroup.Append>
-                        </InputGroup>
-                    );
-                })}
+                                    isInvalid={!point.wavelengthIsValid()}
+                                />
+
+                                <InputGroup.Append>
+                                    {this.getEditButton(point, idx)}
+                                    <Button
+                                        variant="outline-secondary"
+                                        onClick={() => {
+                                            this.props.calibrationPoints.removeOption(
+                                                idx
+                                            );
+                                        }}
+                                    >
+                                        <XCircle
+                                            style={{
+                                                display: 'flex',
+                                                alignSelf: 'flex-center',
+                                            }}
+                                        />
+                                    </Button>
+                                </InputGroup.Append>
+                            </InputGroup>
+                        );
+                    }
+                )}
             </>
         );
     };
@@ -73,49 +81,22 @@ export default class CalibrationPointsControl extends React.Component {
                 <Button
                     variant="outline-secondary"
                     onClick={() => {
-                        this.editOption(idx);
+                        this.props.calibrationPoints.editOption(idx);
                     }}
                 >
-                    <Pencil style={{display: 'flex', alignSelf: 'flex-center'}}/>
+                    <Pencil
+                        style={{ display: 'flex', alignSelf: 'flex-center' }}
+                    />
                 </Button>
             );
         }
         return null;
-    }
-
-
-    isCurrentlyPlacing = () => {
-        var isPlacing = false
-        this.state.calibrationPoints.map((point, idx) => {
-            if (point.isBeingPlaced) {
-                isPlacing = true;
-            }
-        });
-        return isPlacing;
-    }
-
-    removeOption = (idx) => {
-        var points = this.state.calibrationPoints;
-        points.splice(idx, 1);
-        this.setState({ calibrationPoints: points });
     };
-
-    addOption = () => {
-        var points = this.state.calibrationPoints;
-        points.push(new CalibrationPoint(null, null, false));
-        this.setState({ calibrationPoints: points });
-    };
-
-    editOption = (idx) => {
-        var points = this.state.calibrationPoints;
-        points.map((point) => point.setPlacementStatus(false))
-        points[idx].setPlacementStatus(true)
-        points[idx].setPlacement(null)
-        this.setState({ calibrationPoints: points });
-    }
 
     getAddButton = () => {
-        if (!(this.state.calibrationPoints.length < this.props.maximumPoints)) {
+        if (
+            !(this.props.calibrationPoints.length() < this.props.maximumPoints)
+        ) {
             return;
         }
         return (
@@ -129,7 +110,7 @@ export default class CalibrationPointsControl extends React.Component {
             >
                 <Button
                     variant="outline-secondary"
-                    onClick={this.addOption}
+                    onClick={this.props.calibrationPoints.addOption}
                     style={{
                         width: '100%',
                         display: 'flex',
@@ -179,13 +160,16 @@ export default class CalibrationPointsControl extends React.Component {
 CalibrationPointsControl.propTypes = {
     height: PropTypes.number,
     maximumPoints: PropTypes.number,
-    calibrationPoints: PropTypes.array,
+    calibrationPoints: PropTypes.object,
 };
 
 CalibrationPointsControl.defaultProps = {
     maximumPoints: 5,
-    calibrationPoints: [
-        new CalibrationPoint(303, 0.8, false),
-        new CalibrationPoint(421, null, true),
-    ],
+    calibrationPoints: new CalibrationPoints(
+        [
+            new CalibrationPoint(303, 0.8, false),
+            new CalibrationPoint(421, null, true),
+        ],
+        () => console.log('onChange')
+    ),
 };

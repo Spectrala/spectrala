@@ -3,7 +3,7 @@ import { Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import CalibrationPointsControl from './calibration/data_options';
 import { data } from './sample_data';
-import CalibrationLine from './calibration/calibration_interface';
+import CalibrationLine from './calibration/calibration_line';
 
 export default class SpectrumChart extends React.Component {
     getHeader = () => {
