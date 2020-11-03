@@ -1,9 +1,9 @@
 import React from 'react';
 import { Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import CalibrationPointsControl from './data_options';
+import CalibrationPointsControl from './calibration/data_options';
 import { data } from './sample_data';
-import CalibrationLine from './calibration_interface';
+import CalibrationLine from './calibration/calibration_interface';
 
 export default class SpectrumChart extends React.Component {
     getHeader = () => {
@@ -23,16 +23,6 @@ export default class SpectrumChart extends React.Component {
         );
     };
 
-    getFooter = () => {
-        return (
-            <Card.Footer>
-                <Row style={{ display: 'flex' }}>
-                    <label>Some adjustment tools for calibration</label>
-                </Row>
-            </Card.Footer>
-        );
-    };
-
     render() {
         return (
             <Row style={{ justifyContent: 'center', display: 'flex' }}>
@@ -42,7 +32,6 @@ export default class SpectrumChart extends React.Component {
                         <div style={{ height: this.props.height }}>
                             <CalibrationLine rawData={data} />
                         </div>
-                        {/* {this.getFooter()} */}
                     </Card>
                 </Col>
                 <Col xs lg={3}>

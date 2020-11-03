@@ -1,5 +1,5 @@
 import React from 'react';
-import {data} from './sample_data';
+import {data} from '../sample_data';
 import PropTypes from 'prop-types';
 import {ResponsiveLine} from '@nivo/line'
 

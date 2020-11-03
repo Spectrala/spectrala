@@ -9,42 +9,7 @@ import {
 } from 'react-bootstrap';
 import { XCircle, Pencil } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
-
-class CalibrationPoint {
-
-    constructor(wavelength, placement, isBeingPlaced) {
-        this.wavelength = wavelength;
-        this.placement = placement;
-        this.isBeingPlaced = isBeingPlaced;
-    }
-
-
-    hasBeenPlaced = () => {
-        // Has not been placed if value is null.
-        return !!this.placement;
-    };
-
-    getDescription = () => {
-        if (this.isBeingPlaced) {
-            return 'Placing';
-        } else if (this.hasBeenPlaced()) {
-            return 'Done';
-        }
-        return 'Place';
-    };
-
-    setWavelength = (wavelength) => {
-        this.wavelength = wavelength
-    }
-
-    setPlacementStatus = (beingPlaced) => {
-        this.isBeingPlaced = beingPlaced
-    }
-
-    wavelengthIsValid = () => {
-        return !isNaN(this.wavelength) && this.wavelength >= 300 && this.wavelength <= 800 
-    }
-}
+import CalibrationPoint from './calibration_point';
 
 export default class CalibrationPointsControl extends React.Component {
     state = {
@@ -81,6 +46,7 @@ export default class CalibrationPointsControl extends React.Component {
                                         calibrationPoints: points,
                                     });
                                 }}
+                                isInvalid={!point.wavelengthIsValid()}
                             />
 
                             <InputGroup.Append>
@@ -102,7 +68,7 @@ export default class CalibrationPointsControl extends React.Component {
     };
 
     getEditButton = (point, idx) => {
-        if (point.hasBeenPlaced()) {
+        if (point.hasBeenPlaced() && point.wavelengthIsValid()) {
             return (
                 <Button
                     variant="outline-secondary"
@@ -130,7 +96,6 @@ export default class CalibrationPointsControl extends React.Component {
 
     removeOption = (idx) => {
         var points = this.state.calibrationPoints;
-        console.log(idx);
         points.splice(idx, 1);
         this.setState({ calibrationPoints: points });
     };
@@ -141,9 +106,11 @@ export default class CalibrationPointsControl extends React.Component {
         this.setState({ calibrationPoints: points });
     };
 
-    editOption = () => {
+    editOption = (idx) => {
         var points = this.state.calibrationPoints;
         points.map((point) => point.setPlacementStatus(false))
+        points[idx].setPlacementStatus(true)
+        points[idx].setPlacement(null)
         this.setState({ calibrationPoints: points });
     }
 
@@ -218,7 +185,7 @@ CalibrationPointsControl.propTypes = {
 CalibrationPointsControl.defaultProps = {
     maximumPoints: 5,
     calibrationPoints: [
-        new CalibrationPoint(241, 0.8, false),
+        new CalibrationPoint(303, 0.8, false),
         new CalibrationPoint(421, null, true),
     ],
 };
