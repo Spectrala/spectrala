@@ -5,6 +5,10 @@ export default class CalibrationPoint {
         this.isBeingPlaced = isBeingPlaced;
     }
 
+    getPlacement = () => {
+        return this.placement;
+    };
+
     hasBeenPlaced = () => {
         // Has not been placed if value is null.
         return !!this.placement;

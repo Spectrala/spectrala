@@ -13,6 +13,11 @@ export default class CalibrationLine extends React.Component {
         isSelecting: false,
     };
 
+    // TODO: Create data source object to handle this
+    getData = () => {
+        return this.props.rawData;
+    };
+
     showsBottomAxis = () => {
         return false;
     };
@@ -31,10 +36,6 @@ export default class CalibrationLine extends React.Component {
             legendPosition: 'middle',
         };
         return bottomAxis;
-    };
-
-    getData = () => {
-        return this.props.rawData;
     };
 
     getPlacedMarkers = () => {
@@ -56,7 +57,7 @@ export default class CalibrationLine extends React.Component {
     getTooltip = () => {
         var point = this.props.calibrationPoints.getPointBeingPlaced();
         if (!point) {
-            return;
+            return null;
         }
         var label = point.getWavelengthDescription();
         return (
@@ -76,7 +77,6 @@ export default class CalibrationLine extends React.Component {
     // bottomAxis = null;
     render() {
         var shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
-        shouldShowCrosshair = true;
         return (
             <ResponsiveLine
                 data={data}
@@ -118,7 +118,7 @@ export default class CalibrationLine extends React.Component {
                 useMesh={true}
                 onClick={(point, event) => {
                     const xClick = point.data.x;
-                    console.log(`User clicked x=${xClick}`);
+                    this.props.calibrationPoints.handleSelection(xClick);
                 }}
                 crosshairType={'bottom'}
                 enableCrosshair={shouldShowCrosshair}
