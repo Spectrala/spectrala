@@ -47,9 +47,6 @@ export default class CalibrationLine extends React.Component {
                     lineStyle: {
                         stroke: '#000',
                         strokeWidth: 2,
-                        background: 'white',
-                        padding: '3px 9px',
-                        border: '1px solid #ccc',
                     },
                     legend: description['wavelength'],
                 };
@@ -57,13 +54,11 @@ export default class CalibrationLine extends React.Component {
     };
 
     getTooltip = () => {
-        // var point = this.props.calibrationPoints.getPointBeingPlaced();
-        // if (!point) {
-        //     return;
-        // }
-        // var label = point.getWavelengthDescription();
-        // console.log(label);
-        // label = 'HELLO';
+        var point = this.props.calibrationPoints.getPointBeingPlaced();
+        if (!point) {
+            return;
+        }
+        var label = point.getWavelengthDescription();
         return (
             <div
                 style={{
@@ -73,7 +68,7 @@ export default class CalibrationLine extends React.Component {
                     border: '1px solid #ccc',
                 }}
             >
-                asdf
+                {label}
             </div>
         );
     };
@@ -127,7 +122,7 @@ export default class CalibrationLine extends React.Component {
                 }}
                 crosshairType={'bottom'}
                 enableCrosshair={shouldShowCrosshair}
-                tooltip={this.getTooltip()}
+                tooltip={this.getTooltip}
             />
         );
     }
