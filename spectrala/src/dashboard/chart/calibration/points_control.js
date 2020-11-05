@@ -5,12 +5,11 @@ import {
     FormControl,
     Dropdown,
     Button,
+    Form,
     DropdownButton,
 } from 'react-bootstrap';
 import { XCircle, Pencil } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
-import CalibrationPoint from './helper_classes/calibration_point';
-import CalibrationPoints from './helper_classes/calibration_points';
 
 export default class CalibrationPointsControl extends React.Component {
     getCalibrationBoxes = () => {
@@ -30,9 +29,7 @@ export default class CalibrationPointsControl extends React.Component {
                                 }}
                             >
                                 <InputGroup.Prepend>
-                                    <InputGroup.Text>
-                                        {point.getPlacementStatusDescription()}
-                                    </InputGroup.Text>
+                                    {this.getPrependedGroup(point, idx)}
                                 </InputGroup.Prepend>
                                 <FormControl
                                     value={
@@ -46,7 +43,11 @@ export default class CalibrationPointsControl extends React.Component {
                                             event.target.value
                                         );
                                     }}
-                                    isInvalid={!point.wavelengthIsValid()}
+                                    isInvalid={
+                                        !point.wavelengthIsValid() &&
+                                        !point.wavelengthIsEmpty() ||
+                                        this.props.calibrationPoints.isDuplicateWavelength(point.getWavelength())
+                                    }
                                 />
 
                                 <InputGroup.Append>
@@ -72,6 +73,24 @@ export default class CalibrationPointsControl extends React.Component {
                     }
                 )}
             </>
+        );
+    };
+
+    getPrependedGroup = (point, idx) => {
+        var description = point.getPlacementStatusDescription();
+        if (description['isBeingPlaced']) {
+            return <InputGroup.Text>Placing</InputGroup.Text>;
+        } else if (description['hasBeenPlaced']) {
+            return <InputGroup.Text>Done</InputGroup.Text>;
+        }
+        return (
+            <Button
+                variant="outline-secondary"
+                disabled={!point.wavelengthIsValid()}
+                onClick={() => this.props.calibrationPoints.beginPlace(point)}
+            >
+                Place
+            </Button>
         );
     };
 
@@ -125,7 +144,7 @@ export default class CalibrationPointsControl extends React.Component {
 
     render() {
         return (
-            <Card>
+            <Card style={{ width: '100%' }}>
                 <Card.Header
                     as="h5"
                     style={{

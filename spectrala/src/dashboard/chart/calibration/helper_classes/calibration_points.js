@@ -23,7 +23,13 @@ export default class CalibrationPoints {
     placePoint = (point, location) => {
         point.setPlacementStatus(false);
         point.setPlacement(location);
+        //TODO: Verify if wavelengths are sorted
         this.onChange();
+    };
+
+    // TODO: return true if wavelengths are sorted with position, false otherwise
+    wavelengthsAreSorted = () => {
+        return true;
     };
 
     getPointIndexThatFallsOnLocation = (location) => {
@@ -31,7 +37,7 @@ export default class CalibrationPoints {
         this.calibrationPoints.forEach((point, idx) => {
             if (point.getPlacement() === location) {
                 index = idx;
-                console.log("Found index")
+                console.log('Found index');
             }
         });
         return index;
@@ -83,6 +89,10 @@ export default class CalibrationPoints {
         this.onChange();
     };
 
+    setAllPlacementStatusesFalse = () => {
+        this.calibrationPoints.map((point) => point.setPlacementStatus(false));
+    };
+
     /**
      * editOption:
      *   select a calibration point for editing. This means there was a point
@@ -90,7 +100,7 @@ export default class CalibrationPoints {
      * @param {int} idx index of the calibration point being edited
      */
     editOption = (idx) => {
-        this.calibrationPoints.map((point) => point.setPlacementStatus(false));
+        this.setAllPlacementStatusesFalse();
         this.calibrationPoints[idx].setPlacementStatus(true);
         this.calibrationPoints[idx].setPlacement(null);
         this.onChange();
@@ -118,5 +128,25 @@ export default class CalibrationPoints {
             }
         });
         return descriptions;
+    };
+
+    beginPlace = (point) => {
+        this.setAllPlacementStatusesFalse();
+        point.setPlacementStatus(true);
+        point.setPlacement(null);
+        this.onChange();
+    };
+
+    isDuplicateWavelength = (wavelength) => {
+        var count = 0;
+        this.calibrationPoints.forEach((point) => {
+            console.log(point.getWavelength(), wavelength);
+            if (point.getWavelength() === wavelength) {
+                count += 1;
+            }
+        });
+        console.log(count);
+        console.log(count > 1);
+        return count > 1;
     };
 }

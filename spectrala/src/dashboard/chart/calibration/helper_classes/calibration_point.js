@@ -9,6 +9,10 @@ export default class CalibrationPoint {
         return this.placement;
     };
 
+    getWavelength = () => {
+        return this.wavelength;
+    }
+
     hasBeenPlaced = () => {
         // Has not been placed if value is null.
         return !!this.placement;
@@ -29,16 +33,14 @@ export default class CalibrationPoint {
     };
 
     getPlacementStatusDescription = () => {
-        if (this.isBeingPlaced) {
-            return 'Placing';
-        } else if (this.hasBeenPlaced()) {
-            return 'Done';
-        }
-        return 'Place';
+        return {
+            "isBeingPlaced": this.isBeingPlaced,
+            "hasBeenPlaced": this.hasBeenPlaced(),
+        };
     };
 
     setWavelength = (wavelength) => {
-        this.wavelength = wavelength;
+        this.wavelength = parseInt(wavelength);
         this.setPlacement(null);
     };
 
@@ -57,4 +59,9 @@ export default class CalibrationPoint {
             this.wavelength <= 800
         );
     };
+
+    wavelengthIsEmpty = () => {
+        console.log(this.wavelength);
+        return this.wavelength === "" || !this.wavelength;
+    }
 }
