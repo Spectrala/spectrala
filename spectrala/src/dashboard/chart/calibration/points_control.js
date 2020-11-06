@@ -19,56 +19,71 @@ export default class CalibrationPointsControl extends React.Component {
                 {this.props.calibrationPoints.calibrationPoints.map(
                     (point, idx) => {
                         return (
-                            <InputGroup
-                                className="mb-3"
-                                key={idx}
-                                style={{
-                                    paddingLeft: '15px',
-                                    paddingRight: '15px',
-                                    display: 'flex',
-                                }}
-                            >
-                                <InputGroup.Prepend>
-                                    {this.getPrependedGroup(point, idx)}
-                                </InputGroup.Prepend>
-                                <FormControl
-                                    value={
-                                        point.wavelength ? point.wavelength : ''
-                                    }
-                                    aria-label={`Calibration point ${idx + 1}`}
-                                    aria-describedby="basic-addon2"
-                                    onChange={(event) => {
-                                        this.props.calibrationPoints.setWavelength(
-                                            point,
-                                            event.target.value
-                                        );
+                                <Form
+                                    className="mb-3"
+                                    key={idx}
+                                    style={{
+                                        paddingLeft: '15px',
+                                        paddingRight: '15px',
+                                        display: 'flex',
                                     }}
-                                    isInvalid={
-                                        !point.wavelengthIsValid() &&
-                                        !point.wavelengthIsEmpty() ||
-                                        this.props.calibrationPoints.isDuplicateWavelength(point.getWavelength())
-                                    }
-                                />
-
-                                <InputGroup.Append>
-                                    {this.getEditButton(point, idx)}
-                                    <Button
-                                        variant="outline-secondary"
-                                        onClick={() => {
-                                            this.props.calibrationPoints.removeOption(
-                                                idx
+                                >
+                                    <InputGroup>
+                                    <InputGroup.Prepend>
+                                        {this.getPrependedGroup(point, idx)}
+                                    </InputGroup.Prepend>
+                                    <Form.Control
+                                        value={
+                                            point.wavelength
+                                                ? point.wavelength
+                                                : ''
+                                        }
+                                        aria-label={`Calibration point ${
+                                            idx + 1
+                                        }`}
+                                        aria-describedby="basic-addon2"
+                                        onChange={(event) => {
+                                            this.props.calibrationPoints.setWavelength(
+                                                point,
+                                                event.target.value
                                             );
                                         }}
-                                    >
-                                        <XCircle
-                                            style={{
-                                                display: 'flex',
-                                                alignSelf: 'flex-center',
+                                        isInvalid={
+                                            (!point.wavelengthIsValid() &&
+                                                !point.wavelengthIsEmpty()) ||
+                                            this.props.calibrationPoints.isDuplicateWavelength(
+                                                point.getWavelength()
+                                            )
+                                        }
+                                    />
+
+                                    <InputGroup.Append>
+                                        {this.getEditButton(point, idx)}
+                                        <Button
+                                            variant="outline-secondary"
+                                            onClick={() => {
+                                                this.props.calibrationPoints.removeOption(
+                                                    idx
+                                                );
                                             }}
-                                        />
-                                    </Button>
-                                </InputGroup.Append>
-                            </InputGroup>
+                                        >
+                                            <XCircle
+                                                style={{
+                                                    display: 'flex',
+                                                    alignSelf: 'flex-center',
+                                                }}
+                                            />
+                                        </Button>
+                                    </InputGroup.Append>
+
+
+                                    <Form.Control.Feedback type="invalid">
+                                    Please choose a username.
+                                    </Form.Control.Feedback>
+                                    
+                                    </InputGroup>
+                                </Form>
+
                         );
                     }
                 )}

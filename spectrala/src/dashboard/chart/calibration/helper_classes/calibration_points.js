@@ -138,15 +138,17 @@ export default class CalibrationPoints {
     };
 
     isDuplicateWavelength = (wavelength) => {
+        // Not worried about the case of a blank cel
+        if (wavelength === null || wavelength === "")
+            return false;
+        
+        // Count the number of same.
         var count = 0;
         this.calibrationPoints.forEach((point) => {
-            console.log(point.getWavelength(), wavelength);
             if (point.getWavelength() === wavelength) {
                 count += 1;
             }
         });
-        console.log(count);
-        console.log(count > 1);
         return count > 1;
     };
 }
