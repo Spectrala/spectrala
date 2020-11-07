@@ -3,9 +3,21 @@ import { Container, Col, Navbar, Nav, NavDropdown, Row } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import CameraView from './video/camera';
 import SpectrumChart from './chart/calibration/calibration_interface';
+import MasterFeed from './data_handlers/master_feed';
 
 export default class Dashboard extends React.Component {
     state = {};
+
+    componentDidMount() {
+        var feed = new MasterFeed();
+
+    }
+
+    onSpectralGraphChange = () => {
+        console.log("A change was made to the spectral graph")
+    }
+
+    
 
     getNavbar = () => {
         return (
