@@ -1,8 +1,8 @@
 import React from 'react';
-import { data } from '../sample_data';
 import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
 import CalibrationPoints from './helper_classes/calibration_points';
+import CameraFeed from '../../data_handlers/camera_feed';
 /* 
 TODO: Make this inherit from a more generic type of line. 
 Shouldn't have to import ResponsiveLine for both calibration 
@@ -13,9 +13,8 @@ export default class CalibrationLine extends React.Component {
         isSelecting: false,
     };
 
-    // TODO: Create data source object to handle this
     getData = () => {
-        return this.props.rawData;
+        return this.props.cameraFeed.getChartData();
     };
 
     showsBottomAxis = () => {
@@ -79,7 +78,7 @@ export default class CalibrationLine extends React.Component {
         var shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
         return (
             <ResponsiveLine
-                data={data}
+                data={this.getData()}
                 animate={false}
                 margin={{
                     top: 15,
@@ -131,4 +130,5 @@ export default class CalibrationLine extends React.Component {
 CalibrationLine.propTypes = {
     rawData: PropTypes.array.isRequired,
     calibrationPoints: PropTypes.object.isRequired,
+    cameraFeed: PropTypes.object.isRequired,
 };

@@ -2,7 +2,6 @@ import React from 'react';
 import { Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import CalibrationPointsControl from './points_control';
-import { data } from '../sample_data';
 import CalibrationLine from './calibration_line';
 import CalibrationPoints from './helper_classes/calibration_points';
 import CalibrationPoint from './helper_classes/calibration_point';
@@ -60,7 +59,7 @@ export default class SpectrumChart extends React.Component {
                         {this.getHeader()}
                         <div style={{ height: this.props.height }}>
                             <CalibrationLine
-                                rawData={data}
+                                cameraFeed={this.props.cameraFeed}
                                 calibrationPoints={this.state.calibrationPoints}
                             />
                         </div>
@@ -79,4 +78,5 @@ export default class SpectrumChart extends React.Component {
 
 SpectrumChart.propTypes = {
     height: PropTypes.number,
+    cameraFeed: PropTypes.object,
 };

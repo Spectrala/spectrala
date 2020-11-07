@@ -6,13 +6,11 @@ import SpectrumChart from './chart/calibration/calibration_interface';
 import MasterFeed from './data_handlers/master_feed';
 
 export default class Dashboard extends React.Component {
-    state = {};
-
-    componentDidMount() {
-        var feed = new MasterFeed({
+    state = {
+        feed: new MasterFeed({
             refreshRate: 1
-        }, this.onSpectralGraphChange);
-    }
+        }, this.onSpectralGraphChange)
+    };
 
     onSpectralGraphChange = () => {
         console.log(
@@ -61,14 +59,14 @@ export default class Dashboard extends React.Component {
                             paddingBottom: '16px',
                         }}
                     >
-                        <CameraView height={200} />
+                        <CameraView height={200} cameraFeed={this.state.feed.getCameraFeed()}  />
                     </Row>
                     <Row
                         xs
                         xl={1}
                         style={{ display: 'flex', justifyContent: 'center' }}
                     >
-                        <SpectrumChart height={400} />
+                        <SpectrumChart height={400} cameraFeed={this.state.feed.getCameraFeed()} />
                     </Row>
                 </Col>
             </Container>

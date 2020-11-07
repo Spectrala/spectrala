@@ -5,6 +5,7 @@ import SourceSelect from './source_select';
 import LineSelector from './line_selector';
 import VideoOptions from './adjustments';
 import { CameraFill } from 'react-bootstrap-icons';
+import CameraFeed from '../data_handlers/camera_feed';
 
 const FRAME_RENDER_INTERVAL_MS = 67; // 15fps
 // const FRAME_RENDER_INTERVAL_MS = 500; // 15fps
@@ -118,7 +119,7 @@ const ChannelToText = {
     [ChannelEnum.BLUE]: 'Blue',
 };
 
-export default function CameraView({ onPixelDataChange }) {
+export default function CameraView({ cameraFeed }) {
     const [calibCoords, setCalibCoords] = useState(null);
     // TODO: detect saturated channels in the SetInterval call
     /* eslint-disable no-unused-vars */
@@ -161,7 +162,7 @@ export default function CameraView({ onPixelDataChange }) {
                 canvasElem.width,
                 canvasElem.height
             );
-            onPixelDataChange(
+            cameraFeed.processRawData(
                 extractPixelData(
                     imgData,
                     calibCoords.lowX,
@@ -188,7 +189,7 @@ export default function CameraView({ onPixelDataChange }) {
             ctx.stroke();
         }, FRAME_RENDER_INTERVAL_MS);
         return () => clearInterval(interval);
-    }, [canvas, videoSrc, calibCoords, onPixelDataChange]);
+    }, [canvas, videoSrc, calibCoords, cameraFeed]);
 
     return (
         <>
@@ -242,11 +243,5 @@ export default function CameraView({ onPixelDataChange }) {
 }
 
 CameraView.propTypes = {
-    onPixelDataChange: PropTypes.func,
-};
-
-CameraView.defaultProps = {
-    onPixelDataChange: (data) => {
-        console.log(data);
-    },
+    cameraFeed: PropTypes.object,
 };

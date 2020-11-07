@@ -10,18 +10,23 @@ import CalibrationFeed from './calibration_feed';
 
 export default class MasterFeed {
     constructor(preferences, onChange) {
-        this.cameraFeed = new CameraFeed(preferences.refreshRate, this.onCameraChange);
+        this.cameraFeed = new CameraFeed(
+            preferences.refreshRate,
+            this.onCameraChange
+        );
         this.calibration = new CalibrationFeed();
-        this.onSpectralGraphChange = onChange
+        this.onSpectralGraphChange = onChange;
     }
 
+    getCameraFeed = () => {
+        return this.cameraFeed;
+    };
+
     feedSpectralGraphToParent = () => {
-        this.onSpectralGraphChange()
-    }
+        this.onSpectralGraphChange();
+    };
 
     onCameraChange = (array) => {
         console.log('MasterFeed.onCameraChange - Smile for the camera.');
-        
     };
-
 }
