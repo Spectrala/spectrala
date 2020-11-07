@@ -1,171 +1,158 @@
-import React from 'react';
-import {Button, FormControl, Col, ButtonGroup, Dropdown, Row, Form} from 'react-bootstrap';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+    Button,
+    FormControl,
+    Col,
+    ButtonGroup,
+    Dropdown,
+    Row,
+} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-export default class SourceSelect extends React.Component {
+const SourceEnum = {
+    STREAM: 'SOURCE_STREAM',
+    WEBCAM: 'SOURCE_WEBCAM',
+    IMAGE: 'SOURCE_IMAGE',
+};
 
-    state = {
-        selectedSourceIndex: this.props.defaultSourceIndex,
-        hostedStreamLocation: {'port':'','ip':''}
-    }
+// Will be used for checking permissions when listing cameras
+// browser support here is weak but good enough
+// async function getCameraPermissions() {
+//     return (await navigator.permissions.query({ name: 'camera' })).state;
+// }
 
-    /**
-     * Pass the necessary info from this class back to the host 
-     *  webcamIsSelected: bool -- true if the source is selected to be the 
-     *                            webcam, false if Mobile/Raspberry Pi is selected.
-     *  hostedStreamLocation: object -- port and IP of the hosted stream. {'port':'','ip':''}
-     */
-    handleChange = () => {
-        this.props.onChange({
-            'selectedSourceIndex': this.state.selectedSourceIndex,
-            'hostedStreamLocation': this.state.hostedStreamLocation,
-        });
-    }
+export default function SourceSelect(props) {
+    const [selectedSource, setSelectedSource] = useState(SourceEnum.WEBCAM);
+    const [streamUrl, setStreamUrl] = useState('');
+    // const [mediaElement, setMediaElement] = useState(null);
 
-    /**
-     * Set state within promise for use with await for synchronous state changes
-     * @param {object} state 
-     */
-    setStateAsync(state) {
-        return new Promise((resolve) => {
-          this.setState(state, resolve)
-        });
-    }
-    
-    /**
-     * Returns the proper bootstrap variant (https://react-bootstrap.github.io/components/alerts#examples)
-     * depending on whether or not the interface element is selected
-     * @param {bool} isSelected Whether or not the given interface element is selected
-     */
-    getVariant = (idx) => {
-        return idx === this.state.selectedSourceIndex ? this.props.selectedVariant : this.props.unselectedVariant
-    }
+    const { selectedVariant, unselectedVariant, onChange } = props;
 
-    /**
-     * Responds to the click of a source button and updates the state of webcamIsSelected if necessary.
-     * @param {bool} buttonIsWebcam true if the button being used is the webcam button
-     */
-    toggleSelectedButton = async (idx) => {
-        // Only update state if necessary
-        if (idx !== this.state.selectedSourceIndex) {
-            await this.setStateAsync({selectedSourceIndex: idx})
-            this.handleChange()
+    const updateMediaElement = useCallback(
+        (e) => {
+            // setMediaElement(e);
+            onChange(e);
+            window.testvideoelem = e;
+        },
+        [onChange /*, setMediaElement*/]
+    );
+
+    const getBtnVariant = (isActive) =>
+        isActive ? selectedVariant : unselectedVariant;
+
+    // Handle stream creation
+    useEffect(() => {
+        if (selectedSource === SourceEnum.WEBCAM) {
+            let videoElement;
+            let mediaStream;
+            async function createVideoElem() {
+                videoElement = document.createElement('video');
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                });
+                videoElement.srcObject = mediaStream;
+                videoElement.play();
+                updateMediaElement(videoElement);
+            }
+            createVideoElem();
+            return () => {
+                // cleanup video
+                videoElement.pause();
+                videoElement.removeAttribute('src'); // empty source
+                videoElement.removeAttribute('srcObject'); // empty source
+                videoElement.load();
+                mediaStream.getTracks().forEach((track) => track.stop());
+            };
+        } else if (selectedSource === SourceEnum.STREAM) {
+            let imageElement = document.createElement('img');
+            imageElement.src = streamUrl;
+            updateMediaElement(imageElement);
+            return () => {
+                // cleanup video
+                imageElement.src = '#';
+                imageElement.removeAttribute('src');
+                imageElement.removeAttribute('srcObject');
+            };
         }
-    }
+    }, [selectedSource, streamUrl, updateMediaElement]);
 
-    /**
-     * Returns the buttons for switching the video source
-     */
-    getSourceButtonGroup = () => {
-        return (
-            <ButtonGroup style={{height:"38px"}}>
-                {
-                    this.props.sourceOptions.map((name, idx) => {
-                        return (
-                            <Button 
-                                key = {idx}
-                                variant={this.getVariant(idx)}
-                                onClick={() => this.toggleSelectedButton(idx)}
-                            >{name}</Button>
-                        )
-                    })
-                }
-            </ButtonGroup>
-        )
-    }
-
-    /**
-     * Return the dropdown to switch between webcams. 
-     * TODO: Make this dynamic. Currently static. 
-     */
-    getWebcamSelector = () => {
-        return (
-            <Dropdown>
-                <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                    HD Webcam 2
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                    <Dropdown.Item href="#/action-1">Macintosh HD Webcam</Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
-        )
-    }
-
-    /**
-     * Handle change of a text field for the stream ip and port
-     * @param {string} field key of the mobileOptions dictionary to modify
-     * @param {string} newValue value to assign the given field to
-     */
-    changeMobileField = (field, newValue) => {
-        var mobileOptions = this.state.hostedStreamLocation
-        mobileOptions[field] = newValue
-        this.setState({mobileOptions: mobileOptions})
-        this.handleChange()
-    }
-
-    getMobileIPSelector = () => {
-        return (
-            <>
-                <FormControl type="text" placeholder="Stream IP (e.g. 123.456.7.89)" value={this.state.hostedStreamLocation.ip} onChange={(event) => { this.changeMobileField('ip',event.target.value)}}/>
-                <FormControl type="text" placeholder="Stream Port (e.g. 4789)" value={this.state.hostedStreamLocation.port} onChange={(event) => { this.changeMobileField('port',event.target.value)}}/>
-            </>
-        )
-    }
-
-    getFileSelector = () => {
-        return (
-            <Form style={{height:"38px", display:"flex"}}>
-                <Form.File 
-                    size="sm"
-                    id="custom-file"
-                    label="Custom file input"
-                    custom
-                    />
-            </Form>
-        );
-    }
-    
-    getExpandedSelector = (idx) => {
-        var name = this.props.sourceOptions[idx];
-        if (name === "Webcam") {
-            return this.getWebcamSelector()
-        } else if (name === "Mobile/Raspberry Pi") {
-            return this.getMobileIPSelector()
-        } else if (name === "File Upload") {
-            return this.getFileSelector()
-        }
-    }
-
-    render() {
-        return (
-            <Row style={{display: 'flex', justifyContent:'space-between'}}>
-                <Col>
-                    <Row >
-                        <label style={{paddingLeft: '15px',paddingRight: '15px', alignItems: 'center', display: 'flex', height:"38px"}}>
-                            Source
-                        </label>
-                        {this.getSourceButtonGroup()}
-                    </Row>
-                </Col>
-                <Col xs lg={6} style={{display: 'flex', justifyContent: 'flex-end'}}>
-                    {this.getExpandedSelector(this.state.selectedSourceIndex)}
-                </Col>
-            </Row>
-        )
-    }
+    return (
+        <Row style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Col>
+                <Row>
+                    <label
+                        style={{
+                            paddingLeft: '10px',
+                            paddingRight: '10px',
+                            alignItems: 'center',
+                            display: 'flex',
+                            height: '38px',
+                        }}
+                    >
+                        Source
+                    </label>
+                    <ButtonGroup style={{ height: '38px' }}>
+                        <Button
+                            variant={getBtnVariant(
+                                selectedSource === SourceEnum.STREAM
+                            )}
+                            onClick={() => setSelectedSource(SourceEnum.STREAM)}
+                        >
+                            Mobile/Raspberry Pi
+                        </Button>
+                        <Button
+                            variant={getBtnVariant(
+                                selectedSource === SourceEnum.WEBCAM
+                            )}
+                            onClick={() => setSelectedSource(SourceEnum.WEBCAM)}
+                        >
+                            Webcam
+                        </Button>
+                    </ButtonGroup>
+                </Row>
+            </Col>
+            <Col
+                xs
+                lg={6}
+                style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+                {selectedSource === SourceEnum.STREAM && (
+                    <>
+                        <FormControl
+                            type="text"
+                            placeholder="Stream URL (e.g. http://192.0.2.1:8000/stream.mp4)"
+                            value={streamUrl}
+                            onChange={(e) => setStreamUrl(e.target.value)}
+                        />
+                    </>
+                )}
+                {selectedSource === SourceEnum.WEBCAM && (
+                    <Dropdown>
+                        <Dropdown.Toggle variant="dark" id="dropdown-basic">
+                            Browser Default Webcam
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">
+                                Macintosh HD Webcam
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                )}
+            </Col>
+        </Row>
+    );
 }
 
 SourceSelect.propTypes = {
     onChange: PropTypes.func,
     selectedVariant: PropTypes.string,
     unselectedVariant: PropTypes.string,
-    defaultSourceIndex: PropTypes.number,
-    sourceOptions: PropTypes.array,
-}
+};
 
 SourceSelect.defaultProps = {
-    onChange: () => {console.warn("Unimplemented onChange for SourceSelect")},
-    selectedVariant: "dark",
-    unselectedVariant: "outline-dark",
-}
+    onChange: () => {
+        console.warn('Unimplemented onChange for SourceSelect');
+    },
+    selectedVariant: 'dark',
+    unselectedVariant: 'outline-dark',
+};
