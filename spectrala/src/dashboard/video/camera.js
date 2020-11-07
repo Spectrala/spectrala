@@ -120,7 +120,10 @@ const ChannelToText = {
 
 export default function CameraView({ onPixelDataChange }) {
     const [calibCoords, setCalibCoords] = useState(null);
-    const [saturatedChannels, setSaturatedChannels] = useState([]);
+    // TODO: detect saturated channels in the SetInterval call
+    /* eslint-disable no-unused-vars */
+    const [saturatedChannels, _setSaturatedChannels] = useState([]);
+    /* eslint-enable no-unused-vars */
     const canvas = useRef(null);
     const [videoSrc, setVideoSrc] = useState(null);
 
@@ -185,7 +188,7 @@ export default function CameraView({ onPixelDataChange }) {
             ctx.stroke();
         }, FRAME_RENDER_INTERVAL_MS);
         return () => clearInterval(interval);
-    }, [canvas, videoSrc, calibCoords]);
+    }, [canvas, videoSrc, calibCoords, onPixelDataChange]);
 
     return (
         <>
