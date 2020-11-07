@@ -10,6 +10,8 @@ import {
 } from 'react-bootstrap';
 import { XCircle, Pencil } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
+import CalibrationConstants from './helper_classes/calibration_constants';
+const calibration_constants = new CalibrationConstants();
 
 export default class CalibrationPointsControl extends React.Component {
     getCalibrationBoxes = () => {
@@ -19,16 +21,16 @@ export default class CalibrationPointsControl extends React.Component {
                 {this.props.calibrationPoints.calibrationPoints.map(
                     (point, idx) => {
                         return (
-                                <Form
-                                    className="mb-3"
-                                    key={idx}
-                                    style={{
-                                        paddingLeft: '15px',
-                                        paddingRight: '15px',
-                                        display: 'flex',
-                                    }}
-                                >
-                                    <InputGroup>
+                            <Form
+                                className="mb-3"
+                                key={idx}
+                                style={{
+                                    paddingLeft: '15px',
+                                    paddingRight: '15px',
+                                    display: 'flex',
+                                }}
+                            >
+                                <InputGroup>
                                     <InputGroup.Prepend>
                                         {this.getPrependedGroup(point, idx)}
                                     </InputGroup.Prepend>
@@ -48,13 +50,7 @@ export default class CalibrationPointsControl extends React.Component {
                                                 event.target.value
                                             );
                                         }}
-                                        isInvalid={
-                                            (!point.wavelengthIsValid() &&
-                                                !point.wavelengthIsEmpty()) ||
-                                            this.props.calibrationPoints.isDuplicateWavelength(
-                                                point.getWavelength()
-                                            )
-                                        }
+                                        isInvalid={this.pointIsInvalid(point)}
                                     />
 
                                     <InputGroup.Append>
@@ -76,19 +72,34 @@ export default class CalibrationPointsControl extends React.Component {
                                         </Button>
                                     </InputGroup.Append>
 
-
                                     <Form.Control.Feedback type="invalid">
-                                    Please choose a username.
+                                        {this.getValidationFeedback(point)}
                                     </Form.Control.Feedback>
-                                    
-                                    </InputGroup>
-                                </Form>
-
+                                </InputGroup>
+                            </Form>
                         );
                     }
                 )}
             </>
         );
+    };
+
+    pointIsInvalid = (point) => {
+        return !!this.getValidationFeedback(point);
+    }
+
+    getValidationFeedback = (point) => {
+        if (point.wavelengthIsEmpty()) {
+            return null;
+        } else if (!point.wavelengthIsValid()) {
+            return `Select a wavelength between ${calibration_constants.MINIMUM_WAVELENGTH} and ${calibration_constants.MAXIMUM_WAVELENGTH}`;
+        } else if (
+            this.props.calibrationPoints.isDuplicateWavelength(
+                point.getWavelength()
+            )
+        ) {
+            return 'Duplicated wavelength found.';
+        }
     };
 
     getPrependedGroup = (point, idx) => {

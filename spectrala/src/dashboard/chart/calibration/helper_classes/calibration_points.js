@@ -37,7 +37,6 @@ export default class CalibrationPoints {
         this.calibrationPoints.forEach((point, idx) => {
             if (point.getPlacement() === location) {
                 index = idx;
-                console.log('Found index');
             }
         });
         return index;
@@ -73,12 +72,25 @@ export default class CalibrationPoints {
     handleSelection = (xPosition) => {
         if (this.isCurrentlyPlacing()) {
             var point = this.getPointBeingPlaced();
-            this.placePoint(point, xPosition);
+            if (this.isValidPlacement(point, xPosition)) {
+                this.placePoint(point, xPosition);
+            } else {
+                this.triggerBadPlacement()
+            }
+            
         } else if (this.pointFallsOnLocation(xPosition)) {
             var pointIdx = this.getPointIndexThatFallsOnLocation(xPosition);
             this.editOption(pointIdx);
         }
     };
+
+    isValidPlacement = (point, xPosition) => {
+        return true;
+    }
+
+    triggerBadPlacement = () => {
+        console.warn("BAD PLACEMENT")
+    }
 
     /**
      * addOption:
@@ -108,7 +120,7 @@ export default class CalibrationPoints {
 
     /**
      * setWavelength:
-     *
+     *   modify the wavelength of a calibration point.
      * @param {CalibrationPoint} point the calibration point being set
      * @param {float} value the wavelength value to set the point to.
      */
@@ -116,9 +128,26 @@ export default class CalibrationPoints {
         /** access the CalibrationPoint method setWavelength, but also use the
          * onChange method for this class. */
         point.setWavelength(value);
+
+        /** Make sure the point cannot be placed if the new value is invalid. */
+        if (point.isBeingPlaced && !point.isValidToPlace()) {
+            point.setPlacementStatus(false);
+        }
+
         this.onChange();
     };
 
+    /**
+     * getSetPoints:
+     *   return the descriptions of all of the points that are already set. 
+     * Returns: 1d array of objects:
+     *   [
+     *     {
+     *        "wavelength": number,
+     *        "placement": number (from 0 to 1),
+     *     },
+     *   ]
+     */
     getSetPoints = () => {
         var descriptions = [];
         this.calibrationPoints.forEach((point, idx) => {
