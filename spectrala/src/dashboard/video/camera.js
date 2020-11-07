@@ -16,7 +16,7 @@ function getSinglePixel(imageData, initial, current) {
         dist += (current[i] - initial[i]) * (current[i] - initial[i]);
     }
     dist = Math.sqrt(dist);
-    let offset = (initial[0] * imageData.width + initial[1]) * 4;
+    let offset = (current[0] * imageData.width + current[1]) * 4;
     const r = imageData.data[offset];
     const g = imageData.data[offset + 1];
     const b = imageData.data[offset + 2];
