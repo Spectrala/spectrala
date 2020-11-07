@@ -38,7 +38,7 @@ export default class SourceSelect extends React.Component {
      * @param {bool} isSelected Whether or not the given interface element is selected
      */
     getVariant = (idx) => {
-        return idx == this.state.selectedSourceIndex ? this.props.selectedVariant : this.props.unselectedVariant
+        return idx === this.state.selectedSourceIndex ? this.props.selectedVariant : this.props.unselectedVariant
     }
 
     /**
@@ -128,11 +128,11 @@ export default class SourceSelect extends React.Component {
     
     getExpandedSelector = (idx) => {
         var name = this.props.sourceOptions[idx];
-        if (name == "Webcam") {
+        if (name === "Webcam") {
             return this.getWebcamSelector()
-        } else if (name == "Mobile/Raspberry Pi") {
+        } else if (name === "Mobile/Raspberry Pi") {
             return this.getMobileIPSelector()
-        } else if (name == "File Upload") {
+        } else if (name === "File Upload") {
             return this.getFileSelector()
         }
     }
