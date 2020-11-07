@@ -75,22 +75,27 @@ export default class CalibrationPoints {
             if (this.isValidPlacement(point, xPosition)) {
                 this.placePoint(point, xPosition);
             } else {
-                this.triggerBadPlacement()
+                this.triggerBadPlacement();
             }
-            
         } else if (this.pointFallsOnLocation(xPosition)) {
             var pointIdx = this.getPointIndexThatFallsOnLocation(xPosition);
             this.editOption(pointIdx);
         }
     };
 
+    allPointsGoInOrder = () => {
+        this.calibrationPoints.sort(
+            (a, b) => a.getPlacement() < b.getPlacement()
+        );
+    };
+
     isValidPlacement = (point, xPosition) => {
         return true;
-    }
+    };
 
     triggerBadPlacement = () => {
-        console.warn("BAD PLACEMENT")
-    }
+        console.warn('BAD PLACEMENT');
+    };
 
     /**
      * addOption:
@@ -139,7 +144,7 @@ export default class CalibrationPoints {
 
     /**
      * getSetPoints:
-     *   return the descriptions of all of the points that are already set. 
+     *   return the descriptions of all of the points that are already set.
      * Returns: 1d array of objects:
      *   [
      *     {
@@ -168,9 +173,8 @@ export default class CalibrationPoints {
 
     isDuplicateWavelength = (wavelength) => {
         // Not worried about the case of a blank cel
-        if (wavelength === null || wavelength === "")
-            return false;
-        
+        if (wavelength === null || wavelength === '') return false;
+
         // Count the number of same.
         var count = 0;
         this.calibrationPoints.forEach((point) => {
