@@ -196,7 +196,7 @@ export default function CameraView({ onPixelDataChange }) {
                 <Col xs lg={8}>
                     <Card>
                         <Card.Header as="h5" style={{ height: '64px' }}>
-                            <SourceSelect onChange={setVideoSrc} />}
+                            <SourceSelect onChange={setVideoSrc} />
                         </Card.Header>
                         {saturatedChannels.length > 0 && (
                             <Alert
@@ -247,7 +247,6 @@ CameraView.propTypes = {
 
 CameraView.defaultProps = {
     onPixelDataChange: (data) => {
-        console.warn('Unimplemented onPixelDataChange for Camera');
         console.log(data);
     },
 };

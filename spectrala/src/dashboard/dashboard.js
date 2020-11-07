@@ -9,15 +9,16 @@ export default class Dashboard extends React.Component {
     state = {};
 
     componentDidMount() {
-        var feed = new MasterFeed();
-
+        var feed = new MasterFeed({
+            refreshRate: 1
+        }, this.onSpectralGraphChange);
     }
 
     onSpectralGraphChange = () => {
-        console.log("A change was made to the spectral graph")
-    }
-
-    
+        console.log(
+            'Dashboard.onSpectralGraphChange - Look folks, another wave of data has arrived'
+        );
+    };
 
     getNavbar = () => {
         return (
