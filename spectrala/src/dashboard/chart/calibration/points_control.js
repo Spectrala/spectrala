@@ -2,7 +2,6 @@ import React from 'react';
 import {
     Card,
     InputGroup,
-    FormControl,
     Dropdown,
     Button,
     Form,
@@ -86,7 +85,7 @@ export default class CalibrationPointsControl extends React.Component {
 
     pointIsInvalid = (point) => {
         return !!this.getValidationFeedback(point);
-    }
+    };
 
     getValidationFeedback = (point) => {
         if (point.wavelengthIsEmpty()) {
