@@ -22,7 +22,7 @@ export default function LineSelector({ onChange, defaultCalibCoords }) {
                 placeholder={nm + ' pct.'}
                 aria-label={nm + ' percentage'}
                 isInvalid={calibCoords[stateTarget] === null}
-                value={calibCoords[stateTarget] * 100}
+                value={Math.round(calibCoords[stateTarget] * 100)}
                 onChange={(event) => {
                     const value = invalidToNull(event.target.value / 100);
                     updateCalibCoords({ ...calibCoords, [stateTarget]: value });

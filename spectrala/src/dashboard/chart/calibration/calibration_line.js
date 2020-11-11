@@ -3,11 +3,8 @@ import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
 import CalibrationPoints from './helper_classes/calibration_points';
 import CameraFeed from '../../data_handlers/camera_feed';
-/* 
-TODO: Make this inherit from a more generic type of line. 
-Shouldn't have to import ResponsiveLine for both calibration 
-and displaying spectra.
-*/
+
+
 export default class CalibrationLine extends React.Component {
     state = {
         isSelecting: false,
@@ -111,7 +108,7 @@ export default class CalibrationLine extends React.Component {
                     bottom: this.showsBottomAxis() ? 50 : 15,
                     left: 60,
                 }}
-                xScale={{ type: 'linear', min: 'auto', max: 'auto' }}
+                xScale={{ type: 'linear', min: '0', max: '1' }}
                 yScale={{ type: 'linear', min: '0', max: '100' }}
                 yFormat=" >-.2f"
                 curve="linear"
@@ -136,8 +133,7 @@ export default class CalibrationLine extends React.Component {
                 pointBorderWidth={1}
                 pointBorderColor={{ from: 'serieColor' }}
                 pointLabelYOffset={-12}
-                enableArea={true}
-                areaBaselineValue={0}
+                enableArea={false}
                 areaOpacity={0.1}
                 useMesh={true}
                 onClick={(point, event) => {
