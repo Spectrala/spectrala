@@ -7,15 +7,34 @@ export default class CameraFeed {
     constructor(refreshRate, onChange) {
         this.refreshRate = refreshRate;
         this.intensities = [];
-        this.onChange = onChange;
+        this.listeners = [onChange];
+        this.mustUpdate = false;
+        this.refreshInterval = setInterval(() => {
+            this.refresh();
+        }, this.refreshRate * 1000);
     }
 
+    refresh = () => {
+        if (this.mustUpdate) {
+            this.listeners.forEach((listener) => {
+                listener();
+            });
+        }
+    };
+
+    addListener = (func) => {
+        this.listeners.push(func);
+    };
+
+    onChange = () => {
+        this.mustUpdate = true;
+    };
+
     processRawData = (raw) => {
-        console.log('PROCESS RAW DATA');
-        console.log(raw);
         this.intensities = raw.map((obj) => {
-            return (obj.r + obj.g + obj.b) / 3;
+            return (obj.r + obj.g + obj.b) / 3 / 2.55;
         });
+        this.onChange();
     };
 
     getChartData = () => {

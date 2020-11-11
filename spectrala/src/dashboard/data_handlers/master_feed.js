@@ -27,6 +27,6 @@ export default class MasterFeed {
     };
 
     onCameraChange = (array) => {
-        console.log('MasterFeed.onCameraChange - Smile for the camera.');
+        this.onSpectralGraphChange(array)
     };
 }

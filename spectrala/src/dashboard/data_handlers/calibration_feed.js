@@ -11,16 +11,6 @@ export default class CalibrationFeed {
     /**
      * Superclasses do not care about calibration, only the map for x position -> wavelength
      */
-    state = {
-        calibrationPoints: new CalibrationPoints(
-            [
-                new CalibrationPoint(303, 0.3670886075949367, false),
-                new CalibrationPoint(421, null, true),
-            ],
-            () => this.onCalibrationPointChange()
-        ),
-    };
-
     constructor(onChange) {
         const calibrationPoints = new CalibrationPoints(
             [
@@ -29,5 +19,7 @@ export default class CalibrationFeed {
             ],
             () => this.onCalibrationPointChange()
         );
+        this.calibrationPoints = calibrationPoints
+        this.onChange = onChange
     }
 }

@@ -13,6 +13,14 @@ import CalibrationConstants from './helper_classes/calibration_constants';
 const calibration_constants = new CalibrationConstants();
 
 export default class CalibrationPointsControl extends React.Component {
+    componentDidMount() {
+        this.props.calibrationPoints.addListener((() => this.onDataUpdate()))
+    }
+
+    onDataUpdate = () => {
+        // console.log("Nice, fresh data to view!")
+    }
+
     getCalibrationBoxes = () => {
         return (
             <>

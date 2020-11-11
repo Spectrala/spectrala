@@ -11,6 +11,15 @@ and displaying spectra.
 export default class CalibrationLine extends React.Component {
     state = {
         isSelecting: false,
+        data: null,
+    };
+
+    componentDidMount() {
+        this.props.cameraFeed.addListener((() => this.listenToStream()));
+    }
+
+    listenToStream = () => {
+        this.setState({ data: this.getData() });
     };
 
     getData = () => {
@@ -76,9 +85,25 @@ export default class CalibrationLine extends React.Component {
     // bottomAxis = null;
     render() {
         var shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
+        if (!this.state.data) {
+            return (
+                <label
+                    style={{
+                        display: 'flex',
+                        flex: '1',
+                        height: '100%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    Waiting for data. Make sure to set points of interest on
+                    webcam.
+                </label>
+            );
+        }
         return (
             <ResponsiveLine
-                data={this.getData()}
+                data={this.state.data}
                 animate={false}
                 margin={{
                     top: 15,
@@ -128,7 +153,6 @@ export default class CalibrationLine extends React.Component {
 }
 
 CalibrationLine.propTypes = {
-    rawData: PropTypes.array.isRequired,
     calibrationPoints: PropTypes.object.isRequired,
     cameraFeed: PropTypes.object.isRequired,
 };

@@ -32,12 +32,6 @@ function getSinglePixel(imageData, initial, current) {
 
 // coordinates are 0-1.0 values. Returns array of {dist: , r: ...} values
 function extractPixelData(imageData, beginX, beginY, finalX, finalY) {
-    console.log({
-        beginX,
-        beginY,
-        finalX,
-        finalY,
-    });
     // we basically compute how we would raster a line, but sample instead of rasterizing
     // https://classic.csunplugged.org/wp-content/uploads/2014/12/Lines.pdf
     // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm

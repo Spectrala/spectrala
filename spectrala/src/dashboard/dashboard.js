@@ -7,15 +7,18 @@ import MasterFeed from './data_handlers/master_feed';
 
 export default class Dashboard extends React.Component {
     state = {
-        feed: new MasterFeed({
-            refreshRate: 1
-        }, this.onSpectralGraphChange)
+        feed: new MasterFeed(
+            {
+                refreshRate: 4,
+            },
+            ((data) => { this.onSpectralGraphChange(data)})
+        ),
     };
 
-    onSpectralGraphChange = () => {
-        console.log(
-            'Dashboard.onSpectralGraphChange - Look folks, another wave of data has arrived'
-        );
+    onSpectralGraphChange = (data) => {
+        // console.log(
+        //     data
+        // );
     };
 
     getNavbar = () => {
@@ -59,14 +62,20 @@ export default class Dashboard extends React.Component {
                             paddingBottom: '16px',
                         }}
                     >
-                        <CameraView height={250} cameraFeed={this.state.feed.getCameraFeed()}  />
+                        <CameraView
+                            height={250}
+                            cameraFeed={this.state.feed.getCameraFeed()}
+                        />
                     </Row>
                     <Row
                         xs
                         xl={1}
                         style={{ display: 'flex', justifyContent: 'center' }}
                     >
-                        <SpectrumChart height={400} cameraFeed={this.state.feed.getCameraFeed()} />
+                        <SpectrumChart
+                            height={400}
+                            cameraFeed={this.state.feed.getCameraFeed()}
+                        />
                     </Row>
                 </Col>
             </Container>
