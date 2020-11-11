@@ -114,7 +114,7 @@ export default class CalibrationLine extends React.Component {
                 xScale={{ type: 'linear', min: 'auto', max: 'auto' }}
                 yScale={{ type: 'linear', min: '0', max: '100' }}
                 yFormat=" >-.2f"
-                curve="monotoneX"
+                curve="linear"
                 axisTop={null}
                 axisRight={null}
                 axisBottom={this.getBottomAxis()}
@@ -130,7 +130,7 @@ export default class CalibrationLine extends React.Component {
                 markers={this.getPlacedMarkers()}
                 enableGridX={false}
                 colors={{ scheme: 'spectral' }}
-                lineWidth={1}
+                lineWidth={2}
                 pointSize={4}
                 pointColor={{ theme: 'background' }}
                 pointBorderWidth={1}
@@ -147,6 +147,7 @@ export default class CalibrationLine extends React.Component {
                 crosshairType={'bottom'}
                 enableCrosshair={shouldShowCrosshair}
                 tooltip={this.getTooltip}
+                layers={['grid', 'markers', 'axes', 'areas', 'crosshair', 'lines','slices', 'mesh']}
             />
         );
     }

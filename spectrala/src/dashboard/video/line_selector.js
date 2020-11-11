@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Col, InputGroup, FormControl } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
@@ -8,13 +8,8 @@ function invalidToNull(x) {
     return x;
 }
 
-export default function LineSelector({ onChange }) {
-    const [calibCoords, setCalibCoords] = useState({
-        lowX: null,
-        lowY: null,
-        highX: null,
-        highY: null,
-    });
+export default function LineSelector({ onChange, defaultCalibCoords }) {
+    const [calibCoords, setCalibCoords] = useState(defaultCalibCoords);
 
     const updateCalibCoords = (newval) => {
         setCalibCoords(newval);
@@ -27,6 +22,7 @@ export default function LineSelector({ onChange }) {
                 placeholder={nm + ' pct.'}
                 aria-label={nm + ' percentage'}
                 isInvalid={calibCoords[stateTarget] === null}
+                value={calibCoords[stateTarget] * 100}
                 onChange={(event) => {
                     const value = invalidToNull(event.target.value / 100);
                     updateCalibCoords({ ...calibCoords, [stateTarget]: value });
@@ -61,10 +57,17 @@ export default function LineSelector({ onChange }) {
 
 LineSelector.propTypes = {
     onChange: PropTypes.func,
+    defaultCalibCoords: PropTypes.object,
 };
 
 LineSelector.defaultProps = {
     onChange: () => {
         console.warn('Unimplemented onChange for LineSelector');
+    },
+    defaultCalibCoords: {
+        lowX: .10,
+        lowY: .50,
+        highX: .90,
+        highY: .50,
     },
 };
