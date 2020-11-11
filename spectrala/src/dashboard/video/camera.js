@@ -119,7 +119,7 @@ const ChannelToText = {
     [ChannelEnum.BLUE]: 'Blue',
 };
 
-export default function CameraView({ cameraFeed }) {
+export default function CameraView({ cameraFeed, height }) {
     const [calibCoords, setCalibCoords] = useState(null);
     // TODO: detect saturated channels in the SetInterval call
     /* eslint-disable no-unused-vars */
@@ -211,7 +211,7 @@ export default function CameraView({ cameraFeed }) {
                                 .<Alert.Link href="#">Learn more</Alert.Link>.
                             </Alert>
                         )}
-                        <canvas ref={canvas} style={{ width: '100%' }} />
+                        <canvas ref={canvas} style={{ width: '100%', height: height}} />
                         <Card.Footer>
                             <Row style={{ display: 'flex' }}>
                                 <LineSelector onChange={setCalibCoords} />
@@ -244,4 +244,5 @@ export default function CameraView({ cameraFeed }) {
 
 CameraView.propTypes = {
     cameraFeed: PropTypes.object,
+    height: PropTypes.number,
 };

@@ -59,7 +59,7 @@ export default class Dashboard extends React.Component {
                             paddingBottom: '16px',
                         }}
                     >
-                        <CameraView height={200} cameraFeed={this.state.feed.getCameraFeed()}  />
+                        <CameraView height={250} cameraFeed={this.state.feed.getCameraFeed()}  />
                     </Row>
                     <Row
                         xs
