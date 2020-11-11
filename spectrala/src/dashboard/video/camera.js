@@ -6,6 +6,7 @@ import LineSelector from './line_selector';
 import VideoOptions from './adjustments';
 import { CameraFill } from 'react-bootstrap-icons';
 import CameraFeed from '../data_handlers/camera_feed';
+import AdjustmentOptions from './adjustments';
 
 const FRAME_RENDER_INTERVAL_MS = 67; // 15fps
 // const FRAME_RENDER_INTERVAL_MS = 500; // 15fps
@@ -229,7 +230,7 @@ export default function CameraView({ cameraFeed, height }) {
                     </Card>
                 </Col>
                 <Col xs lg={3}>
-                    <VideoOptions />
+                    <AdjustmentOptions />
                 </Col>
             </Row>
         </>

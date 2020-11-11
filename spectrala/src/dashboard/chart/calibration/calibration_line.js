@@ -4,7 +4,6 @@ import { ResponsiveLine } from '@nivo/line';
 import CalibrationPoints from './helper_classes/calibration_points';
 import CameraFeed from '../../data_handlers/camera_feed';
 
-
 export default class CalibrationLine extends React.Component {
     state = {
         isSelecting: false,
@@ -12,7 +11,7 @@ export default class CalibrationLine extends React.Component {
     };
 
     componentDidMount() {
-        this.props.cameraFeed.addListener((() => this.listenToStream()));
+        this.props.cameraFeed.addListener(() => this.listenToStream());
     }
 
     listenToStream = () => {
@@ -20,7 +19,8 @@ export default class CalibrationLine extends React.Component {
     };
 
     getData = () => {
-        return this.props.cameraFeed.getChartData();
+        const data = this.props.cameraFeed.getChartData();
+        return data;
     };
 
     showsBottomAxis = () => {
@@ -94,7 +94,7 @@ export default class CalibrationLine extends React.Component {
                     }}
                 >
                     Waiting for data. Make sure to set points of interest on
-                    webcam.
+                    camera feed.
                 </label>
             );
         }
@@ -143,7 +143,16 @@ export default class CalibrationLine extends React.Component {
                 crosshairType={'bottom'}
                 enableCrosshair={shouldShowCrosshair}
                 tooltip={this.getTooltip}
-                layers={['grid', 'markers', 'axes', 'areas', 'crosshair', 'lines','slices', 'mesh']}
+                layers={[
+                    'grid',
+                    'markers',
+                    'axes',
+                    'areas',
+                    'crosshair',
+                    'lines',
+                    'slices',
+                    'mesh',
+                ]}
             />
         );
     }

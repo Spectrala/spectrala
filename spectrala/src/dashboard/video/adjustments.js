@@ -1,68 +1,85 @@
 import React from 'react';
-import {Button, Card, Form} from 'react-bootstrap';
-import 'rc-slider/assets/index.css';
+import { Button, Card, Form } from 'react-bootstrap';
+import { createStore, useSelector } from 'react-redux';
 
-export default class VideoOptions extends React.Component {
+const defaultAdjustments = {
+    brightness: { value: 50, title: 'Brightness' },
+    contrast: { value: 50, title: 'Contrast' },
+    hue: { value: 50, title: 'Hue' },
+    saturation: { value: 50, title: 'Saturation' },
+};
 
+const selectAdjustments = (state) => state.adjustments;
+
+const AdjustmentOptions = () => {
+    const todos = useSelector(selectAdjustments);
 
     // Todo: handle this data, including saving it to user defaults
     // Todo: left edge of control can go past 0. Looks bad given left alignment is strictly at 15px everywhere else.
-    state = {
-        videoPreferences: {
-            brightness:54,
-            contrast:12,
-            hue:93,
-            saturation:50,
-        },
-    }
+    var state = {
+        videoPreferences: defaultAdjustments,
+    };
 
-    sliders = ["brightness","contrast","hue","saturation"]    
+    // function handleChange(property, newValue) {
+    //     var preferences = this.state.videoPreferences;
+    //     preferences[property] = newValue;
+    //     this.setState({ videoPreferences: preferences });
+    // };
 
-    titles = {
-        "brightness":"Brightness",
-        "contrast":"Contrast",
-        "hue":"Hue",
-        "saturation":"Saturation",
-    }
-
-
-
-    handleChange = (property, newValue) => {
-        var preferences = this.state.videoPreferences
-        preferences[property] = newValue
-        this.setState({videoPreferences: preferences})
-    }
-
-
-    sliderControl = (idx, property) => {
-        const value = this.state.videoPreferences[property]
-        const title = this.titles[property]
+    function sliderControl(adjustment, idx) {
+        const value = adjustment.value;
+        const title = adjustment.title;
         return (
-            <div style={{height:"100%", paddingLeft:"15px", paddingRight:"15px"}} key={idx}>
-                <label style={{paddingTop:"10px"}}>{title}</label>
-                <Form.Control type="range" custom onChange={(newValue) => {
-                    this.handleChange(property, newValue.target.value)
-                }} value={value}/>
+            <div
+                style={{
+                    height: '100%',
+                    paddingLeft: '15px',
+                    paddingRight: '15px',
+                }}
+                key={idx}
+            >
+                <label style={{ paddingTop: '10px' }}>{title}</label>
+                <Form.Control
+                    type="range"
+                    custom
+                    onChange={(newValue) => {
+                        console.log("onchange")
+                    }}
+                    value={value}
+                />
             </div>
-        )
-    }
+        );
+    };
 
-    getSliders = () => {
+    function getSliders() {
         return (
             <>
-            {this.sliders.map((property, idx) => this.sliderControl(idx, property)) }
+                {selectAdjustments.map((adjustment, idx) =>
+                    this.sliderControl(adjustment, idx)
+                )}
             </>
-        )
-    }
+        );
+    };
 
-    render() {
-        return (
-            <Card style={{height:"100%"}}>
-                <Card.Header as="h5" style={{height:"64px", justifyContent:"space-between", alignItems:'center',display:'flex',paddingLeft:"15px",paddingRight:"15px"}}>Adjustments
-                    <Button variant='outline-secondary'>Reset</Button>
-                </Card.Header> 
-                {this.getSliders()}
-            </Card>
-        )
-    }
-}
+    return (
+        <Card style={{ height: '100%' }}>
+            <Card.Header
+                as="h5"
+                style={{
+                    height: '64px',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    display: 'flex',
+                    paddingLeft: '15px',
+                    paddingRight: '15px',
+                }}
+            >
+                Adjustments
+                <Button variant="outline-secondary">Reset</Button>
+            </Card.Header>
+            {this.getSliders()}
+        </Card>
+    );
+};
+
+export default AdjustmentOptions;

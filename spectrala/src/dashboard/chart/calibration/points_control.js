@@ -191,13 +191,14 @@ export default class CalibrationPointsControl extends React.Component {
                 >
                     Set points
                     <DropdownButton
-                        title="CFL Bulb"
+                        title="Custom"
                         variant="primary-link"
                         id="collasible-nav-dropdown"
                     >
-                        <Dropdown.Item>Other option A</Dropdown.Item>
-                        <Dropdown.Item>Other option B</Dropdown.Item>
-                        <Dropdown.Item>Other option C</Dropdown.Item>
+                        <Dropdown.Item>CFL Bulb</Dropdown.Item>
+                        <Dropdown.Item>Red, Blue LED</Dropdown.Item>
+                        <Dropdown.Item>Red, Green LED</Dropdown.Item>
+                        <Dropdown.Item>Blue, Green LED</Dropdown.Item>
                     </DropdownButton>
                 </Card.Header>
                 <div style={{ height: this.props.height }}>
