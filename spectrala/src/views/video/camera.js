@@ -3,9 +3,7 @@ import { Button, Col, Card, Row, Alert } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import SourceSelect from './source_select';
 import LineSelector from './line_selector';
-import VideoOptions from './adjustments';
 import { CameraFill } from 'react-bootstrap-icons';
-import CameraFeed from '../data_handlers/camera_feed';
 import AdjustmentOptions from './adjustments';
 
 const FRAME_RENDER_INTERVAL_MS = 67; // 15fps

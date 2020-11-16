@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
-import { createStore, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    setValue,
+    setDefault,
+    selectAdjustments,
+} from '../../reducers/adjustments';
 
-
-
-// const selectAdjustments = (state) => state.adjustments;
-
-const AdjustmentOptions = () => {
-    const [adjustments, setAdjustments] = useState(defaultAdjustments)
-
-    // function handleChange(property, newValue) {
-    //     var preferences = this.state.videoPreferences;
-    //     preferences[property] = newValue;
-    //     this.setState({ videoPreferences: preferences });
-    // };
+export default function AdjustmentOptions() {
+    const adjustments = useSelector(selectAdjustments);
+    const dispatch = useDispatch();
 
     function sliderControl(adjustment, idx) {
         const value = adjustment.value;
@@ -31,14 +27,19 @@ const AdjustmentOptions = () => {
                 <Form.Control
                     type="range"
                     custom
-                    onChange={(newValue) => {
-                        console.log("onchange")
+                    onChange={(event) => {
+                        dispatch(
+                            setValue({
+                                value: parseInt(event.target.value),
+                                targetIndex: idx,
+                            })
+                        );
                     }}
                     value={value}
                 />
             </div>
         );
-    };
+    }
 
     function getSliders() {
         return (
@@ -48,7 +49,7 @@ const AdjustmentOptions = () => {
                 )}
             </>
         );
-    };
+    }
 
     return (
         <Card style={{ height: '100%' }}>
@@ -64,11 +65,9 @@ const AdjustmentOptions = () => {
                 }}
             >
                 Adjustments
-                <Button variant="outline-secondary">Reset</Button>
+                <Button variant="outline-secondary" onClick={() => dispatch(setDefault())}>Reset</Button>
             </Card.Header>
             {getSliders()}
         </Card>
     );
-};
-
-export default AdjustmentOptions;
+}

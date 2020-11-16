@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
-import CalibrationPoints from './helper_classes/calibration_points';
-import CameraFeed from '../../data_handlers/camera_feed';
 
 export default class CalibrationLine extends React.Component {
     state = {
