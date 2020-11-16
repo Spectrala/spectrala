@@ -1,24 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { createStore, useSelector } from 'react-redux';
 
-const defaultAdjustments = {
-    brightness: { value: 50, title: 'Brightness' },
-    contrast: { value: 50, title: 'Contrast' },
-    hue: { value: 50, title: 'Hue' },
-    saturation: { value: 50, title: 'Saturation' },
-};
 
-const selectAdjustments = (state) => state.adjustments;
+
+// const selectAdjustments = (state) => state.adjustments;
 
 const AdjustmentOptions = () => {
-    const todos = useSelector(selectAdjustments);
-
-    // Todo: handle this data, including saving it to user defaults
-    // Todo: left edge of control can go past 0. Looks bad given left alignment is strictly at 15px everywhere else.
-    var state = {
-        videoPreferences: defaultAdjustments,
-    };
+    const [adjustments, setAdjustments] = useState(defaultAdjustments)
 
     // function handleChange(property, newValue) {
     //     var preferences = this.state.videoPreferences;
@@ -54,8 +43,8 @@ const AdjustmentOptions = () => {
     function getSliders() {
         return (
             <>
-                {selectAdjustments.map((adjustment, idx) =>
-                    this.sliderControl(adjustment, idx)
+                {adjustments.map((adjustment, idx) =>
+                    sliderControl(adjustment, idx)
                 )}
             </>
         );
@@ -77,7 +66,7 @@ const AdjustmentOptions = () => {
                 Adjustments
                 <Button variant="outline-secondary">Reset</Button>
             </Card.Header>
-            {this.getSliders()}
+            {getSliders()}
         </Card>
     );
 };
