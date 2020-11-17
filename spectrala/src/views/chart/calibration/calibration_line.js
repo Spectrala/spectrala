@@ -2,15 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
 
-export default class CalibrationLine extends React.Component {
+export default function CalibrationLine() {
     state = {
         isSelecting: false,
         data: null,
     };
-
-    componentDidMount() {
-        // this.props.cameraFeed.addListener(() => this.listenToStream());
-    }
 
     listenToStream = () => {
         this.setState({ data: this.getData() });
@@ -77,85 +73,79 @@ export default class CalibrationLine extends React.Component {
         );
     };
 
-    // bottomAxis = null;
-    render() {
-        var shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
-        if (!this.state.data) {
-            return (
-                <label
-                    style={{
-                        display: 'flex',
-                        flex: '1',
-                        height: '100%',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
-                    Waiting for data. Make sure to set points of interest on
-                    camera feed.
-                </label>
-            );
-        }
+    var shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
+    if (!this.state.data) {
         return (
-            <ResponsiveLine
-                data={this.state.data}
-                animate={false}
-                margin={{
-                    top: 15,
-                    right: 15,
-                    bottom: this.showsBottomAxis() ? 50 : 15,
-                    left: 60,
+            <label
+                style={{
+                    display: 'flex',
+                    flex: '1',
+                    height: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                 }}
-                xScale={{ type: 'linear', min: '0', max: '1' }}
-                yScale={{ type: 'linear', min: '0', max: '100' }}
-                yFormat=" >-.2f"
-                curve="linear"
-                axisTop={null}
-                axisRight={null}
-                axisBottom={this.getBottomAxis()}
-                axisLeft={{
-                    tickSize: 5,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                    format: '.0f',
-                    legend: 'intensity',
-                    legendOffset: -40,
-                    legendPosition: 'middle',
-                }}
-                markers={this.getPlacedMarkers()}
-                enableGridX={false}
-                colors={{ scheme: 'spectral' }}
-                lineWidth={2}
-                pointSize={4}
-                pointColor={{ theme: 'background' }}
-                pointBorderWidth={1}
-                pointBorderColor={{ from: 'serieColor' }}
-                pointLabelYOffset={-12}
-                enableArea={false}
-                areaOpacity={0.1}
-                useMesh={true}
-                onClick={(point, event) => {
-                    const xClick = point.data.x;
-                    this.props.calibrationPoints.handleSelection(xClick);
-                }}
-                crosshairType={'bottom'}
-                enableCrosshair={shouldShowCrosshair}
-                tooltip={this.getTooltip}
-                layers={[
-                    'grid',
-                    'markers',
-                    'axes',
-                    'areas',
-                    'crosshair',
-                    'lines',
-                    'slices',
-                    'mesh',
-                ]}
-            />
+            >
+                Waiting for data. Make sure to set points of interest on
+                camera feed.
+            </label>
         );
     }
+    return (
+        <ResponsiveLine
+            data={this.state.data}
+            animate={false}
+            margin={{
+                top: 15,
+                right: 15,
+                bottom: this.showsBottomAxis() ? 50 : 15,
+                left: 60,
+            }}
+            xScale={{ type: 'linear', min: '0', max: '1' }}
+            yScale={{ type: 'linear', min: '0', max: '100' }}
+            yFormat=" >-.2f"
+            curve="linear"
+            axisTop={null}
+            axisRight={null}
+            axisBottom={this.getBottomAxis()}
+            axisLeft={{
+                tickSize: 5,
+                tickPadding: 5,
+                tickRotation: 0,
+                format: '.0f',
+                legend: 'intensity',
+                legendOffset: -40,
+                legendPosition: 'middle',
+            }}
+            markers={this.getPlacedMarkers()}
+            enableGridX={false}
+            colors={{ scheme: 'spectral' }}
+            lineWidth={2}
+            pointSize={4}
+            pointColor={{ theme: 'background' }}
+            pointBorderWidth={1}
+            pointBorderColor={{ from: 'serieColor' }}
+            pointLabelYOffset={-12}
+            enableArea={false}
+            areaOpacity={0.1}
+            useMesh={true}
+            onClick={(point, event) => {
+                const xClick = point.data.x;
+                this.props.calibrationPoints.handleSelection(xClick);
+            }}
+            crosshairType={'bottom'}
+            enableCrosshair={shouldShowCrosshair}
+            tooltip={this.getTooltip}
+            layers={[
+                'grid',
+                'markers',
+                'axes',
+                'areas',
+                'crosshair',
+                'lines',
+                'slices',
+                'mesh',
+            ]}
+        />
+    );
+    
 }
-
-CalibrationLine.propTypes = {
-    calibrationPoints: PropTypes.object.isRequired,
-};

@@ -65,16 +65,6 @@ export default class CalibrationPoints {
     };
 
     /**
-     * removeOption:
-     *  delete the calibration point at the specified index.
-     * @param {int} idx the index of the option to remove
-     */
-    removeOption = (idx) => {
-        this.calibrationPoints.splice(idx, 1);
-        this.onChange();
-    };
-
-    /**
      * handleSelection:
      *   respond to a user's click on the calibration graph.
      * @param {float} xPosition the pressed x-location on the graph range [0,1]
@@ -107,51 +97,6 @@ export default class CalibrationPoints {
         console.warn('BAD PLACEMENT');
     };
 
-    /**
-     * addOption:
-     *   add a blank calibrationPoint to the list
-     */
-    addOption = () => {
-        this.calibrationPoints.push(new CalibrationPoint(null, null, false));
-        this.onChange();
-    };
-
-    setAllPlacementStatusesFalse = () => {
-        this.calibrationPoints.map((point) => point.setPlacementStatus(false));
-    };
-
-    /**
-     * editOption:
-     *   select a calibration point for editing. This means there was a point
-     *   already placed and the user would like to modify it.
-     * @param {int} idx index of the calibration point being edited
-     */
-    editOption = (idx) => {
-        this.setAllPlacementStatusesFalse();
-        this.calibrationPoints[idx].setPlacementStatus(true);
-        this.calibrationPoints[idx].setPlacement(null);
-        this.onChange();
-    };
-
-    // REDUXED
-    /**
-     * setWavelength:
-     *   modify the wavelength of a calibration point.
-     * @param {CalibrationPoint} point the calibration point being set
-     * @param {float} value the wavelength value to set the point to.
-     */
-    setWavelength = (point, value) => {
-        /** access the CalibrationPoint method setWavelength, but also use the
-         * onChange method for this class. */
-        point.setWavelength(value);
-
-        /** Make sure the point cannot be placed if the new value is invalid. */
-        if (point.isBeingPlaced && !point.isValidToPlace()) {
-            point.setPlacementStatus(false);
-        }
-
-        this.onChange();
-    };
 
     /**
      * getSetPoints:
@@ -175,12 +120,41 @@ export default class CalibrationPoints {
         return descriptions;
     };
 
+    // ~~~~~~~~~~~~ functions below this line have been re-implemented ~~~~~~~~~~~~~~~
+    
+    setAllPlacementStatusesFalse = () => {
+        this.calibrationPoints.map((point) => point.setPlacementStatus(false));
+    };
+
+
     beginPlace = (point) => {
         this.setAllPlacementStatusesFalse();
         point.setPlacementStatus(true);
         point.setPlacement(null);
         this.onChange();
     };
+
+
+    /**
+     * addOption:
+     *   add a blank calibrationPoint to the list
+     */
+    addOption = () => {
+        this.calibrationPoints.push(new CalibrationPoint(null, null, false));
+        this.onChange();
+    };
+
+
+    /**
+     * removeOption:
+     *  delete the calibration point at the specified index.
+     * @param {int} idx the index of the option to remove
+     */
+    removeOption = (idx) => {
+        this.calibrationPoints.splice(idx, 1);
+        this.onChange();
+    };
+
 
     isDuplicateWavelength = (wavelength) => {
         // Not worried about the case of a blank cel
@@ -195,4 +169,42 @@ export default class CalibrationPoints {
         });
         return count > 1;
     };
+
+
+    /**
+     * setWavelength:
+     *   modify the wavelength of a calibration point.
+     * @param {CalibrationPoint} point the calibration point being set
+     * @param {float} value the wavelength value to set the point to.
+     */
+    setWavelength = (point, value) => {
+        /** access the CalibrationPoint method setWavelength, but also use the
+         * onChange method for this class. */
+        point.setWavelength(value);
+
+        /** Make sure the point cannot be placed if the new value is invalid. */
+        if (point.isBeingPlaced && !point.isValidToPlace()) {
+            point.setPlacementStatus(false);
+        }
+
+        this.onChange();
+    };
+
+
+    // NOTE: editOption was a duplicate. implementation not necessary.
+    /**
+     * editOption:
+     *   select a calibration point for editing. This means there was a point
+     *   already placed and the user would like to modify it.
+     * @param {int} idx index of the calibration point being edited
+     */
+    editOption = (idx) => {
+        this.setAllPlacementStatusesFalse();
+        this.calibrationPoints[idx].setPlacementStatus(true);
+        this.calibrationPoints[idx].setPlacement(null);
+        this.onChange();
+    };
+
+
+
 }

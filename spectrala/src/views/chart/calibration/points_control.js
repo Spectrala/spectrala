@@ -19,6 +19,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     selectCalibrationPoints,
     modifyWavelength,
+    removePoint,
+    addOption,
+    beginPlace,
 } from '../../../reducers/calibration/calibration';
 
 export default function CalibrationPointsControl({ height, maximumPoints }) {
@@ -87,7 +90,11 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
                                     <Button
                                         variant="outline-secondary"
                                         onClick={() => {
-                                            calibrationPoints.removeOption(idx);
+                                            dispatch(
+                                                removePoint({
+                                                    targetIndex: idx,
+                                                })
+                                            );
                                         }}
                                     >
                                         <XCircle
@@ -135,7 +142,7 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
             <Button
                 variant="outline-secondary"
                 disabled={!point.wavelengthIsValid()}
-                onClick={() => calibrationPoints.beginPlace(point)}
+                onClick={() => dispatch(beginPlace({ targetIndex: idx }))}
             >
                 Place
             </Button>
@@ -148,7 +155,7 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
                 <Button
                     variant="outline-secondary"
                     onClick={() => {
-                        calibrationPoints.editOption(idx);
+                        calibrationPoints.beginPlace(idx);
                     }}
                 >
                     <Pencil
@@ -175,7 +182,7 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
             >
                 <Button
                     variant="outline-secondary"
-                    onClick={calibrationPoints.addOption}
+                    onClick={() => dispatch(addOption())}
                     style={{
                         width: '100%',
                         display: 'flex',
