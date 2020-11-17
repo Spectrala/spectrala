@@ -7,17 +7,17 @@ export const calibrationPresetsOrder = ['custom', 'cfl'];
 export const calibrationPresets = {
     custom: {
         title: 'Custom',
-        value: new CalibrationPoints([
+        value: [
             new CalibrationPoint(0, null, false),
             new CalibrationPoint(0, null, false),
-        ]),
+        ],
     },
     cfl: {
         title: 'CFL Bulb',
-        value: new CalibrationPoints([
+        value: [
             new CalibrationPoint(303, null, false),
             new CalibrationPoint(421, null, false),
-        ]),
+        ],
     },
 };
 

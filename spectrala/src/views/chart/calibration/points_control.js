@@ -16,11 +16,25 @@ import {
 } from '../../../reducers/calibration/calibration_constants';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCalibrationPoints } from '../../../reducers/calibration/calibration';
+import {
+    selectCalibrationPoints,
+    modifyWavelength,
+} from '../../../reducers/calibration/calibration';
 
 export default function CalibrationPointsControl({ height, maximumPoints }) {
-    const calibrationPoints = useSelector(selectCalibrationPoints);
+    // TODO: Don't simply return false, bro
+    const calibrationPoints = useSelector(
+        selectCalibrationPoints,
+        (a, b) => false
+    );
     const dispatch = useDispatch();
+
+    function isDuplicateWavelength(wavelength) {
+        if (wavelength === null || wavelength === '') return false;
+        return calibrationPoints.every(
+            (point) => point.getWavelength() != wavelength
+        );
+    }
 
     // componentDidMount() {
     //     calibrationPoints.addListener((() => this.onDataUpdate()))
@@ -34,7 +48,7 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
         return (
             <>
                 <div style={{ height: '15px' }} />
-                {calibrationPoints.calibrationPoints.map((point, idx) => {
+                {calibrationPoints.map((point, idx) => {
                     return (
                         <Form
                             className="mb-3"
@@ -56,9 +70,13 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
                                     aria-label={`Calibration point ${idx + 1}`}
                                     aria-describedby="basic-addon2"
                                     onChange={(event) => {
-                                        calibrationPoints.setWavelength(
-                                            point,
-                                            event.target.value
+                                        dispatch(
+                                            modifyWavelength({
+                                                targetIndex: idx,
+                                                value: parseInt(
+                                                    event.target.value
+                                                ),
+                                            })
                                         );
                                     }}
                                     isInvalid={pointIsInvalid(point)}
@@ -101,9 +119,7 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
             return null;
         } else if (!point.wavelengthIsValid()) {
             return `Select a wavelength between ${MINIMUM_WAVELENGTH} and ${MAXIMUM_WAVELENGTH}`;
-        } else if (
-            calibrationPoints.isDuplicateWavelength(point.getWavelength())
-        ) {
+        } else if (isDuplicateWavelength(point.getWavelength())) {
             return 'Duplicated wavelength found.';
         }
     }
@@ -145,7 +161,7 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
     }
 
     function getAddButton() {
-        if (!(calibrationPoints.length() < maximumPoints)) {
+        if (!(calibrationPoints.length < maximumPoints)) {
             return;
         }
         return (

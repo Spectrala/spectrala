@@ -158,5 +158,4 @@ export default class CalibrationLine extends React.Component {
 
 CalibrationLine.propTypes = {
     calibrationPoints: PropTypes.object.isRequired,
-    cameraFeed: PropTypes.object.isRequired,
 };

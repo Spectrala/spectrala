@@ -133,6 +133,7 @@ export default class CalibrationPoints {
         this.onChange();
     };
 
+    // REDUXED
     /**
      * setWavelength:
      *   modify the wavelength of a calibration point.
