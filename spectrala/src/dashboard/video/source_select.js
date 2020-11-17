@@ -61,10 +61,12 @@ export default function SourceSelect(props) {
                 videoElement.removeAttribute('src'); // empty source
                 videoElement.removeAttribute('srcObject'); // empty source
                 videoElement.load();
+                if (!mediaStream) return; // exit early if creation failed.
                 mediaStream.getTracks().forEach((track) => track.stop());
             };
         } else if (selectedSource === SourceEnum.STREAM) {
             let imageElement = document.createElement('img');
+            imageElement.crossOrigin = 'anonymous';
             imageElement.src = streamUrl;
             updateMediaElement(imageElement);
             return () => {

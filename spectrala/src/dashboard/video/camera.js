@@ -130,16 +130,31 @@ export default function CameraView({ cameraFeed, height }) {
             const canvasElem = canvas.current;
             if (!canvasElem) return;
             const ctx = canvasElem.getContext('2d');
-            if (!videoSrc) {
+            if (
+                !videoSrc ||
+                (videoSrc instanceof HTMLImageElement &&
+                    videoSrc.naturalHeight === 0)
+            ) {
                 // fill with placeholder color and return
                 canvasElem.height = 200;
-                ctx.fillStyle = 'grey';
+                ctx.fillStyle = 'green';
                 ctx.fillRect(0, 0, canvasElem.width, canvasElem.height);
                 return;
             }
             // render canvas frame
-            canvasElem.width = videoSrc.videoWidth;
-            canvasElem.height = videoSrc.videoHeight;
+            if (videoSrc instanceof HTMLVideoElement) {
+                canvasElem.width = videoSrc.videoWidth;
+                canvasElem.height = videoSrc.videoHeight;
+            } else if (videoSrc instanceof HTMLImageElement) {
+                canvasElem.width = videoSrc.naturalWidth;
+                canvasElem.height = videoSrc.naturalHeight;
+            } else {
+                throw {
+                    err: 'Unsupported video source type',
+                    type: typeof videoSrc,
+                    src: videoSrc,
+                };
+            }
             ctx.drawImage(videoSrc, 0, 0, canvasElem.width, canvasElem.height);
 
             // get line pixel data
@@ -149,9 +164,9 @@ export default function CameraView({ cameraFeed, height }) {
                 calibCoords.lowY === null ||
                 calibCoords.highX === null ||
                 calibCoords.highY === null
-            )
+            ) {
                 return;
-            // debugger;
+            }
             // TODO: this could be faster by querying only the region we need
             const imgData = ctx.getImageData(
                 0,
@@ -175,12 +190,12 @@ export default function CameraView({ cameraFeed, height }) {
             ctx.beginPath();
             ctx.moveTo(
                 // I think this should be canvasElem.width, but this makes it work
-                calibCoords.lowX * videoSrc.videoWidth,
+                calibCoords.lowX * canvasElem.width,
                 calibCoords.lowY * canvasElem.height
             );
             ctx.lineTo(
                 // same as above
-                calibCoords.highX * videoSrc.videoWidth,
+                calibCoords.highX * canvasElem.width,
                 calibCoords.highY * canvasElem.height
             );
             ctx.stroke();
