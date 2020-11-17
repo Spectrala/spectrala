@@ -18,7 +18,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCalibrationPoints } from '../../../reducers/calibration/calibration';
 
-
 export default function CalibrationPointsControl({ height, maximumPoints }) {
     const calibrationPoints = useSelector(selectCalibrationPoints);
     const dispatch = useDispatch();
@@ -146,7 +145,7 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
     }
 
     function getAddButton() {
-        if (!(calibrationPoints.length() < this.props.maximumPoints)) {
+        if (!(calibrationPoints.length() < maximumPoints)) {
             return;
         }
         return (
@@ -198,7 +197,7 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
                     <Dropdown.Item>Blue, Green LED</Dropdown.Item>
                 </DropdownButton>
             </Card.Header>
-            <div style={{ height: this.props.height }}>
+            <div style={{ height: height }}>
                 {getCalibrationBoxes()}
                 {getAddButton()}
             </div>

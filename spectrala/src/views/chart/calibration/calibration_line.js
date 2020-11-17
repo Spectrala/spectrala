@@ -9,7 +9,7 @@ export default class CalibrationLine extends React.Component {
     };
 
     componentDidMount() {
-        this.props.cameraFeed.addListener(() => this.listenToStream());
+        // this.props.cameraFeed.addListener(() => this.listenToStream());
     }
 
     listenToStream = () => {

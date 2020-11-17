@@ -3,15 +3,17 @@ import CalibrationPoint from './calibration_point';
 export default class CalibrationPoints {
     constructor(calibrationPoints, onChange) {
         this.calibrationPoints = calibrationPoints;
-        this.listeners = [onChange];
+        // this.listeners = [onChange];
     }
 
     onChange = () => {
-        this.listeners.forEach((listener) => listener());
+        console.log("onchange");
+        // this.listeners.forEach((listener) => listener());
     }
 
     addListener = (func) => {
-        this.listeners.push(func)
+        console.log("addListener");
+        // this.listeners.push(func)
     }
 
     length = () => {

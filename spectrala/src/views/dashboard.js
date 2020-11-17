@@ -3,17 +3,16 @@ import { Container, Col, Navbar, Nav, NavDropdown, Row } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import CameraView from './video/camera';
 import SpectrumChart from './chart/calibration/calibration_interface';
-import MasterFeed from './data_handlers/master_feed';
 
 export default class Dashboard extends React.Component {
-    state = {
-        feed: new MasterFeed(
-            {
-                refreshRate: 4,
-            },
-            ((data) => { this.onSpectralGraphChange(data)})
-        ),
-    };
+    // state = {
+    //     feed: new MasterFeed(
+    //         {
+    //             refreshRate: 4,
+    //         },
+    //         ((data) => { this.onSpectralGraphChange(data)})
+    //     ),
+    // };
 
     onSpectralGraphChange = (data) => {
         // console.log(
@@ -64,7 +63,6 @@ export default class Dashboard extends React.Component {
                     >
                         <CameraView
                             height={250}
-                            cameraFeed={this.state.feed.getCameraFeed()}
                         />
                     </Row>
                     <Row
@@ -74,7 +72,6 @@ export default class Dashboard extends React.Component {
                     >
                         <SpectrumChart
                             height={400}
-                            cameraFeed={this.state.feed.getCameraFeed()}
                         />
                     </Row>
                 </Col>

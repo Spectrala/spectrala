@@ -7,12 +7,6 @@ import {
     calibrationPresets,
 } from './calibration_constants';
 
-/**
- * Adjustments: An object representing the sliders for modifying attributes
- * of video input (brightness/contrast/hue/saturation).
- *   value: The number between 0 and 100 the slider is set to.
- *   title: The label the user sees.
- */
 export const defaultCalibration = calibrationPresets.cfl;
 
 export const calibrationSlice = createSlice({
@@ -21,6 +15,9 @@ export const calibrationSlice = createSlice({
         calibrationPoints: defaultCalibration,
     },
     reducers: {
+        modifyWavelength: (state, action) => {
+            console.log(state, action);
+        },
         saveCalibration: (state) => {
             console.log('Save the calibration');
         },
@@ -29,7 +26,7 @@ export const calibrationSlice = createSlice({
 
 export const { saveCalibration } = calibrationSlice.actions;
 
-export const selectCalibrationPoints = (state) => state.calibration;
-// export const selectCalibrationPoints = (state) => state.calibration.calibrationPoints;
+export const selectCalibrationPoints = (state) =>
+    state.calibration.calibrationPoints.value;
 
 export default calibrationSlice.reducer;
