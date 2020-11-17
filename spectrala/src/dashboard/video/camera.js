@@ -5,10 +5,8 @@ import SourceSelect from './source_select';
 import LineSelector from './line_selector';
 import VideoOptions from './adjustments';
 import { CameraFill } from 'react-bootstrap-icons';
-import CameraFeed from '../data_handlers/camera_feed';
 
 const FRAME_RENDER_INTERVAL_MS = 67; // 15fps
-// const FRAME_RENDER_INTERVAL_MS = 500; // 15fps
 
 function getSinglePixel(imageData, initial, current) {
     let dist = 0;
@@ -149,11 +147,13 @@ export default function CameraView({ cameraFeed, height }) {
                 canvasElem.width = videoSrc.naturalWidth;
                 canvasElem.height = videoSrc.naturalHeight;
             } else {
+                /* eslint-disable no-throw-literal */
                 throw {
                     err: 'Unsupported video source type',
                     type: typeof videoSrc,
                     src: videoSrc,
                 };
+                /* eslint-enable no-throw-literal */
             }
             ctx.drawImage(videoSrc, 0, 0, canvasElem.width, canvasElem.height);
 
