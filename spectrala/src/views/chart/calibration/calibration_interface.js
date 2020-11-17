@@ -31,7 +31,6 @@ export default class SpectrumChart extends React.Component {
         if (this._ismounted) {
             this.setState({ calibrationPoints: this.state.calibrationPoints });
         }
-        
     };
 
     getHeader = () => {

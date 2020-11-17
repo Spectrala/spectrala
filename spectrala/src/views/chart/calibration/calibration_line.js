@@ -2,27 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
 
-export default function CalibrationLine() {
-    state = {
-        isSelecting: false,
-        data: null,
-    };
-
-    listenToStream = () => {
-        this.setState({ data: this.getData() });
-    };
-
-    getData = () => {
-        const data = this.props.cameraFeed.getChartData();
-        return data;
-    };
-
-    showsBottomAxis = () => {
+export default function CalibrationLine({ data }) {
+    function showsBottomAxis() {
         return false;
-    };
+    }
 
-    getBottomAxis = () => {
-        if (!this.showsBottomAxis()) {
+    function getBottomAxis() {
+        if (!showsBottomAxis()) {
             return null;
         }
         const bottomAxis = {
@@ -35,9 +21,9 @@ export default function CalibrationLine() {
             legendPosition: 'middle',
         };
         return bottomAxis;
-    };
+    }
 
-    getPlacedMarkers = () => {
+    function getPlacedMarkers() {
         return this.props.calibrationPoints
             .getSetPoints()
             .map((description) => {
@@ -51,9 +37,9 @@ export default function CalibrationLine() {
                     legend: description['wavelength'],
                 };
             });
-    };
+    }
 
-    getTooltip = () => {
+    function getTooltip() {
         var point = this.props.calibrationPoints.getPointBeingPlaced();
         if (!point) {
             return null;
@@ -71,10 +57,9 @@ export default function CalibrationLine() {
                 {label}
             </div>
         );
-    };
+    }
 
-    var shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
-    if (!this.state.data) {
+    function getLoadingScreen() {
         return (
             <label
                 style={{
@@ -85,67 +70,81 @@ export default function CalibrationLine() {
                     justifyContent: 'center',
                 }}
             >
-                Waiting for data. Make sure to set points of interest on
-                camera feed.
+                Waiting for data. Make sure to set points of interest on camera
+                feed.
             </label>
         );
     }
-    return (
-        <ResponsiveLine
-            data={this.state.data}
-            animate={false}
-            margin={{
-                top: 15,
-                right: 15,
-                bottom: this.showsBottomAxis() ? 50 : 15,
-                left: 60,
-            }}
-            xScale={{ type: 'linear', min: '0', max: '1' }}
-            yScale={{ type: 'linear', min: '0', max: '100' }}
-            yFormat=" >-.2f"
-            curve="linear"
-            axisTop={null}
-            axisRight={null}
-            axisBottom={this.getBottomAxis()}
-            axisLeft={{
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                format: '.0f',
-                legend: 'intensity',
-                legendOffset: -40,
-                legendPosition: 'middle',
-            }}
-            markers={this.getPlacedMarkers()}
-            enableGridX={false}
-            colors={{ scheme: 'spectral' }}
-            lineWidth={2}
-            pointSize={4}
-            pointColor={{ theme: 'background' }}
-            pointBorderWidth={1}
-            pointBorderColor={{ from: 'serieColor' }}
-            pointLabelYOffset={-12}
-            enableArea={false}
-            areaOpacity={0.1}
-            useMesh={true}
-            onClick={(point, event) => {
-                const xClick = point.data.x;
-                this.props.calibrationPoints.handleSelection(xClick);
-            }}
-            crosshairType={'bottom'}
-            enableCrosshair={shouldShowCrosshair}
-            tooltip={this.getTooltip}
-            layers={[
-                'grid',
-                'markers',
-                'axes',
-                'areas',
-                'crosshair',
-                'lines',
-                'slices',
-                'mesh',
-            ]}
-        />
-    );
-    
+
+    function getLineGraph() {
+        const shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
+
+        return (
+            <ResponsiveLine
+                data={this.state.data}
+                animate={false}
+                margin={{
+                    top: 15,
+                    right: 15,
+                    bottom: showsBottomAxis() ? 50 : 15,
+                    left: 60,
+                }}
+                xScale={{ type: 'linear', min: '0', max: '1' }}
+                yScale={{ type: 'linear', min: '0', max: '100' }}
+                yFormat=" >-.2f"
+                curve="linear"
+                axisTop={null}
+                axisRight={null}
+                axisBottom={getBottomAxis()}
+                axisLeft={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    format: '.0f',
+                    legend: 'intensity',
+                    legendOffset: -40,
+                    legendPosition: 'middle',
+                }}
+                markers={this.getPlacedMarkers()}
+                enableGridX={false}
+                colors={{ scheme: 'spectral' }}
+                lineWidth={2}
+                pointSize={4}
+                pointColor={{ theme: 'background' }}
+                pointBorderWidth={1}
+                pointBorderColor={{ from: 'serieColor' }}
+                pointLabelYOffset={-12}
+                enableArea={false}
+                areaOpacity={0.1}
+                useMesh={true}
+                onClick={(point, event) => {
+                    const xClick = point.data.x;
+                    this.props.calibrationPoints.handleSelection(xClick);
+                }}
+                crosshairType={'bottom'}
+                enableCrosshair={shouldShowCrosshair}
+                tooltip={this.getTooltip}
+                layers={[
+                    'grid',
+                    'markers',
+                    'axes',
+                    'areas',
+                    'crosshair',
+                    'lines',
+                    'slices',
+                    'mesh',
+                ]}
+            />
+        );
+    }
+
+    if (!data) {
+        return getLoadingScreen();
+    } else {
+        return getLineGraph();
+    }
 }
+
+CalibrationLine.propTypes = {
+    data: PropTypes.object,
+};
