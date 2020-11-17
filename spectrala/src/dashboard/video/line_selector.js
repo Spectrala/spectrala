@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Col, InputGroup, FormControl } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
@@ -65,9 +65,9 @@ LineSelector.defaultProps = {
         console.warn('Unimplemented onChange for LineSelector');
     },
     defaultCalibCoords: {
-        lowX: .10,
-        lowY: .50,
-        highX: .90,
-        highY: .50,
+        lowX: 0.1,
+        lowY: 0.5,
+        highX: 0.9,
+        highY: 0.5,
     },
 };

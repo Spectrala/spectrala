@@ -1,5 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Col, Card, Row, Alert } from 'react-bootstrap';
+import {
+    Button,
+    Col,
+    Card,
+    Row,
+    Alert,
+    Overlay,
+    Popover,
+} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import SourceSelect from './source_select';
 import LineSelector from './line_selector';
@@ -123,6 +131,9 @@ export default function CameraView({ cameraFeed, height }) {
     const canvas = useRef(null);
     const [videoSrc, setVideoSrc] = useState(null);
 
+    const [inSaveMode, setInSaveMode] = useState(false);
+    const saveOverlayTarget = useRef(null);
+
     useEffect(() => {
         const interval = setInterval(() => {
             const canvasElem = canvas.current;
@@ -185,6 +196,7 @@ export default function CameraView({ cameraFeed, height }) {
             );
 
             // render line on top of the data we just got
+            if (inSaveMode) return; // but not if the user is saving
             ctx.strokeStyle = 'yellow';
             ctx.lineWidth = 3;
             ctx.beginPath();
@@ -201,7 +213,7 @@ export default function CameraView({ cameraFeed, height }) {
             ctx.stroke();
         }, FRAME_RENDER_INTERVAL_MS);
         return () => clearInterval(interval);
-    }, [canvas, videoSrc, calibCoords, cameraFeed]);
+    }, [canvas, videoSrc, calibCoords, cameraFeed, inSaveMode]);
 
     return (
         <>
@@ -223,7 +235,10 @@ export default function CameraView({ cameraFeed, height }) {
                                 .<Alert.Link href="#">Learn more</Alert.Link>.
                             </Alert>
                         )}
-                        <canvas ref={canvas} style={{ width: '100%', height: height}} />
+                        <canvas
+                            ref={canvas}
+                            style={{ width: '100%', height: height }}
+                        />
                         <Card.Footer>
                             <Row style={{ display: 'flex' }}>
                                 <LineSelector onChange={setCalibCoords} />
@@ -238,9 +253,30 @@ export default function CameraView({ cameraFeed, height }) {
                                     <Button
                                         variant="outline-primary"
                                         style={{ alignItems: 'center' }}
+                                        onClick={() =>
+                                            setInSaveMode(!inSaveMode)
+                                        }
+                                        ref={saveOverlayTarget}
                                     >
-                                        <CameraFill /> Save Snapshot
+                                        <CameraFill /> Snapshot Mode
                                     </Button>
+                                    <Overlay
+                                        show={inSaveMode}
+                                        target={saveOverlayTarget.current}
+                                        placement="left-start"
+                                    >
+                                        <Popover id="snapshot-popover">
+                                            <Popover.Title>
+                                                Snapshot Mode
+                                            </Popover.Title>
+                                            <Popover.Content>
+                                                Right-click the preview and
+                                                select "Save image as..." Click
+                                                again when you are done to
+                                                re-enable the overlay.
+                                            </Popover.Content>
+                                        </Popover>
+                                    </Overlay>
                                 </Col>
                             </Row>
                         </Card.Footer>
