@@ -1,5 +1,8 @@
 import CalibrationConstants from './calibration_constants';
-const calibration_constants = new CalibrationConstants();
+import {
+    MINIMUM_WAVELENGTH,
+    MAXIMUM_WAVELENGTH,
+} from './calibration_constants';
 
 export default class CalibrationPoint {
     constructor(wavelength, placement, isBeingPlaced) {
@@ -58,8 +61,8 @@ export default class CalibrationPoint {
     wavelengthIsValid = () => {
         return (
             !isNaN(this.wavelength) &&
-            this.wavelength >= calibration_constants.MINIMUM_WAVELENGTH &&
-            this.wavelength <= calibration_constants.MAXIMUM_WAVELENGTH
+            this.wavelength >= MINIMUM_WAVELENGTH &&
+            this.wavelength <= MAXIMUM_WAVELENGTH
         );
     };
 
@@ -69,5 +72,5 @@ export default class CalibrationPoint {
 
     isValidToPlace = () => {
         return this.wavelengthIsValid();
-    }
+    };
 }

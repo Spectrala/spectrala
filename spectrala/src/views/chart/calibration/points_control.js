@@ -9,107 +9,107 @@ import {
 } from 'react-bootstrap';
 import { XCircle, Pencil } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
-import CalibrationConstants from './helper_classes/calibration_constants';
-const calibration_constants = new CalibrationConstants();
 
-export default class CalibrationPointsControl extends React.Component {
-    componentDidMount() {
-        this.props.calibrationPoints.addListener((() => this.onDataUpdate()))
-    }
+import {
+    MINIMUM_WAVELENGTH,
+    MAXIMUM_WAVELENGTH,
+} from '../../../reducers/calibration/calibration_constants';
 
-    onDataUpdate = () => {
-        // console.log("Nice, fresh data to view!")
-    }
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCalibrationPoints } from '../../../reducers/calibration/calibration';
 
-    getCalibrationBoxes = () => {
+
+export default function CalibrationPointsControl({ height, maximumPoints }) {
+    const calibrationPoints = useSelector(selectCalibrationPoints);
+    const dispatch = useDispatch();
+
+    // componentDidMount() {
+    //     calibrationPoints.addListener((() => this.onDataUpdate()))
+    // }
+
+    // onDataUpdate = () => {
+    //     // console.log("Nice, fresh data to view!")
+    // }
+
+    function getCalibrationBoxes() {
         return (
             <>
                 <div style={{ height: '15px' }} />
-                {this.props.calibrationPoints.calibrationPoints.map(
-                    (point, idx) => {
-                        return (
-                            <Form
-                                className="mb-3"
-                                key={idx}
-                                style={{
-                                    paddingLeft: '15px',
-                                    paddingRight: '15px',
-                                    display: 'flex',
-                                }}
-                            >
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        {this.getPrependedGroup(point, idx)}
-                                    </InputGroup.Prepend>
-                                    <Form.Control
-                                        value={
-                                            point.wavelength
-                                                ? point.wavelength
-                                                : ''
-                                        }
-                                        aria-label={`Calibration point ${
-                                            idx + 1
-                                        }`}
-                                        aria-describedby="basic-addon2"
-                                        onChange={(event) => {
-                                            this.props.calibrationPoints.setWavelength(
-                                                point,
-                                                event.target.value
-                                            );
+                {calibrationPoints.calibrationPoints.map((point, idx) => {
+                    return (
+                        <Form
+                            className="mb-3"
+                            key={idx}
+                            style={{
+                                paddingLeft: '15px',
+                                paddingRight: '15px',
+                                display: 'flex',
+                            }}
+                        >
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    {getPrependedGroup(point, idx)}
+                                </InputGroup.Prepend>
+                                <Form.Control
+                                    value={
+                                        point.wavelength ? point.wavelength : ''
+                                    }
+                                    aria-label={`Calibration point ${idx + 1}`}
+                                    aria-describedby="basic-addon2"
+                                    onChange={(event) => {
+                                        calibrationPoints.setWavelength(
+                                            point,
+                                            event.target.value
+                                        );
+                                    }}
+                                    isInvalid={pointIsInvalid(point)}
+                                />
+
+                                <InputGroup.Append>
+                                    {getEditButton(point, idx)}
+                                    <Button
+                                        variant="outline-secondary"
+                                        onClick={() => {
+                                            calibrationPoints.removeOption(idx);
                                         }}
-                                        isInvalid={this.pointIsInvalid(point)}
-                                    />
-
-                                    <InputGroup.Append>
-                                        {this.getEditButton(point, idx)}
-                                        <Button
-                                            variant="outline-secondary"
-                                            onClick={() => {
-                                                this.props.calibrationPoints.removeOption(
-                                                    idx
-                                                );
+                                    >
+                                        <XCircle
+                                            style={{
+                                                display: 'flex',
+                                                alignSelf: 'flex-center',
                                             }}
-                                        >
-                                            <XCircle
-                                                style={{
-                                                    display: 'flex',
-                                                    alignSelf: 'flex-center',
-                                                }}
-                                            />
-                                        </Button>
-                                    </InputGroup.Append>
+                                        />
+                                    </Button>
+                                </InputGroup.Append>
 
-                                    <Form.Control.Feedback type="invalid">
-                                        {this.getValidationFeedback(point)}
-                                    </Form.Control.Feedback>
-                                </InputGroup>
-                            </Form>
-                        );
-                    }
-                )}
+                                <Form.Control.Feedback type="invalid">
+                                    {getValidationFeedback(point)}
+                                </Form.Control.Feedback>
+                            </InputGroup>
+                        </Form>
+                    );
+                })}
             </>
         );
-    };
+    }
 
-    pointIsInvalid = (point) => {
-        return !!this.getValidationFeedback(point);
-    };
+    function pointIsInvalid(point) {
+        return !!getValidationFeedback(point);
+    }
 
-    getValidationFeedback = (point) => {
+    function getValidationFeedback(point) {
         if (point.wavelengthIsEmpty()) {
             return null;
         } else if (!point.wavelengthIsValid()) {
-            return `Select a wavelength between ${calibration_constants.MINIMUM_WAVELENGTH} and ${calibration_constants.MAXIMUM_WAVELENGTH}`;
+            return `Select a wavelength between ${MINIMUM_WAVELENGTH} and ${MAXIMUM_WAVELENGTH}`;
         } else if (
-            this.props.calibrationPoints.isDuplicateWavelength(
-                point.getWavelength()
-            )
+            calibrationPoints.isDuplicateWavelength(point.getWavelength())
         ) {
             return 'Duplicated wavelength found.';
         }
-    };
+    }
 
-    getPrependedGroup = (point, idx) => {
+    function getPrependedGroup(point, idx) {
         var description = point.getPlacementStatusDescription();
         if (description['isBeingPlaced']) {
             return <InputGroup.Text>Placing</InputGroup.Text>;
@@ -120,20 +120,20 @@ export default class CalibrationPointsControl extends React.Component {
             <Button
                 variant="outline-secondary"
                 disabled={!point.wavelengthIsValid()}
-                onClick={() => this.props.calibrationPoints.beginPlace(point)}
+                onClick={() => calibrationPoints.beginPlace(point)}
             >
                 Place
             </Button>
         );
-    };
+    }
 
-    getEditButton = (point, idx) => {
+    function getEditButton(point, idx) {
         if (point.hasBeenPlaced() && point.wavelengthIsValid()) {
             return (
                 <Button
                     variant="outline-secondary"
                     onClick={() => {
-                        this.props.calibrationPoints.editOption(idx);
+                        calibrationPoints.editOption(idx);
                     }}
                 >
                     <Pencil
@@ -143,12 +143,10 @@ export default class CalibrationPointsControl extends React.Component {
             );
         }
         return null;
-    };
+    }
 
-    getAddButton = () => {
-        if (
-            !(this.props.calibrationPoints.length() < this.props.maximumPoints)
-        ) {
+    function getAddButton() {
+        if (!(calibrationPoints.length() < this.props.maximumPoints)) {
             return;
         }
         return (
@@ -162,7 +160,7 @@ export default class CalibrationPointsControl extends React.Component {
             >
                 <Button
                     variant="outline-secondary"
-                    onClick={this.props.calibrationPoints.addOption}
+                    onClick={calibrationPoints.addOption}
                     style={{
                         width: '100%',
                         display: 'flex',
@@ -173,41 +171,39 @@ export default class CalibrationPointsControl extends React.Component {
                 </Button>
             </div>
         );
-    };
-
-    render() {
-        return (
-            <Card style={{ width: '100%' }}>
-                <Card.Header
-                    as="h5"
-                    style={{
-                        height: '64px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        paddingLeft: '15px',
-                        paddingRight: '15px',
-                    }}
-                >
-                    Set points
-                    <DropdownButton
-                        title="Custom"
-                        variant="primary-link"
-                        id="collasible-nav-dropdown"
-                    >
-                        <Dropdown.Item>CFL Bulb</Dropdown.Item>
-                        <Dropdown.Item>Red, Blue LED</Dropdown.Item>
-                        <Dropdown.Item>Red, Green LED</Dropdown.Item>
-                        <Dropdown.Item>Blue, Green LED</Dropdown.Item>
-                    </DropdownButton>
-                </Card.Header>
-                <div style={{ height: this.props.height }}>
-                    {this.getCalibrationBoxes()}
-                    {this.getAddButton()}
-                </div>
-            </Card>
-        );
     }
+
+    return (
+        <Card style={{ width: '100%' }}>
+            <Card.Header
+                as="h5"
+                style={{
+                    height: '64px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingLeft: '15px',
+                    paddingRight: '15px',
+                }}
+            >
+                Set points
+                <DropdownButton
+                    title="Custom"
+                    variant="primary-link"
+                    id="collasible-nav-dropdown"
+                >
+                    <Dropdown.Item>CFL Bulb</Dropdown.Item>
+                    <Dropdown.Item>Red, Blue LED</Dropdown.Item>
+                    <Dropdown.Item>Red, Green LED</Dropdown.Item>
+                    <Dropdown.Item>Blue, Green LED</Dropdown.Item>
+                </DropdownButton>
+            </Card.Header>
+            <div style={{ height: this.props.height }}>
+                {getCalibrationBoxes()}
+                {getAddButton()}
+            </div>
+        </Card>
+    );
 }
 
 CalibrationPointsControl.propTypes = {

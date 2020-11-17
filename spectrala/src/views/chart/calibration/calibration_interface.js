@@ -3,8 +3,8 @@ import { Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import CalibrationPointsControl from './points_control';
 import CalibrationLine from './calibration_line';
-import CalibrationPoints from './helper_classes/calibration_points';
-import CalibrationPoint from './helper_classes/calibration_point';
+import CalibrationPoints from '../../../reducers/calibration/calibration_points';
+import CalibrationPoint from '../../../reducers/calibration/calibration_point';
 
 export default class SpectrumChart extends React.Component {
     state = {

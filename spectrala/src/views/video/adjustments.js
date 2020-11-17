@@ -65,7 +65,12 @@ export default function AdjustmentOptions() {
                 }}
             >
                 Adjustments
-                <Button variant="outline-secondary" onClick={() => dispatch(setDefault())}>Reset</Button>
+                <Button
+                    variant="outline-secondary"
+                    onClick={() => dispatch(setDefault())}
+                >
+                    Reset
+                </Button>
             </Card.Header>
             {getSliders()}
         </Card>

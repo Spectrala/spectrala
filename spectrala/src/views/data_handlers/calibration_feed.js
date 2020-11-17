@@ -1,5 +1,6 @@
-import CalibrationPoints from '../chart/calibration/helper_classes/calibration_points';
-import CalibrationPoint from '../chart/calibration/helper_classes/calibration_point';
+import CalibrationPoints from '../../reducers/calibration/calibration_points';
+import CalibrationPoint from '../../reducers/calibration/calibration_point';
+
 
 /**
  * This is a class that is responsible for storing and serving a
