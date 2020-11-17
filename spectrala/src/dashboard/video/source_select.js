@@ -75,6 +75,34 @@ export default function SourceSelect(props) {
                 imageElement.removeAttribute('src');
                 imageElement.removeAttribute('srcObject');
             };
+        } else if (selectedSource === SourceEnum.IMAGE) {
+            let staticImage;
+            async function loadStaticImage() {
+                const picker = document.createElement('input');
+                picker.type = 'file';
+                picker.accept = 'image/*';
+                picker.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.onload = () => {
+                        URL.revokeObjectURL(img.src);
+                    };
+                    staticImage = img;
+                    updateMediaElement(staticImage);
+                });
+                picker.click();
+            }
+            loadStaticImage();
+            // Cleanup isn't a big deal here because it's a single image,
+            // but we're good citizens here.
+            return () => {
+                staticImage.src = '#';
+                staticImage.removeAttribute('src');
+                staticImage.removeAttribute('srcObject');
+            };
+        } else {
+            updateMediaElement(null);
         }
     }, [selectedSource, streamUrl, updateMediaElement]);
 
@@ -109,6 +137,14 @@ export default function SourceSelect(props) {
                             onClick={() => setSelectedSource(SourceEnum.WEBCAM)}
                         >
                             Webcam
+                        </Button>
+                        <Button
+                            variant={getBtnVariant(
+                                selectedSource === SourceEnum.IMAGE
+                            )}
+                            onClick={() => setSelectedSource(SourceEnum.IMAGE)}
+                        >
+                            Upload Image
                         </Button>
                     </ButtonGroup>
                 </Row>
