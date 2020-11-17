@@ -16,7 +16,7 @@ function getSinglePixel(imageData, initial, current) {
         dist += (current[i] - initial[i]) * (current[i] - initial[i]);
     }
     dist = Math.sqrt(dist);
-    let offset = (current[0] * imageData.width + current[1]) * 4;
+    let offset = (current[1] * imageData.width + current[0]) * 4;
     const r = imageData.data[offset];
     const g = imageData.data[offset + 1];
     const b = imageData.data[offset + 2];
@@ -69,6 +69,9 @@ function extractPixelData(imageData, beginX, beginY, finalX, finalY) {
         Math.round(imageData.width * finalX),
         Math.round(imageData.height * finalY),
     ];
+    // ensure we don't exceed image boundaries on a 1.0 value
+    pos2[0] = Math.min(pos2[0], imageData.width - 1);
+    pos2[1] = Math.min(pos2[1], imageData.height - 1);
 
     let delta = pos2.map(function (value, index) {
         return value - pos1[index];
