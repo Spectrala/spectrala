@@ -43,15 +43,6 @@ export const calibrationSlice = createSlice({
             point.setPlacementStatus(true);
             point.setPlacement(null);
         },
-        getPointBeingPlaced: (state) => {
-            var pointBeingPlaced = null;
-            state.calibrationPoints.value.forEach((point, idx) => {
-                if (point.isBeingPlaced) {
-                    pointBeingPlaced = point;
-                }
-            });
-            return pointBeingPlaced;
-        },
         isCurrentlyPlacing: (state) => {
             return !!this.getPointBeingPlaced(state);
         },
@@ -84,5 +75,18 @@ export const {
 
 export const selectCalibrationPoints = (state) =>
     state.calibration.calibrationPoints.value;
+
+
+export const selectTooltipLabel = (state) => {
+    var pointBeingPlaced = null;
+    state.calibrationPoints.value.forEach((point, idx) => {
+        console.log(point);
+        if (point.isBeingPlaced) {
+            pointBeingPlaced = point;
+        }
+    });
+    return pointBeingPlaced;
+
+}
 
 export default calibrationSlice.reducer;

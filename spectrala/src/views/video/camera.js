@@ -10,7 +10,7 @@ import { selectLineCoords, updateFeed } from '../../reducers/video';
 // import { selectAdjustments } from '../../reducers/adjustments';
 
 const FRAME_RENDER_INTERVAL_MS = 67; // 15fps
-const DATA_FEEDBACK_INTERVAL_MS = 1000;
+const DATA_FEEDBACK_INTERVAL_MS = 199;
 
 // Put ticker in here to dispatch slowly.
 // Line selection should be in redux.
@@ -135,10 +135,12 @@ export default function CameraView({ height }) {
     const canvas = useRef(null);
     const [videoSrc, setVideoSrc] = useState(null);
 
-    var [imageData, setImageData] = useState(null);
+    const [imageData, setImageData] = useState(null);
 
     useEffect(() => {
         const videoInterval = setInterval(() => {
+            console.log('videoInterval');
+
             const canvasElem = canvas.current;
             if (!canvasElem) return;
             const ctx = canvasElem.getContext('2d');
@@ -175,7 +177,18 @@ export default function CameraView({ height }) {
                 canvasElem.height
             );
 
-            setImageData(imgData);
+
+            dispatch(
+                updateFeed({
+                    value: extractPixelData(
+                        imgData,
+                        calibCoords.lowX,
+                        calibCoords.lowY,
+                        calibCoords.highX,
+                        calibCoords.highY
+                    ),
+                })
+            );
 
             // render line on top of the data we just got
             ctx.strokeStyle = 'yellow';
@@ -194,19 +207,12 @@ export default function CameraView({ height }) {
             ctx.stroke();
         }, FRAME_RENDER_INTERVAL_MS);
 
+
         const calibrationInterval = setInterval(() => {
+            console.log('calibrationInterval');
+
             if (imageData && calibCoords) {
-                dispatch(
-                    updateFeed({
-                        value: extractPixelData(
-                            imageData,
-                            calibCoords.lowX,
-                            calibCoords.lowY,
-                            calibCoords.highX,
-                            calibCoords.highY
-                        ),
-                    })
-                );
+                
             }
         }, DATA_FEEDBACK_INTERVAL_MS);
 

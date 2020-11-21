@@ -40,6 +40,7 @@ export default function CalibrationLine() {
     }
 
     function getPlacedMarkers() {
+        return null;
         return calibrationPoints
             .getSetPoints()
             .map((description) => {
@@ -60,6 +61,7 @@ export default function CalibrationLine() {
         if (!point) {
             return null;
         }
+        console.log(point);
         var label = point.getWavelengthDescription();
         return (
             <div
