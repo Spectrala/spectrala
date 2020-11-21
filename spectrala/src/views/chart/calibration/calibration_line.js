@@ -1,18 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectChartData } from '../../../reducers/video';
 import {
-    saveCalibration,
-    modifyWavelength,
-    removePoint,
-    addOption,
-    beginPlace,
+    selectCalibrationPoints,
+    getPointBeingPlaced,
+    handleSelection,
 } from '../../../reducers/calibration/calibration';
 
 export default function CalibrationLine() {
     const data = useSelector(selectChartData);
+    const calibrationPoints = useSelector(selectCalibrationPoints);
     const dispatch = useDispatch();
 
     if (!data) {
@@ -42,9 +40,7 @@ export default function CalibrationLine() {
     }
 
     function getPlacedMarkers() {
-        return null;
-
-        return this.props.calibrationPoints
+        return calibrationPoints
             .getSetPoints()
             .map((description) => {
                 return {
@@ -60,8 +56,7 @@ export default function CalibrationLine() {
     }
 
     function getTooltip() {
-        return null;
-        var point = this.props.calibrationPoints.getPointBeingPlaced();
+        var point = getPointBeingPlaced();
         if (!point) {
             return null;
         }
@@ -140,9 +135,9 @@ export default function CalibrationLine() {
                 areaOpacity={0.1}
                 useMesh={true}
                 onClick={(point, event) => {
-                    console.log('Please set up onClick');
-                    // const xClick = point.data.x;
-                    // this.props.calibrationPoints.handleSelection(xClick);
+                    dispatch(handleSelection({
+                        value: point.data.x
+                    }))
                 }}
                 crosshairType={'bottom'}
                 enableCrosshair={shouldShowCrosshair}

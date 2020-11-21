@@ -6,8 +6,8 @@ import LineSelector from './line_selector';
 import { CameraFill } from 'react-bootstrap-icons';
 import AdjustmentOptions from './adjustments';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAdjustments } from '../../reducers/adjustments';
 import { selectLineCoords, updateFeed } from '../../reducers/video';
+// import { selectAdjustments } from '../../reducers/adjustments';
 
 const FRAME_RENDER_INTERVAL_MS = 67; // 15fps
 const DATA_FEEDBACK_INTERVAL_MS = 1000;
@@ -137,7 +137,6 @@ export default function CameraView({ height }) {
 
     var [imageData, setImageData] = useState(null);
 
-
     useEffect(() => {
         const videoInterval = setInterval(() => {
             const canvasElem = canvas.current;
@@ -196,10 +195,7 @@ export default function CameraView({ height }) {
         }, FRAME_RENDER_INTERVAL_MS);
 
         const calibrationInterval = setInterval(() => {
-            if (
-                imageData &&
-                calibCoords
-            ) {
+            if (imageData && calibCoords) {
                 dispatch(
                     updateFeed({
                         value: extractPixelData(
@@ -218,7 +214,7 @@ export default function CameraView({ height }) {
             clearInterval(videoInterval);
             clearInterval(calibrationInterval);
         };
-    }, [canvas, videoSrc, calibCoords]);
+    }, [canvas, videoSrc, calibCoords, dispatch, imageData]);
 
     return (
         <>

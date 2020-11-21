@@ -26,27 +26,27 @@ export const videoSlice = createSlice({
         },
         updateLineCoords: (state, action) => {
             state.lineCoords[action.payload.targetKey] = action.payload.value;
-        }
+        },
     },
 });
 
 export const { updateFeed, updateLineCoords } = videoSlice.actions;
 
 export const selectIntensities = (state) => {
-    const pixels = state.video.pixelLine
+    const pixels = state.video.pixelLine;
     if (pixels) {
         return pixels.map((obj) => (obj.r + obj.g + obj.b) / 3 / 2.55);
     }
     return null;
-}
+};
 
-export const selectLineCoords = (state) => state.video.lineCoords; 
+export const selectLineCoords = (state) => state.video.lineCoords;
 
 export const selectChartData = (state) => {
     const intensities = selectIntensities(state);
     if (!intensities) {
         return null;
-    } 
+    }
     return [
         {
             id: 'spectrum',

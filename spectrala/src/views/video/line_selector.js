@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Col, InputGroup, FormControl } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectLineCoords, updateLineCoords } from '../../reducers/video';
 
@@ -30,7 +29,7 @@ export default function LineSelector() {
                                 targetKey: stateTarget,
                             })
                         );
-                    };
+                    }
                 }}
             />
         );

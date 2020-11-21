@@ -1,4 +1,3 @@
-import CalibrationPoints from './calibration_points';
 import CalibrationPoint from './calibration_point';
 export const MINIMUM_WAVELENGTH = 300;
 export const MAXIMUM_WAVELENGTH = 800;

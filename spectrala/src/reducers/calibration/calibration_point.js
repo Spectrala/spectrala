@@ -1,4 +1,3 @@
-import CalibrationConstants from './calibration_constants';
 import {
     MINIMUM_WAVELENGTH,
     MAXIMUM_WAVELENGTH,
