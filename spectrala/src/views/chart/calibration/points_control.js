@@ -231,7 +231,6 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
 CalibrationPointsControl.propTypes = {
     height: PropTypes.number,
     maximumPoints: PropTypes.number,
-    calibrationPoints: PropTypes.object.isRequired,
 };
 
 CalibrationPointsControl.defaultProps = {

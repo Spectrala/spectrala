@@ -5,9 +5,21 @@ import SourceSelect from './source_select';
 import LineSelector from './line_selector';
 import { CameraFill } from 'react-bootstrap-icons';
 import AdjustmentOptions from './adjustments';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAdjustments } from '../../reducers/adjustments';
+import { updateFeed } from '../../reducers/video';
 
 const FRAME_RENDER_INTERVAL_MS = 67; // 15fps
-// const FRAME_RENDER_INTERVAL_MS = 500; // 15fps
+const DATA_FEEDBACK_INTERVAL_MS = 1000;
+
+// Put ticker in here to dispatch slowly.
+// Line selection should be in redux.
+// Video source should not be part of calibration (webcam/image select)
+/**Line selection goes in redux.
+ * Calibration state (the nodes) go in redux.
+ * The spectrum data goes in redux.
+ *   - At some point you want a calibration and want a
+ */
 
 function getSinglePixel(imageData, initial, current) {
     let dist = 0;
@@ -112,7 +124,7 @@ const ChannelToText = {
     [ChannelEnum.BLUE]: 'Blue',
 };
 
-export default function CameraView({ cameraFeed, height }) {
+export default function CameraView({ height }) {
     const [calibCoords, setCalibCoords] = useState(null);
     // TODO: detect saturated channels in the SetInterval call
     /* eslint-disable no-unused-vars */
@@ -121,7 +133,31 @@ export default function CameraView({ cameraFeed, height }) {
     const canvas = useRef(null);
     const [videoSrc, setVideoSrc] = useState(null);
 
+    var [pixelDataParams, setPixelDataParams] = useState({});
+
+    const dispatch = useDispatch();
+
     useEffect(() => {
+        setInterval(() => {
+            if (
+                pixelDataParams &&
+                pixelDataParams.imgData &&
+                pixelDataParams.calibCoords
+            ) {
+                dispatch(
+                    updateFeed({
+                        value: extractPixelData(
+                            pixelDataParams.imgData,
+                            pixelDataParams.calibCoords.lowX,
+                            pixelDataParams.calibCoords.lowY,
+                            pixelDataParams.calibCoords.highX,
+                            pixelDataParams.calibCoords.highY
+                        ),
+                    })
+                );
+            }
+        }, DATA_FEEDBACK_INTERVAL_MS);
+
         const interval = setInterval(() => {
             const canvasElem = canvas.current;
             if (!canvasElem) return;
@@ -155,15 +191,11 @@ export default function CameraView({ cameraFeed, height }) {
                 canvasElem.width,
                 canvasElem.height
             );
-            cameraFeed.processRawData(
-                extractPixelData(
-                    imgData,
-                    calibCoords.lowX,
-                    calibCoords.lowY,
-                    calibCoords.highX,
-                    calibCoords.highY
-                )
-            );
+
+            setPixelDataParams({
+                imgData: imgData,
+                calibCoords: calibCoords,
+            });
 
             // render line on top of the data we just got
             ctx.strokeStyle = 'yellow';
@@ -182,7 +214,7 @@ export default function CameraView({ cameraFeed, height }) {
             ctx.stroke();
         }, FRAME_RENDER_INTERVAL_MS);
         return () => clearInterval(interval);
-    }, [canvas, videoSrc, calibCoords, cameraFeed]);
+    }, [canvas, videoSrc, calibCoords]);
 
     return (
         <>
@@ -204,7 +236,10 @@ export default function CameraView({ cameraFeed, height }) {
                                 .<Alert.Link href="#">Learn more</Alert.Link>.
                             </Alert>
                         )}
-                        <canvas ref={canvas} style={{ width: '100%', height: height}} />
+                        <canvas
+                            ref={canvas}
+                            style={{ width: '100%', height: height }}
+                        />
                         <Card.Footer>
                             <Row style={{ display: 'flex' }}>
                                 <LineSelector onChange={setCalibCoords} />
