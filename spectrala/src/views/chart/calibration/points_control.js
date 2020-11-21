@@ -35,7 +35,7 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
     function isDuplicateWavelength(wavelength) {
         if (wavelength === null || wavelength === '') return false;
         return calibrationPoints.every(
-            (point) => point.getWavelength() != wavelength
+            (point) => point.getWavelength() !== wavelength
         );
     }
 

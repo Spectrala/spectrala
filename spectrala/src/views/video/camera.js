@@ -138,27 +138,7 @@ export default function CameraView({ height }) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setInterval(() => {
-            if (
-                pixelDataParams &&
-                pixelDataParams.imgData &&
-                pixelDataParams.calibCoords
-            ) {
-                dispatch(
-                    updateFeed({
-                        value: extractPixelData(
-                            pixelDataParams.imgData,
-                            pixelDataParams.calibCoords.lowX,
-                            pixelDataParams.calibCoords.lowY,
-                            pixelDataParams.calibCoords.highX,
-                            pixelDataParams.calibCoords.highY
-                        ),
-                    })
-                );
-            }
-        }, DATA_FEEDBACK_INTERVAL_MS);
-
-        const interval = setInterval(() => {
+        const videoInterval = setInterval(() => {
             const canvasElem = canvas.current;
             if (!canvasElem) return;
             const ctx = canvasElem.getContext('2d');
@@ -213,7 +193,31 @@ export default function CameraView({ height }) {
             );
             ctx.stroke();
         }, FRAME_RENDER_INTERVAL_MS);
-        return () => clearInterval(interval);
+
+        const calibrationInterval = setInterval(() => {
+            if (
+                pixelDataParams &&
+                pixelDataParams.imgData &&
+                pixelDataParams.calibCoords
+            ) {
+                dispatch(
+                    updateFeed({
+                        value: extractPixelData(
+                            pixelDataParams.imgData,
+                            pixelDataParams.calibCoords.lowX,
+                            pixelDataParams.calibCoords.lowY,
+                            pixelDataParams.calibCoords.highX,
+                            pixelDataParams.calibCoords.highY
+                        ),
+                    })
+                );
+            }
+        }, DATA_FEEDBACK_INTERVAL_MS);
+
+        return () => {
+            clearInterval(videoInterval);
+            clearInterval(calibrationInterval);
+        };
     }, [canvas, videoSrc, calibCoords]);
 
     return (
