@@ -1,8 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectChartData } from '../../../reducers/video';
+import {
+    saveCalibration,
+    modifyWavelength,
+    removePoint,
+    addOption,
+    beginPlace,
+} from '../../../reducers/calibration/calibration';
 
-export default function CalibrationLine({ data }) {
+export default function CalibrationLine() {
+    const data = useSelector(selectChartData);
+    const dispatch = useDispatch();
+
+    if (!data) {
+        return getLoadingScreen();
+    } else {
+        return getLineGraph();
+    }
+
     function showsBottomAxis() {
         return false;
     }
@@ -24,6 +42,8 @@ export default function CalibrationLine({ data }) {
     }
 
     function getPlacedMarkers() {
+        return null;
+
         return this.props.calibrationPoints
             .getSetPoints()
             .map((description) => {
@@ -40,6 +60,7 @@ export default function CalibrationLine({ data }) {
     }
 
     function getTooltip() {
+        return null;
         var point = this.props.calibrationPoints.getPointBeingPlaced();
         if (!point) {
             return null;
@@ -77,11 +98,12 @@ export default function CalibrationLine({ data }) {
     }
 
     function getLineGraph() {
-        const shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
+        // const shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
+        const shouldShowCrosshair = false;
 
         return (
             <ResponsiveLine
-                data={this.state.data}
+                data={data}
                 animate={false}
                 margin={{
                     top: 15,
@@ -105,7 +127,7 @@ export default function CalibrationLine({ data }) {
                     legendOffset: -40,
                     legendPosition: 'middle',
                 }}
-                markers={this.getPlacedMarkers()}
+                markers={getPlacedMarkers()}
                 enableGridX={false}
                 colors={{ scheme: 'spectral' }}
                 lineWidth={2}
@@ -118,12 +140,13 @@ export default function CalibrationLine({ data }) {
                 areaOpacity={0.1}
                 useMesh={true}
                 onClick={(point, event) => {
-                    const xClick = point.data.x;
-                    this.props.calibrationPoints.handleSelection(xClick);
+                    console.log('Please set up onClick');
+                    // const xClick = point.data.x;
+                    // this.props.calibrationPoints.handleSelection(xClick);
                 }}
                 crosshairType={'bottom'}
                 enableCrosshair={shouldShowCrosshair}
-                tooltip={this.getTooltip}
+                tooltip={getTooltip}
                 layers={[
                     'grid',
                     'markers',
@@ -137,14 +160,4 @@ export default function CalibrationLine({ data }) {
             />
         );
     }
-
-    if (!data) {
-        return getLoadingScreen();
-    } else {
-        return getLineGraph();
-    }
 }
-
-CalibrationLine.propTypes = {
-    data: PropTypes.object,
-};

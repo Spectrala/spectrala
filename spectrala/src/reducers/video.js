@@ -23,11 +23,20 @@ export const videoSlice = createSlice({
 
 export const { updateFeed } = videoSlice.actions;
 
-export const selectIntensities = (state) =>
-    state.video.pixelLine.map((obj) => (obj.r + obj.g + obj.b) / 3 / 2.55);
+export const selectIntensities = (state) => {
+    const pixels = state.video.pixelLine
+    if (pixels) {
+        return pixels.map((obj) => (obj.r + obj.g + obj.b) / 3 / 2.55);
+    }
+    return null;
+}
+    
 
 export const selectChartData = (state) => {
     const intensities = selectIntensities(state);
+    if (!intensities) {
+        return null;
+    } 
     return [
         {
             id: 'spectrum',

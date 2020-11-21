@@ -28,7 +28,7 @@ export default function SpectrumChart({ height }) {
                 <Card>
                     {getHeader()}
                     <div style={{ height: height }}>
-                        <CalibrationLine data={null} />
+                        <CalibrationLine/>
                     </div>
                 </Card>
             </Col>
