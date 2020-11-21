@@ -1,31 +1,36 @@
 import React, { useState } from 'react';
 import { Col, InputGroup, FormControl } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectLineCoords, updateLineCoords } from '../../reducers/video';
 
-function invalidToNull(x) {
-    if (isNaN(x)) return null;
-    if (x < 0 || x > 1) return null;
-    return x;
+function isValid(x) {
+    if (isNaN(x)) return false;
+    if (x < 0 || x > 1) return false;
+    return true;
 }
 
-export default function LineSelector({ onChange, defaultCalibCoords }) {
-    const [calibCoords, setCalibCoords] = useState(defaultCalibCoords);
-
-    const updateCalibCoords = (newval) => {
-        setCalibCoords(newval);
-        onChange(newval);
-    };
+export default function LineSelector() {
+    const lineCoords = useSelector(selectLineCoords);
+    const dispatch = useDispatch();
 
     const createFormControl = (nm, stateTarget) => {
         return (
             <FormControl
                 placeholder={nm + ' pct.'}
                 aria-label={nm + ' percentage'}
-                isInvalid={calibCoords[stateTarget] === null}
-                value={Math.round(calibCoords[stateTarget] * 100)}
+                isInvalid={!isValid(lineCoords[stateTarget])}
+                value={Math.round(lineCoords[stateTarget] * 100)}
                 onChange={(event) => {
-                    const value = invalidToNull(event.target.value / 100);
-                    updateCalibCoords({ ...calibCoords, [stateTarget]: value });
+                    const value = event.target.value / 100;
+                    if (isValid(value)) {
+                        dispatch(
+                            updateLineCoords({
+                                value: value,
+                                targetKey: stateTarget,
+                            })
+                        );
+                    };
                 }}
             />
         );
@@ -54,20 +59,3 @@ export default function LineSelector({ onChange, defaultCalibCoords }) {
         </>
     );
 }
-
-LineSelector.propTypes = {
-    onChange: PropTypes.func,
-    defaultCalibCoords: PropTypes.object,
-};
-
-LineSelector.defaultProps = {
-    onChange: () => {
-        console.warn('Unimplemented onChange for LineSelector');
-    },
-    defaultCalibCoords: {
-        lowX: .10,
-        lowY: .50,
-        highX: .90,
-        highY: .50,
-    },
-};

@@ -7,7 +7,7 @@ import { CameraFill } from 'react-bootstrap-icons';
 import AdjustmentOptions from './adjustments';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAdjustments } from '../../reducers/adjustments';
-import { updateFeed } from '../../reducers/video';
+import { selectLineCoords, updateFeed } from '../../reducers/video';
 
 const FRAME_RENDER_INTERVAL_MS = 67; // 15fps
 const DATA_FEEDBACK_INTERVAL_MS = 1000;
@@ -125,7 +125,9 @@ const ChannelToText = {
 };
 
 export default function CameraView({ height }) {
-    const [calibCoords, setCalibCoords] = useState(null);
+    const calibCoords = useSelector(selectLineCoords);
+    const dispatch = useDispatch();
+
     // TODO: detect saturated channels in the SetInterval call
     /* eslint-disable no-unused-vars */
     const [saturatedChannels, _setSaturatedChannels] = useState([]);
@@ -133,9 +135,8 @@ export default function CameraView({ height }) {
     const canvas = useRef(null);
     const [videoSrc, setVideoSrc] = useState(null);
 
-    var [pixelDataParams, setPixelDataParams] = useState({});
+    var [imageData, setImageData] = useState(null);
 
-    const dispatch = useDispatch();
 
     useEffect(() => {
         const videoInterval = setInterval(() => {
@@ -164,6 +165,9 @@ export default function CameraView({ height }) {
             )
                 return;
             // debugger;
+
+            if (canvasElem.width * canvasElem.height === 0) return;
+
             // TODO: this could be faster by querying only the region we need
             const imgData = ctx.getImageData(
                 0,
@@ -172,10 +176,7 @@ export default function CameraView({ height }) {
                 canvasElem.height
             );
 
-            setPixelDataParams({
-                imgData: imgData,
-                calibCoords: calibCoords,
-            });
+            setImageData(imgData);
 
             // render line on top of the data we just got
             ctx.strokeStyle = 'yellow';
@@ -196,18 +197,17 @@ export default function CameraView({ height }) {
 
         const calibrationInterval = setInterval(() => {
             if (
-                pixelDataParams &&
-                pixelDataParams.imgData &&
-                pixelDataParams.calibCoords
+                imageData &&
+                calibCoords
             ) {
                 dispatch(
                     updateFeed({
                         value: extractPixelData(
-                            pixelDataParams.imgData,
-                            pixelDataParams.calibCoords.lowX,
-                            pixelDataParams.calibCoords.lowY,
-                            pixelDataParams.calibCoords.highX,
-                            pixelDataParams.calibCoords.highY
+                            imageData,
+                            calibCoords.lowX,
+                            calibCoords.lowY,
+                            calibCoords.highX,
+                            calibCoords.highY
                         ),
                     })
                 );
@@ -226,7 +226,10 @@ export default function CameraView({ height }) {
                 <Col xs lg={8}>
                     <Card>
                         <Card.Header as="h5" style={{ height: '64px' }}>
-                            <SourceSelect onChange={setVideoSrc} />
+                            <SourceSelect
+                                onChange={setVideoSrc}
+                                calibCoords={calibCoords}
+                            />
                         </Card.Header>
                         {saturatedChannels.length > 0 && (
                             <Alert
@@ -246,7 +249,7 @@ export default function CameraView({ height }) {
                         />
                         <Card.Footer>
                             <Row style={{ display: 'flex' }}>
-                                <LineSelector onChange={setCalibCoords} />
+                                <LineSelector />
                                 <Col
                                     xs
                                     xl={4}
@@ -275,6 +278,5 @@ export default function CameraView({ height }) {
 }
 
 CameraView.propTypes = {
-    cameraFeed: PropTypes.object,
     height: PropTypes.number,
 };

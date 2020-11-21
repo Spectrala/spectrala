@@ -13,15 +13,24 @@ export const videoSlice = createSlice({
     name: 'video',
     initialState: {
         pixelLine: null,
+        lineCoords: {
+            lowX: 0.1,
+            lowY: 0.5,
+            highX: 0.9,
+            highY: 0.5,
+        },
     },
     reducers: {
         updateFeed: (state, action) => {
             state.pixelLine = action.payload.value;
         },
+        updateLineCoords: (state, action) => {
+            state.lineCoords[action.payload.targetKey] = action.payload.value;
+        }
     },
 });
 
-export const { updateFeed } = videoSlice.actions;
+export const { updateFeed, updateLineCoords } = videoSlice.actions;
 
 export const selectIntensities = (state) => {
     const pixels = state.video.pixelLine
@@ -30,7 +39,8 @@ export const selectIntensities = (state) => {
     }
     return null;
 }
-    
+
+export const selectLineCoords = (state) => state.video.lineCoords; 
 
 export const selectChartData = (state) => {
     const intensities = selectIntensities(state);
