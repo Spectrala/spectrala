@@ -16,7 +16,6 @@ export const videoSlice = createSlice({
     },
     reducers: {
         updateFeed: (state, action) => {
-            console.log('HEHEHEHEHHEHE');
             state.pixelLine = action.payload.value;
         },
     },
