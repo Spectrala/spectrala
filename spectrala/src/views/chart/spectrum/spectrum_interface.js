@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import CalibrationPointsControl from './points_control';
 import CalibrationLine from './calibration_line';
 
-export default function CalibrationSpectrumChart({ height }) {
+export default function SpectrumChart({ height }) {
     function getHeader() {
         return (
             <Card.Header
@@ -39,6 +39,6 @@ export default function CalibrationSpectrumChart({ height }) {
     );
 }
 
-CalibrationSpectrumChart.propTypes = {
+SpectrumChart.propTypes = {
     height: PropTypes.number,
 };
