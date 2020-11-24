@@ -1,8 +1,8 @@
 import React from 'react';
 import { Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import CalibrationPointsControl from './points_control';
-import CalibrationLine from './calibration_line';
+import SpectrumTools from './spectrum_tools';
+import SpectrumLine from './spectrum_line';
 
 export default function SpectrumChart({ height }) {
     function getHeader() {
@@ -17,7 +17,7 @@ export default function SpectrumChart({ height }) {
                     paddingRight: '15px',
                 }}
             >
-                Calibration
+                Spectrum
             </Card.Header>
         );
     }
@@ -28,12 +28,12 @@ export default function SpectrumChart({ height }) {
                 <Card>
                     {getHeader()}
                     <div style={{ height: height }}>
-                        <CalibrationLine/>
+                        <SpectrumLine/>
                     </div>
                 </Card>
             </Col>
             <Col xs lg={3}>
-                <CalibrationPointsControl height={height} />
+                <SpectrumTools height={height} />
             </Col>
         </Row>
     );

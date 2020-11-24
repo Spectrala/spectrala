@@ -1,15 +1,14 @@
 import React from 'react';
 import { ResponsiveLine } from '@nivo/line';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectChartData } from '../../../reducers/video';
+import { selectSpectrumChartData } from '../../../reducers/spectrum';
 import {
     selectCalibrationPoints,
     placePoint,
 } from '../../../reducers/calibration/calibration';
-// import { calibrationPresets } from '../../../reducers/calibration/calibration_constants';
 
 export default function SpectrumLine() {
-    const data = useSelector(selectChartData);
+    const data = useSelector(selectSpectrumChartData);
     const calibrationPoints = useSelector(selectCalibrationPoints);
     const dispatch = useDispatch();
     const CLOSE_POINT_THRESHOLD = 0.015;
@@ -210,14 +209,14 @@ export default function SpectrumLine() {
                 }}
                 markers={getPlacedMarkers()}
                 enableGridX={false}
-                colors={{ scheme: 'spectral' }}
+                colors={{ scheme: 'category10' }}
                 lineWidth={2}
                 pointSize={4}
                 pointColor={{ theme: 'background' }}
                 pointBorderWidth={1}
                 pointBorderColor={{ from: 'serieColor' }}
                 pointLabelYOffset={-12}
-                enableArea={false}
+                enableArea={true}
                 areaOpacity={0.1}
                 useMesh={true}
                 onClick={(point, event) => {

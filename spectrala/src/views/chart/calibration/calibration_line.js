@@ -217,7 +217,7 @@ export default function CalibrationLine() {
                 pointBorderWidth={1}
                 pointBorderColor={{ from: 'serieColor' }}
                 pointLabelYOffset={-12}
-                enableArea={false}
+                enableArea={true}
                 areaOpacity={0.1}
                 useMesh={true}
                 onClick={(point, event) => {

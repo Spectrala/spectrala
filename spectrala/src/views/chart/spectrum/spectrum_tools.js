@@ -233,11 +233,11 @@ export default function SpectrumTools({ height, maximumPoints }) {
     );
 }
 
-CalibrationPointsControl.propTypes = {
+SpectrumTools.propTypes = {
     height: PropTypes.number,
     maximumPoints: PropTypes.number,
 };
 
-CalibrationPointsControl.defaultProps = {
+SpectrumTools.defaultProps = {
     maximumPoints: 5,
 };
