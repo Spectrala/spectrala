@@ -150,7 +150,6 @@ export default function CameraView({ height }) {
     const canvas = useRef(null);
     const [videoSrc, setVideoSrc] = useState(null);
 
-    const [imageData, setImageData] = useState(null);
     const [inSaveMode, setInSaveMode] = useState(false);
     const saveOverlayTarget = useRef(null);
 
@@ -251,7 +250,7 @@ export default function CameraView({ height }) {
         }, FRAME_RENDER_INTERVAL_MS);
 
         return () => clearInterval(videoInterval);
-    }, [canvas, videoSrc, calibCoords, dispatch, imageData, inSaveMode]);
+    }, [canvas, videoSrc, calibCoords, dispatch, inSaveMode]);
 
     return (
         <>
