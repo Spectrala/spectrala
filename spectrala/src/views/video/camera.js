@@ -18,7 +18,11 @@ import { selectLineCoords, updateFeed } from '../../reducers/video';
 // import { selectAdjustments } from '../../reducers/adjustments';
 
 const FRAME_RENDER_INTERVAL_MS = 67; // 15fps
-const DATA_FEEDBACK_INTERVAL_MS = 199;
+
+// Render this many frames per data read.
+// 1 will push data every at the same framerate as video is displayed,
+// 10 will push at 1/10 the rate, etc.
+const DATA_PUSH_INTERVAL_LENGTH_FRAMES = 3; // 15 / 3 = 5fps
 
 // Put ticker in here to dispatch slowly.
 // Line selection should be in redux.
@@ -151,6 +155,7 @@ export default function CameraView({ height }) {
     const saveOverlayTarget = useRef(null);
 
     useEffect(() => {
+        let frameCounter = 0;
         const videoInterval = setInterval(() => {
             console.log('videoInterval');
 
@@ -186,6 +191,39 @@ export default function CameraView({ height }) {
             }
             ctx.drawImage(videoSrc, 0, 0, canvasElem.width, canvasElem.height);
 
+            if (++frameCounter >= DATA_PUSH_INTERVAL_LENGTH_FRAMES) {
+                frameCounter = 0;
+
+                if (canvasElem.width * canvasElem.height === 0) {
+                    console.error(
+                        'Got to data reading step with zero-area canvas.'
+                    );
+                    return;
+                }
+
+                // TODO: this could be faster by querying only the region we need
+                const imgData = ctx.getImageData(
+                    0,
+                    0,
+                    canvasElem.width,
+                    canvasElem.height
+                );
+
+                dispatch(
+                    updateFeed({
+                        value: extractPixelData(
+                            imgData,
+                            calibCoords.lowX,
+                            calibCoords.lowY,
+                            calibCoords.highX,
+                            calibCoords.highY
+                        ),
+                    })
+                );
+            }
+
+            // Regardless of data pushing, we render the overlay line:
+
             // get line pixel data
             if (
                 !calibCoords ||
@@ -197,45 +235,15 @@ export default function CameraView({ height }) {
                 return;
             }
 
-            if (canvasElem.width * canvasElem.height === 0) {
-                console.error(
-                    'Got to data reading step with zero-area canvas.'
-                );
-                return;
-            }
-
-            // TODO: this could be faster by querying only the region we need
-            const imgData = ctx.getImageData(
-                0,
-                0,
-                canvasElem.width,
-                canvasElem.height
-            );
-
-            dispatch(
-                updateFeed({
-                    value: extractPixelData(
-                        imgData,
-                        calibCoords.lowX,
-                        calibCoords.lowY,
-                        calibCoords.highX,
-                        calibCoords.highY
-                    ),
-                })
-            );
-
-            // render line on top of the data we just got
-            if (inSaveMode) return; // but not if the user is saving
+            if (inSaveMode) return; // don't render overlay if the user is saving
             ctx.strokeStyle = 'yellow';
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.moveTo(
-                // I think this should be canvasElem.width, but this makes it work
                 calibCoords.lowX * canvasElem.width,
                 calibCoords.lowY * canvasElem.height
             );
             ctx.lineTo(
-                // same as above
                 calibCoords.highX * canvasElem.width,
                 calibCoords.highY * canvasElem.height
             );
