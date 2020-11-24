@@ -48,6 +48,11 @@ export const calibrationSlice = createSlice({
             point.setPlacementStatus(false);
             point.setPlacement(location);
         },
+        cancelPlace: (state, action) => {
+            const points = state.calibrationPoints.value;
+            const point = points[action.payload.targetIndex];
+            point.setPlacementStatus(false);
+        },
     },
 });
 
@@ -58,6 +63,7 @@ export const {
     addOption,
     beginPlace,
     placePoint,
+    cancelPlace,
 } = calibrationSlice.actions;
 
 export const selectCalibrationPoints = (state) =>

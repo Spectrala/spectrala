@@ -22,6 +22,7 @@ import {
     removePoint,
     addOption,
     beginPlace,
+    cancelPlace,
 } from '../../../reducers/calibration/calibration';
 
 export default function CalibrationPointsControl({ height, maximumPoints }) {
@@ -134,7 +135,14 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
     function getPrependedGroup(point, idx) {
         var description = point.getPlacementStatusDescription();
         if (description['isBeingPlaced']) {
-            return <InputGroup.Text>Placing</InputGroup.Text>;
+            return (
+                <Button
+                    variant="outline-secondary"
+                    onClick={() => dispatch(cancelPlace({ targetIndex: idx }))}
+                >
+                    Placing
+                </Button>
+            );
         } else if (description['hasBeenPlaced']) {
             return <InputGroup.Text>Done</InputGroup.Text>;
         }
