@@ -4,9 +4,10 @@ import logo from '../spectrala_logo.svg';
 import CameraView from './video/camera';
 import CalibrationSpectrumChart from './chart/calibration/calibration_interface';
 import SpectrumChart from './chart/spectrum/spectrum_interface';
+import SaveButton from './persistence/save_btn';
+import LoadButton from './persistence/load_btn';
 
 export default class Dashboard extends React.Component {
-
     // TODO: make the help menu do something before you show it to the user
     getHelpMenu = () => {
         const helpMenu = (
@@ -33,7 +34,11 @@ export default class Dashboard extends React.Component {
                 <Navbar.Brand href="#home">
                     <img style={{ height: '40px' }} src={logo} alt="logo" />
                 </Navbar.Brand>
-                <Nav className="mr-auto">{this.getHelpMenu()}</Nav>
+                <Nav className="mr-auto">
+                    {this.getHelpMenu()}
+                    <SaveButton />
+                    <LoadButton />
+                </Nav>
             </Navbar>
         );
     };
