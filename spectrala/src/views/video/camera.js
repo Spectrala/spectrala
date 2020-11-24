@@ -156,7 +156,6 @@ export default function CameraView({ height }) {
     useEffect(() => {
         let frameCounter = 0;
         const videoInterval = setInterval(() => {
-            console.log('videoInterval');
 
             const canvasElem = canvas.current;
             if (!canvasElem) return;

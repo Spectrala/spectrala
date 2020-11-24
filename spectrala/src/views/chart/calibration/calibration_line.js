@@ -4,14 +4,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectChartData } from '../../../reducers/video';
 import {
     selectCalibrationPoints,
-    getPointBeingPlaced,
-    handleSelection,
+    placePoint,
 } from '../../../reducers/calibration/calibration';
+import { calibrationPresets } from '../../../reducers/calibration/calibration_constants';
 
 export default function CalibrationLine() {
     const data = useSelector(selectChartData);
     const calibrationPoints = useSelector(selectCalibrationPoints);
     const dispatch = useDispatch();
+    const CLOSE_POINT_THRESHOLD = 0.015;
 
     if (!data) {
         return getLoadingScreen();
@@ -39,29 +40,31 @@ export default function CalibrationLine() {
         return bottomAxis;
     }
 
+    function getSetPoints() {
+        return calibrationPoints.filter((point) => point.hasBeenPlaced());
+    }
+
     function getPlacedMarkers() {
-        return null;
-        return calibrationPoints
-            .getSetPoints()
-            .map((description) => {
-                return {
-                    axis: 'x',
-                    value: description['placement'],
-                    lineStyle: {
-                        stroke: '#000',
-                        strokeWidth: 2,
-                    },
-                    legend: description['wavelength'],
-                };
-            });
+        return getSetPoints().map((point) => {
+            var description = point.getWavelengthDescription();
+            var location = point.getPlacement()
+            return {
+                axis: 'x',
+                value: location,
+                lineStyle: {
+                    stroke: '#000',
+                    strokeWidth: 2,
+                },
+                legend: description,
+            };
+        });
     }
 
     function getTooltip() {
-        var point = getPointBeingPlaced();
+        var point = getPointBeingPlaced().point;
         if (!point) {
             return null;
         }
-        console.log(point);
         var label = point.getWavelengthDescription();
         return (
             <div
@@ -75,6 +78,88 @@ export default function CalibrationLine() {
                 {label}
             </div>
         );
+    }
+
+    function getPointBeingPlaced() {
+        var pointBeingPlaced = null;
+        var index = null;
+        calibrationPoints.forEach((point, idx) => {
+            if (point.isBeingPlaced) {
+                pointBeingPlaced = point;
+                index = idx;
+            }
+        });
+        return {
+            point: pointBeingPlaced,
+            idx: index,
+        };
+    }
+
+    function isCurrentlyPlacing() {
+        return !!getPointBeingPlaced().point;
+    }
+
+    function triggerBadPlacement() {
+        console.warn('TODO: Bad point drop detected. Alert user.');
+    }
+
+    function isValidPlacement(point, xPosition) {
+        console.warn('TODO: implement isValidPlacement');
+        return true;
+    }
+
+    function getPointIndexThatFallsOnLocation(location) {
+        var pointDistances = [];
+        // Want to get the point closest to the click
+        calibrationPoints.forEach((point, idx) => {
+            var placement = point.getPlacement();
+            if (placement) {
+                pointDistances.push({
+                    idx: idx,
+                    residual: Math.abs(placement - location),
+                });
+            }
+        });
+
+        // If there are no points, return null
+        if (pointDistances.length === 0) return null;
+
+        // Retrieve the closest point.
+        var minResidual = pointDistances.sort(
+            (a, b) => a.residual - b.residual
+        )[0];
+
+        // If this point is close enough to a click by the CLOSE_POINT_THRESHOLD, return its index.
+        if (minResidual < CLOSE_POINT_THRESHOLD) return minResidual.idx;
+
+        // Otherwise, return null.
+        return null;
+    }
+
+    function pointFallsOnLocation(location) {
+        return !!getPointIndexThatFallsOnLocation(location);
+    }
+
+    function handleSelection(action) {
+        const xPosition = action.value;
+        if (isCurrentlyPlacing()) {
+            var ongoingPlacement = getPointBeingPlaced();
+            var point = ongoingPlacement.point;
+            var idx = ongoingPlacement.idx;
+            if (isValidPlacement(point, xPosition)) {
+                dispatch(
+                    placePoint({
+                        value: xPosition,
+                        targetIndex: idx,
+                    })
+                );
+            } else {
+                triggerBadPlacement();
+            }
+        } else if (pointFallsOnLocation(xPosition)) {
+            var pointIdx = getPointIndexThatFallsOnLocation(xPosition);
+            this.editOption(pointIdx);
+        }
     }
 
     function getLoadingScreen() {
@@ -95,8 +180,7 @@ export default function CalibrationLine() {
     }
 
     function getLineGraph() {
-        // const shouldShowCrosshair = this.props.calibrationPoints.isCurrentlyPlacing();
-        const shouldShowCrosshair = false;
+        const shouldShowCrosshair = isCurrentlyPlacing();
 
         return (
             <ResponsiveLine
@@ -137,9 +221,9 @@ export default function CalibrationLine() {
                 areaOpacity={0.1}
                 useMesh={true}
                 onClick={(point, event) => {
-                    dispatch(handleSelection({
-                        value: point.data.x
-                    }))
+                    handleSelection({
+                        value: point.data.x,
+                    });
                 }}
                 crosshairType={'bottom'}
                 enableCrosshair={shouldShowCrosshair}

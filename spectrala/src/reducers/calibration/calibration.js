@@ -8,7 +8,6 @@ export const setAllPlacementStatusesFalse = (calibrationPoints) => {
     calibrationPoints.map((point) => point.setPlacementStatus(false));
 };
 
-
 export const calibrationSlice = createSlice({
     name: 'calibration',
     initialState: {
@@ -16,9 +15,8 @@ export const calibrationSlice = createSlice({
     },
     reducers: {
         modifyWavelength: (state, action) => {
-            const point = state.calibrationPoints.value[
-                action.payload.targetIndex
-            ];
+            const point =
+                state.calibrationPoints.value[action.payload.targetIndex];
             point.setWavelength(action.payload.value);
             /** Make sure the point cannot be placed if the new value is invalid. */
             if (point.isBeingPlaced && !point.isValidToPlace()) {
@@ -43,22 +41,12 @@ export const calibrationSlice = createSlice({
             point.setPlacementStatus(true);
             point.setPlacement(null);
         },
-        isCurrentlyPlacing: (state) => {
-            return !!this.getPointBeingPlaced(state);
-        },
-        handleSelection: (state, action) => {
-            const xPosition = action.payload.value;
-            if (this.isCurrentlyPlacing(state)) {
-                var point = this.getPointBeingPlaced();
-                if (this.isValidPlacement(point, xPosition)) {
-                    this.placePoint(point, xPosition);
-                } else {
-                    this.triggerBadPlacement();
-                }
-            } else if (this.pointFallsOnLocation(xPosition)) {
-                var pointIdx = this.getPointIndexThatFallsOnLocation(xPosition);
-                this.editOption(pointIdx);
-            }
+        placePoint: (state, action) => {
+            const points = state.calibrationPoints.value;
+            const point = points[action.payload.targetIndex];
+            const location = action.payload.value;
+            point.setPlacementStatus(false);
+            point.setPlacement(location);
         },
     },
 });
@@ -69,13 +57,11 @@ export const {
     removePoint,
     addOption,
     beginPlace,
-    getPointBeingPlaced,
-    handleSelection,
+    placePoint,
 } = calibrationSlice.actions;
 
 export const selectCalibrationPoints = (state) =>
     state.calibration.calibrationPoints.value;
-
 
 export const selectTooltipLabel = (state) => {
     var pointBeingPlaced = null;
@@ -86,7 +72,6 @@ export const selectTooltipLabel = (state) => {
         }
     });
     return pointBeingPlaced;
-
-}
+};
 
 export default calibrationSlice.reducer;
