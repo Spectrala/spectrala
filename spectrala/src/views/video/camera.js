@@ -1,5 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Col, Card, Row, Alert } from 'react-bootstrap';
+import {
+    Button,
+    Col,
+    Card,
+    Row,
+    Alert,
+    Overlay,
+    Popover,
+} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import SourceSelect from './source_select';
 import LineSelector from './line_selector';
@@ -27,7 +35,7 @@ function getSinglePixel(imageData, initial, current) {
         dist += (current[i] - initial[i]) * (current[i] - initial[i]);
     }
     dist = Math.sqrt(dist);
-    let offset = (current[0] * imageData.width + current[1]) * 4;
+    let offset = (current[1] * imageData.width + current[0]) * 4;
     const r = imageData.data[offset];
     const g = imageData.data[offset + 1];
     const b = imageData.data[offset + 2];
@@ -80,6 +88,9 @@ function extractPixelData(imageData, beginX, beginY, finalX, finalY) {
         Math.round(imageData.width * finalX),
         Math.round(imageData.height * finalY),
     ];
+    // ensure we don't exceed image boundaries on a 1.0 value
+    pos2[0] = Math.min(pos2[0], imageData.width - 1);
+    pos2[1] = Math.min(pos2[1], imageData.height - 1);
 
     let delta = pos2.map(function (value, index) {
         return value - pos1[index];
@@ -136,6 +147,8 @@ export default function CameraView({ height }) {
     const [videoSrc, setVideoSrc] = useState(null);
 
     const [imageData, setImageData] = useState(null);
+    const [inSaveMode, setInSaveMode] = useState(false);
+    const saveOverlayTarget = useRef(null);
 
     useEffect(() => {
         const videoInterval = setInterval(() => {
@@ -144,16 +157,33 @@ export default function CameraView({ height }) {
             const canvasElem = canvas.current;
             if (!canvasElem) return;
             const ctx = canvasElem.getContext('2d');
-            if (!videoSrc) {
+            if (
+                !videoSrc ||
+                (videoSrc instanceof HTMLImageElement &&
+                    videoSrc.naturalHeight === 0)
+            ) {
                 // fill with placeholder color and return
                 canvasElem.height = 200;
-                ctx.fillStyle = 'grey';
+                ctx.fillStyle = 'green';
                 ctx.fillRect(0, 0, canvasElem.width, canvasElem.height);
                 return;
             }
             // render canvas frame
-            canvasElem.width = videoSrc.videoWidth;
-            canvasElem.height = videoSrc.videoHeight;
+            if (videoSrc instanceof HTMLVideoElement) {
+                canvasElem.width = videoSrc.videoWidth;
+                canvasElem.height = videoSrc.videoHeight;
+            } else if (videoSrc instanceof HTMLImageElement) {
+                canvasElem.width = videoSrc.naturalWidth;
+                canvasElem.height = videoSrc.naturalHeight;
+            } else {
+                /* eslint-disable no-throw-literal */
+                throw {
+                    err: 'Unsupported video source type',
+                    type: typeof videoSrc,
+                    src: videoSrc,
+                };
+                /* eslint-enable no-throw-literal */
+            }
             ctx.drawImage(videoSrc, 0, 0, canvasElem.width, canvasElem.height);
 
             // get line pixel data
@@ -163,11 +193,16 @@ export default function CameraView({ height }) {
                 calibCoords.lowY === null ||
                 calibCoords.highX === null ||
                 calibCoords.highY === null
-            )
+            ) {
                 return;
-            // debugger;
+            }
 
-            if (canvasElem.width * canvasElem.height === 0) return;
+            if (canvasElem.width * canvasElem.height === 0) {
+                console.error(
+                    'Got to data reading step with zero-area canvas.'
+                );
+                return;
+            }
 
             // TODO: this could be faster by querying only the region we need
             const imgData = ctx.getImageData(
@@ -176,7 +211,6 @@ export default function CameraView({ height }) {
                 canvasElem.width,
                 canvasElem.height
             );
-
 
             dispatch(
                 updateFeed({
@@ -191,36 +225,25 @@ export default function CameraView({ height }) {
             );
 
             // render line on top of the data we just got
+            if (inSaveMode) return; // but not if the user is saving
             ctx.strokeStyle = 'yellow';
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.moveTo(
                 // I think this should be canvasElem.width, but this makes it work
-                calibCoords.lowX * videoSrc.videoWidth,
+                calibCoords.lowX * canvasElem.width,
                 calibCoords.lowY * canvasElem.height
             );
             ctx.lineTo(
                 // same as above
-                calibCoords.highX * videoSrc.videoWidth,
+                calibCoords.highX * canvasElem.width,
                 calibCoords.highY * canvasElem.height
             );
             ctx.stroke();
         }, FRAME_RENDER_INTERVAL_MS);
 
-
-        const calibrationInterval = setInterval(() => {
-            console.log('calibrationInterval');
-
-            if (imageData && calibCoords) {
-                
-            }
-        }, DATA_FEEDBACK_INTERVAL_MS);
-
-        return () => {
-            clearInterval(videoInterval);
-            clearInterval(calibrationInterval);
-        };
-    }, [canvas, videoSrc, calibCoords, dispatch, imageData]);
+        return () => clearInterval(videoInterval);
+    }, [canvas, videoSrc, calibCoords, dispatch, imageData, inSaveMode]);
 
     return (
         <>
@@ -263,9 +286,30 @@ export default function CameraView({ height }) {
                                     <Button
                                         variant="outline-primary"
                                         style={{ alignItems: 'center' }}
+                                        onClick={() =>
+                                            setInSaveMode(!inSaveMode)
+                                        }
+                                        ref={saveOverlayTarget}
                                     >
-                                        <CameraFill /> Save Snapshot
+                                        <CameraFill /> Snapshot Mode
                                     </Button>
+                                    <Overlay
+                                        show={inSaveMode}
+                                        target={saveOverlayTarget.current}
+                                        placement="left-start"
+                                    >
+                                        <Popover id="snapshot-popover">
+                                            <Popover.Title>
+                                                Snapshot Mode
+                                            </Popover.Title>
+                                            <Popover.Content>
+                                                Right-click the preview and
+                                                select "Save image as..." Click
+                                                again when you are done to
+                                                re-enable the overlay.
+                                            </Popover.Content>
+                                        </Popover>
+                                    </Overlay>
                                 </Col>
                             </Row>
                         </Card.Footer>
