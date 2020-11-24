@@ -23,6 +23,7 @@ import {
     addOption,
     beginPlace,
     cancelPlace,
+    editPlacement,
 } from '../../../reducers/calibration/calibration';
 
 export default function CalibrationPointsControl({ height, maximumPoints }) {
@@ -163,7 +164,11 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
                 <Button
                     variant="outline-secondary"
                     onClick={() => {
-                        calibrationPoints.beginPlace(idx);
+                        dispatch(
+                            editPlacement({
+                                targetIndex: idx,
+                            })
+                        );
                     }}
                 >
                     <Pencil

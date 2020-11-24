@@ -47,7 +47,7 @@ export default function CalibrationLine() {
     function getPlacedMarkers() {
         return getSetPoints().map((point) => {
             var description = point.getWavelengthDescription();
-            var location = point.getPlacement()
+            var location = point.getPlacement();
             return {
                 axis: 'x',
                 value: location,
