@@ -6,7 +6,7 @@ import {
     selectCalibrationPoints,
     placePoint,
 } from '../../../reducers/calibration/calibration';
-import { calibrationPresets } from '../../../reducers/calibration/calibration_constants';
+// import { calibrationPresets } from '../../../reducers/calibration/calibration_constants';
 
 export default function CalibrationLine() {
     const data = useSelector(selectChartData);

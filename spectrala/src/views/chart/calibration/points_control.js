@@ -41,14 +41,6 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
         );
     }
 
-    // componentDidMount() {
-    //     calibrationPoints.addListener((() => this.onDataUpdate()))
-    // }
-
-    // onDataUpdate = () => {
-    //     // console.log("Nice, fresh data to view!")
-    // }
-
     function getCalibrationBoxes() {
         return (
             <>
