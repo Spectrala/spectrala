@@ -207,6 +207,7 @@ export default function CameraView({ height }) {
                     canvasElem.height
                 );
 
+                // TODO: Consider putting on timer. Right now, things are running smoothly through pushing everything.
                 dispatch(
                     updateFeed({
                         value: extractPixelData(
