@@ -25,7 +25,9 @@ export const selectSpectrum = (state, target) => {
 
 export const selectSpectrumIntensities = (state) => {
     const intensities = selectIntensities(state);
-    const calibrationPoints = selectCalibrationPoints(state);
+    const calibrationPoints = selectCalibrationPoints(state).map((point) =>
+        point.getPlacementLocationDescription()
+    );
     return getCalibratedSpectrum(intensities, calibrationPoints);
 };
 

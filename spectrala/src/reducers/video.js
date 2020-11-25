@@ -1,5 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+// Samples included in the moving average
+const PIXEL_LINE_HISTORY_DEPTH = 5;
+
 /**
  * videoSlice variables
  *
@@ -12,7 +15,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const videoSlice = createSlice({
     name: 'video',
     initialState: {
-        pixelLine: null,
+        pixelLineHistory: [],
         lineCoords: {
             lowX: 0.1,
             lowY: 0.5,
@@ -22,7 +25,28 @@ export const videoSlice = createSlice({
     },
     reducers: {
         updateFeed: (state, action) => {
-            state.pixelLine = action.payload.value;
+            const newline = action.payload.value;
+            var lineHist = state.pixelLineHistory;
+            /**
+             * Sort of stupid coding but this maintains a history of a certain length
+             * of pixel values in order to create a moving average of intensities.
+             * There's obvious uncertainty when looking at the static bounce around.
+             * Smoothing this out is better for UX and scientific accuracy.
+             */
+            if (lineHist.length > 0) {
+                if (lineHist[0].length === newline.length) {
+                    if (lineHist.length >= PIXEL_LINE_HISTORY_DEPTH)
+                        lineHist = lineHist.slice(
+                            PIXEL_LINE_HISTORY_DEPTH - lineHist.length + 1
+                        );
+                    lineHist.push(newline);
+                } else {
+                    lineHist = [newline];
+                }
+            } else {
+                lineHist = [newline];
+            }
+            state.pixelLineHistory = lineHist;
         },
         updateLineCoords: (state, action) => {
             state.lineCoords[action.payload.targetKey] = action.payload.value;
@@ -33,9 +57,17 @@ export const videoSlice = createSlice({
 export const { updateFeed, updateLineCoords } = videoSlice.actions;
 
 export const selectIntensities = (state) => {
-    const pixels = state.video.pixelLine;
-    if (pixels) {
-        return pixels.map((obj) => (obj.r + obj.g + obj.b) / 3 / 2.55);
+    const pixels = state.video.pixelLineHistory;
+    if (pixels && pixels.length > 0) {
+        const pixelLines = pixels.map((line) =>
+            line.map((obj) => (obj.r + obj.g + obj.b) / 3 / 2.55)
+        );
+        var averagedLine = [];
+        const len = pixelLines[0].length;
+        for (var i = 0; i<len; i++) {
+            averagedLine.push(pixelLines.map((line) => line[i]).reduce((a,b) => a + b, 0) / pixelLines.length)
+        }
+        return averagedLine;
     }
     return null;
 };
