@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { selectIntensities } from './video';
+import { selectCalibrationPoints } from './calibration/calibration';
+import { getCalibratedSpectrum } from './calibration/calibration_math';
 
 export const spectrumSlice = createSlice({
     name: 'spectrum',
@@ -8,7 +10,7 @@ export const spectrumSlice = createSlice({
     },
     reducers: {
         helloWorld: (state, action) => {
-            const target = action.payload.targetIndex;
+            // const target = action.payload.targetIndex;
             return null;
         },
     },
@@ -16,18 +18,16 @@ export const spectrumSlice = createSlice({
 
 export const { helloWorld } = spectrumSlice.actions;
 
-
 export const selectSpectrum = (state, target) => {
-    const f = state.calibration.adjustments[target];
+    // const f = state.calibration.adjustments[target];
     return null;
-}
+};
 
 export const selectSpectrumIntensities = (state) => {
-    var chartData = selectIntensities(state);
-    if (!chartData)  return null;
-    return chartData.map((x) => 100-x);
-}
-
+    const intensities = selectIntensities(state);
+    const calibrationPoints = selectCalibrationPoints(state);
+    return getCalibratedSpectrum(intensities, calibrationPoints);
+};
 
 export const selectSpectrumChartData = (state) => {
     const intensities = selectSpectrumIntensities(state);
@@ -47,7 +47,5 @@ export const selectSpectrumChartData = (state) => {
         },
     ];
 };
-
-
 
 export default spectrumSlice.reducer;
