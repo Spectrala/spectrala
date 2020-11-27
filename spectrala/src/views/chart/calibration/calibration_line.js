@@ -187,10 +187,10 @@ export default function CalibrationLine() {
                 data={data}
                 animate={false}
                 margin={{
-                    top: 15,
-                    right: 15,
-                    bottom: showsBottomAxis() ? 50 : 15,
-                    left: 60,
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
                 }}
                 xScale={{ type: 'linear', min: '0', max: '1' }}
                 yScale={{ type: 'linear', min: '0', max: '100' }}
@@ -199,15 +199,7 @@ export default function CalibrationLine() {
                 axisTop={null}
                 axisRight={null}
                 axisBottom={getBottomAxis()}
-                axisLeft={{
-                    tickSize: 5,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                    format: '.0f',
-                    legend: 'intensity',
-                    legendOffset: -40,
-                    legendPosition: 'middle',
-                }}
+                axisLeft={null}
                 markers={getPlacedMarkers()}
                 enableGridX={false}
                 colors={{ scheme: 'spectral' }}

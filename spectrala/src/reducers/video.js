@@ -3,6 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 // Samples included in the moving average
 const PIXEL_LINE_HISTORY_DEPTH = 5;
 
+const OVERSATURATION_CEILING = 98;
+const isNotOversaturated = (val) => val < OVERSATURATION_CEILING;
+
 /**
  * videoSlice variables
  *
@@ -16,6 +19,7 @@ export const videoSlice = createSlice({
     name: 'video',
     initialState: {
         pixelLineHistory: [],
+        isOversaturated: false,
         lineCoords: {
             lowX: 0.1,
             lowY: 0.5,
@@ -47,6 +51,12 @@ export const videoSlice = createSlice({
                 lineHist = [newline];
             }
             state.pixelLineHistory = lineHist;
+
+            /**
+             * Detect oversaturation
+             */
+            state.isOversaturated = !newline.every(isNotOversaturated);
+
         },
         updateLineCoords: (state, action) => {
             state.lineCoords[action.payload.targetKey] = action.payload.value;
@@ -71,6 +81,8 @@ export const selectIntensities = (state) => {
     }
     return null;
 };
+
+export const selectOversaturation = (state) => state.video.isOversaturated;
 
 export const selectLineCoords = (state) => state.video.lineCoords;
 
