@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import { Line } from 'react-chartjs-2';
 
 // How many digits are skipped when creating color stops.
-const GRADIENT_GRANULARITY = 10;
+const GRADIENT_GRANULARITY = 3;
 
-// TODO: Fix somewhat sketchy color settings. 
+// TODO: Fix somewhat sketchy color settings.
 
 export default function SpectrumLine({ height, width }) {
     const data = useSelector(selectSpectrumChartData);
@@ -15,13 +15,18 @@ export default function SpectrumLine({ height, width }) {
     const CLOSE_POINT_THRESHOLD = 0.015;
     const canvas = useRef(null);
 
+    // TODO: Fix ghetto typeof stuff
     if (!data) {
         return getLoadingScreen();
+    } else if (typeof data === typeof 'String') {
+        return getLoadingScreen(data);
     } else {
         return getLineGraph();
     }
 
-    function getLoadingScreen() {
+    function getLoadingScreen(message) {
+        var text = 'Please place all calibration points to get a spectrum.';
+        if (message) text = message;
         return (
             <label
                 style={{
@@ -32,8 +37,7 @@ export default function SpectrumLine({ height, width }) {
                     justifyContent: 'center',
                 }}
             >
-                Waiting for data. Make sure to set points of interest on camera
-                feed.
+                {text}
             </label>
         );
     }
@@ -102,11 +106,15 @@ export default function SpectrumLine({ height, width }) {
         return hex;
     }
 
-    function addGradients(gradientStroke, min, max) {
+    function addGradients(gradientStroke) {
+        const min = data[0].x;
+        const max = data[data.length - 1].x;
         const range = max - min;
+        const len = Math.round(range / GRADIENT_GRANULARITY);
+
         const get_x = (w) => (w - min) / range;
         const wavelengths = Array.from(
-            new Array(range / GRADIENT_GRANULARITY),
+            new Array(len),
             (x, i) => GRADIENT_GRANULARITY * i + min
         );
         wavelengths.forEach((p) => {
@@ -119,11 +127,11 @@ export default function SpectrumLine({ height, width }) {
             const ctx = canvas.getContext('2d');
 
             const frame = canvas.getBoundingClientRect();
-            const min_x = frame.x
-            const max_x = min_x + frame.width
+            const min_x = frame.x;
+            const max_x = min_x + frame.width;
 
             var gradientStroke = ctx.createLinearGradient(min_x, 0, max_x, 0);
-            addGradients(gradientStroke, 380, 820);
+            addGradients(gradientStroke);
             return {
                 datasets: [
                     {

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { selectIntensities } from './video';
 import { selectCalibrationPoints } from './calibration/calibration';
-import { getCalibratedSpectrum } from './calibration/calibration_math';
+import { validateCalibrationPoints, getCalibratedSpectrum } from './calibration/calibration_math';
 
 export const spectrumSlice = createSlice({
     name: 'spectrum',
@@ -18,30 +18,18 @@ export const spectrumSlice = createSlice({
 
 export const { helloWorld } = spectrumSlice.actions;
 
-export const selectSpectrum = (state, target) => {
-    // const f = state.calibration.adjustments[target];
-    return null;
-};
-
-export const selectSpectrumIntensities = (state) => {
+export const selectSpectrumChartData = (state) => {
     const intensities = selectIntensities(state);
     const calibrationPoints = selectCalibrationPoints(state).map((point) =>
         point.getPlacementLocationDescription()
     );
-    return getCalibratedSpectrum(intensities, calibrationPoints);
+    const validation = validateCalibrationPoints(calibrationPoints);
+    if (!validation.valid) {
+        const failureMessage = validation.message;
+        return failureMessage;
+    }
+    return getCalibratedSpectrum(intensities, validation.sortedCalibrationPoints);
 };
 
-export const selectSpectrumChartData = (state) => {
-    const intensities = selectSpectrumIntensities(state);
-    if (!intensities) {
-        return null;
-    }
-    return intensities.map((y, idx) => {
-        return {
-            x: 100* (idx / (intensities.length - 1)) + 200,
-            y: y,
-        };
-    });
-};
 
 export default spectrumSlice.reducer;

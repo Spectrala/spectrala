@@ -167,7 +167,7 @@ export default function CameraView({ height }) {
             ) {
                 // fill with placeholder color and return
                 canvasElem.height = 200;
-                ctx.fillStyle = 'green';
+                ctx.fillStyle = 'black'; // Used to be green, this looks better imo
                 ctx.fillRect(0, 0, canvasElem.width, canvasElem.height);
                 return;
             }

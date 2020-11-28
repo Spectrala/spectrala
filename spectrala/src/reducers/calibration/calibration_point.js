@@ -33,6 +33,7 @@ export default class CalibrationPoint {
         }
         return {
             wavelength: this.getWavelengthDescription(),
+            rawWavelength: this.wavelength,
             placement: this.placement,
         };
     };
