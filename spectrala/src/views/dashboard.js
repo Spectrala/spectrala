@@ -63,7 +63,7 @@ export default class Dashboard extends React.Component {
                             paddingBottom: '16px',
                         }}
                     >
-                        <CalibrationSpectrumChart height={400} />
+                        <CalibrationSpectrumChart height={350} />
                     </Row>
                     <Row
                         xs
@@ -74,7 +74,7 @@ export default class Dashboard extends React.Component {
                             paddingBottom: '16px',
                         }}
                     >
-                        <SpectrumChart height={400} />
+                        <SpectrumChart height={350} />
                     </Row>
                 </Col>
             </Container>

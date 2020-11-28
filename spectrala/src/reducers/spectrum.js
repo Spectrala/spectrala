@@ -38,7 +38,7 @@ export const selectSpectrumChartData = (state) => {
     }
     return intensities.map((y, idx) => {
         return {
-            x: idx / (intensities.length - 1),
+            x: 100* (idx / (intensities.length - 1)) + 200,
             y: y,
         };
     });

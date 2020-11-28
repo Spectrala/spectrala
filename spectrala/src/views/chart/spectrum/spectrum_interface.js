@@ -28,7 +28,7 @@ export default function SpectrumChart({ height }) {
                 <Card>
                     {getHeader()}
                     <div style={{ height: height }}>
-                        <SpectrumLine/>
+                        <SpectrumLine height={height}/>
                     </div>
                 </Card>
             </Col>
