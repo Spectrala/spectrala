@@ -146,6 +146,9 @@ export default function SpectrumLine({ height, width }) {
             };
         };
 
+        const min_x_value = data[0].x;
+        const max_x_value = data[data.length - 1].x;
+
         return (
             <div
                 style={{ position: 'relative', height: height, width: '100%' }}
@@ -161,18 +164,28 @@ export default function SpectrumLine({ height, width }) {
                                 {
                                     type: 'linear',
                                     position: 'bottom',
-                                    display: false,
-
+                                    display:false,
                                     gridLines: {
                                         drawTicks: false,
                                         display: false,
                                     },
+                                    ticks: {
+                                        beginAtZero: true,
+                                        steps: 10,
+                                        stepValue: 5,
+                                        max: 100
+                                    }
                                 },
                             ],
                             xAxes: [
                                 {
                                     type: 'linear',
                                     position: 'bottom',
+                                    ticks: {
+                                        precision: 0,
+                                        min: min_x_value,
+                                        max: max_x_value
+                                    }
                                 },
                             ],
                         },
