@@ -1,6 +1,4 @@
-import React, { useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectSpectrumChartData } from '../../../reducers/spectrum';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Line } from 'react-chartjs-2';
 
@@ -8,12 +6,7 @@ import { Line } from 'react-chartjs-2';
 const GRADIENT_GRANULARITY = 3;
 
 // TODO: Fix somewhat sketchy color settings.
-
-export default function SpectrumLine({ height, width }) {
-    const data = useSelector(selectSpectrumChartData);
-    const dispatch = useDispatch();
-    const CLOSE_POINT_THRESHOLD = 0.015;
-    const canvas = useRef(null);
+export default function SpectrumLine({ height, data }) {
 
     // TODO: Fix ghetto typeof stuff
     if (!data) {
@@ -43,7 +36,7 @@ export default function SpectrumLine({ height, width }) {
     }
 
     /**
-     * All this code was copped off of this website
+     * decimalToHex and convert were taken from this website:
      * https://www.johndcook.com/wavelength_to_RGB.html
      */
     function decimalToHex(d) {
@@ -198,5 +191,5 @@ export default function SpectrumLine({ height, width }) {
 
 SpectrumLine.propTypes = {
     height: PropTypes.number,
-    width: PropTypes.number,
+    data: PropTypes.array,
 };

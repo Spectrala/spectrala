@@ -5,7 +5,7 @@ import {
 import PropTypes from 'prop-types';
 
 
-export default function SpectrumTools({ height, maximumPoints }) {
+export default function ResultantSpectrumTools({ height }) {
 
     return (
         <Card style={{ width: '100%' }}>
@@ -20,7 +20,7 @@ export default function SpectrumTools({ height, maximumPoints }) {
                     paddingRight: '15px',
                 }}
             >
-                Spectrum Tools
+                Saved Results
             </Card.Header>
             <div
                 style={{
@@ -31,12 +31,12 @@ export default function SpectrumTools({ height, maximumPoints }) {
                     paddingRight: '15px',
                 }}
             >
-                <label>Some tools for working with spectra</label>
+                <label>This should be about the last thing</label>
             </div>
         </Card>
     );
 }
 
-SpectrumTools.propTypes = {
+ResultantSpectrumTools.propTypes = {
     height: PropTypes.number,
 };

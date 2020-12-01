@@ -1,10 +1,15 @@
 import React from 'react';
 import { Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import SpectrumTools from './spectrum_tools';
-import SpectrumLine from './spectrum_line';
+import ReferenceSpectrumTools from './resultant_tools';
+import SpectrumLine from '../spectrum_line';
+import { useSelector } from 'react-redux';
+import { selectSpectrumChartData } from '../../../reducers/spectrum';
 
-export default function SpectrumChart({ height }) {
+export default function ResultantSpectrumChart({ height }) {
+
+    const data = useSelector(selectSpectrumChartData);
+    
     function getHeader() {
         return (
             <Card.Header
@@ -17,7 +22,7 @@ export default function SpectrumChart({ height }) {
                     paddingRight: '15px',
                 }}
             >
-                Spectrum
+                Resultant Spectrum
             </Card.Header>
         );
     }
@@ -28,17 +33,17 @@ export default function SpectrumChart({ height }) {
                 <Card>
                     {getHeader()}
                     <div style={{ height: height }}>
-                        <SpectrumLine height={height}/>
+                        <SpectrumLine height={height} data={data}/>
                     </div>
                 </Card>
             </Col>
             <Col xs lg={3}>
-                <SpectrumTools height={height} />
+                <ReferenceSpectrumTools height={height} />
             </Col>
         </Row>
     );
 }
 
-SpectrumChart.propTypes = {
+ResultantSpectrumChart.propTypes = {
     height: PropTypes.number,
 };
