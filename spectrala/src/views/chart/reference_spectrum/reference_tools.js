@@ -9,12 +9,14 @@ import {
     rename_reference,
     selectRecordedReferences,
     selectReferenceSpectrumChartData,
+    selectValidation,
 } from '../../../reducers/spectrum';
 
 export default function ReferenceSpectrumTools({ height }) {
     const dispatch = useDispatch();
     const spectra = useSelector(selectRecordedReferences);
     const currentSpectrum = useSelector(selectReferenceSpectrumChartData);
+    const valid = useSelector(selectValidation);
 
     return (
         <Card style={{ width: '100%' }}>
@@ -30,7 +32,7 @@ export default function ReferenceSpectrumTools({ height }) {
                 }}
             >
                 Saved References
-                <Button
+                <Button disabled={valid.valid === false}
                     onClick={() => {
                         dispatch(record_reference({
                             data: currentSpectrum,

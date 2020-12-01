@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // Samples included in the moving average
 const PIXEL_LINE_HISTORY_DEPTH = 5;
 
+// Look for absolute maximum, and don't do this in video. this should be raw input. 
 const OVERSATURATION_CEILING = 98;
 const isNotOversaturated = (val) => val < OVERSATURATION_CEILING;
 

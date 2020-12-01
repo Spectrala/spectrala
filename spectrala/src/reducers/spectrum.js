@@ -16,6 +16,7 @@ export const referenceSpectrumSlice = createSlice({
     },
     reducers: {
         record_reference: (state, action) => {
+            // TODO: Verify spectrum is okay. Right now that is only done in the button.
             var recorded = state.recorded_references;
             var key = 1;
             if (recorded.length > 0) {
@@ -28,6 +29,7 @@ export const referenceSpectrumSlice = createSlice({
                 name: name,
                 data: data,
             });
+            console.log(recorded)
             state.record_references = recorded;
         },
         remove_reference: (state, action) => {
