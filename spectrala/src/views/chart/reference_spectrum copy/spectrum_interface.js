@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import ReferenceSpectrumTools from './reference_tools';
+import ReferenceSpectrumTools from './spectrum_tools';
 import SpectrumLine from '../spectrum_line';
 import { useSelector } from 'react-redux';
 import { selectReferenceSpectrumChartData } from '../../../reducers/spectrum';

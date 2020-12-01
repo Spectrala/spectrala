@@ -5,6 +5,13 @@ import { Line } from 'react-chartjs-2';
 // How many digits are skipped when creating color stops.
 const GRADIENT_GRANULARITY = 3;
 
+/**
+ * SpectrumLine:
+ *      This interface is meant to handle both the reference 
+ *      spectrum and the resultant spectrum. It's the pretty rainbow.
+ */
+
+
 // TODO: Fix somewhat sketchy color settings.
 export default function SpectrumLine({ height, data }) {
 
@@ -191,5 +198,5 @@ export default function SpectrumLine({ height, data }) {
 
 SpectrumLine.propTypes = {
     height: PropTypes.number,
-    data: PropTypes.array,
+    data: PropTypes.any,
 };

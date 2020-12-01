@@ -1,11 +1,20 @@
 import React from 'react';
-import {
-    Card,
-} from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { Button } from 'react-bootstrap';
+import {
+    record_reference,
+    remove_reference,
+    rename_reference,
+    selectRecordedReferences,
+    selectReferenceSpectrumChartData,
+} from '../../../reducers/spectrum';
 
 export default function ReferenceSpectrumTools({ height }) {
+    const dispatch = useDispatch();
+    const spectra = useSelector(selectRecordedReferences);
+    const currentSpectrum = useSelector(selectReferenceSpectrumChartData);
 
     return (
         <Card style={{ width: '100%' }}>
@@ -21,6 +30,15 @@ export default function ReferenceSpectrumTools({ height }) {
                 }}
             >
                 Saved References
+                <Button
+                    onClick={() => {
+                        dispatch(record_reference({
+                            data: currentSpectrum,
+                        }));
+                    }}
+                >
+                    Record
+                </Button>
             </Card.Header>
             <div
                 style={{
@@ -31,7 +49,10 @@ export default function ReferenceSpectrumTools({ height }) {
                     paddingRight: '15px',
                 }}
             >
-                <label>Some tools for working with spectra like a record button and stuff.</label>
+                <label>
+                    Some tools for working with spectra like a record button and
+                    stuff.
+                </label>
             </div>
         </Card>
     );
