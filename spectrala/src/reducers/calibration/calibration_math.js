@@ -47,6 +47,11 @@ export const getCalibratedSpectrum = (intensities, sortedCalibrationPoints) => {
     const m = (b.y-a.y)/(b.x-a.x);
     const w_end = (x) => m*(x - a.x) + b.y;
 
+    if (!intensities){
+        console.warn("Got null intensities");
+        return;
+    }
+
     return intensities.map((y, idx) => {
         const x_position = idx / (intensities.length - 1);
         return {

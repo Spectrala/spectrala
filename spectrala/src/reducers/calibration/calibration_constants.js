@@ -14,8 +14,8 @@ export const calibrationPresets = {
     cfl: {
         title: 'CFL Bulb',
         value: [
-            new CalibrationPoint(303, null, false),
-            new CalibrationPoint(421, null, false),
+            new CalibrationPoint(303, 0.2, false),
+            new CalibrationPoint(421, 0.4, false),
         ],
     },
 };

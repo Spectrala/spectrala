@@ -5,8 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import {
     record_reference,
-    remove_reference,
-    rename_reference,
     selectRecordedReferences,
     selectReferenceSpectrumChartData,
     selectValidation,

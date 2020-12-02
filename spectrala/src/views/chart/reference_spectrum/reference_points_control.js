@@ -1,22 +1,16 @@
 import React from 'react';
 import {
-    Card,
     InputGroup,
-    Dropdown,
     Button,
     Form,
-    DropdownButton,
 } from 'react-bootstrap';
 import { XCircle, Pencil } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    record_reference,
     remove_reference,
     rename_reference,
-    selectValidation,
-    selectReferenceSpectrumChartData,
     selectRecordedReferences,
 } from '../../../reducers/spectrum';
 
@@ -56,7 +50,7 @@ export default function ReferencePointsControl({ height }) {
                                             })
                                         );
                                     }}
-                                    isInvalid={false}
+                                    isInvalid={pointIsInvalid(point)}
                                 />
 
                                 <InputGroup.Append>
@@ -101,7 +95,7 @@ export default function ReferencePointsControl({ height }) {
 
     function getEditButton(point, idx) {
         return null;
-        return (
+        /**return (
             <Button
                 variant="outline-secondary"
                 onClick={() => {
@@ -110,7 +104,7 @@ export default function ReferencePointsControl({ height }) {
             >
                 <Pencil style={{ display: 'flex', alignSelf: 'flex-center' }} />
             </Button>
-        );
+        ); */
     }
 
     function getAddButton() {

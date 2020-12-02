@@ -161,6 +161,7 @@ export default function SpectrumLine({ height, data }) {
                     data={lineChartData}
                     options={{
                         legend: null,
+                        hover: false,
                         responsive: true,
                         maintainAspectRatio: false,
                         scales: {
