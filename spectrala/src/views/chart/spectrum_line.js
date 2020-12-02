@@ -5,6 +5,10 @@ import { Line } from 'react-chartjs-2';
 // How many digits are skipped when creating color stops.
 const GRADIENT_GRANULARITY = 3;
 
+// The opacity (in hex, from 00 to FF), of the area of the graph. 
+// FF is completely solid, 00 is completely transparent. 
+const AREA_OPACITY = "CC";
+
 /**
  * SpectrumLine:
  *      This interface is meant to handle both the reference 
@@ -118,7 +122,7 @@ export default function SpectrumLine({ height, data }) {
             (x, i) => GRADIENT_GRANULARITY * i + min
         );
         wavelengths.forEach((p) => {
-            gradientStroke.addColorStop(get_x(p), convert(p));
+            gradientStroke.addColorStop(get_x(p), convert(p)+AREA_OPACITY);
         });
     }
 
