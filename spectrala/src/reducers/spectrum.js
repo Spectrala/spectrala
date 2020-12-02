@@ -29,7 +29,6 @@ export const referenceSpectrumSlice = createSlice({
                 name: name,
                 data: data,
             });
-            console.log(recorded)
             state.record_references = recorded;
         },
         remove_reference: (state, action) => {
@@ -75,7 +74,7 @@ export const selectReferenceSpectrumChartData = (state) => {
 };
 
 export const selectRecordedReferences = (state) => {
-    return state.recorded_references;
+    return state.reference.recorded_references;
 };
 
 export default referenceSpectrumSlice.reducer;

@@ -1,5 +1,6 @@
 import CalibrationPoint from './calibration_point';
 
+// THIS FILE IS GARBAGE. Delete it when all functions have been confidently extracted.
 export default class CalibrationPoints {
     constructor(calibrationPoints, onChange) {
         this.calibrationPoints = calibrationPoints;

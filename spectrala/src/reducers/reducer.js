@@ -8,7 +8,7 @@ const rootReducer = combineReducers({
     adjustments: adjustmentsReducer,
     calibration: calibrationReducer,
     video: videoReducer,
-    spectrum: spectrumReducer,
+    reference: spectrumReducer,
 });
 
 export default rootReducer;

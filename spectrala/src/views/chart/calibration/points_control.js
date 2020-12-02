@@ -225,7 +225,7 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
                     <Dropdown.Item>Blue, Green LED</Dropdown.Item>
                 </DropdownButton>
             </Card.Header>
-            <div style={{ height: height }}>
+            <div style={{ height: height, overflowY: 'auto'}}>
                 {getCalibrationBoxes()}
                 {getAddButton()}
             </div>

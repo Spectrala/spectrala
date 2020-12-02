@@ -11,12 +11,17 @@ import {
     selectReferenceSpectrumChartData,
     selectValidation,
 } from '../../../reducers/spectrum';
-
+import ReferencePointsControl from './reference_points_control';
 export default function ReferenceSpectrumTools({ height }) {
     const dispatch = useDispatch();
     const spectra = useSelector(selectRecordedReferences);
     const currentSpectrum = useSelector(selectReferenceSpectrumChartData);
     const valid = useSelector(selectValidation);
+
+    function getSpectraNames() {
+        if (!spectra) return <label>No saved reference spectra.</label>;
+        return ReferencePointsControl(height);
+    }
 
     return (
         <Card style={{ width: '100%' }}>
@@ -32,11 +37,14 @@ export default function ReferenceSpectrumTools({ height }) {
                 }}
             >
                 Saved References
-                <Button disabled={valid.valid === false}
+                <Button
+                    disabled={valid.valid === false}
                     onClick={() => {
-                        dispatch(record_reference({
-                            data: currentSpectrum,
-                        }));
+                        dispatch(
+                            record_reference({
+                                data: currentSpectrum,
+                            })
+                        );
                     }}
                 >
                     Record
@@ -47,14 +55,11 @@ export default function ReferenceSpectrumTools({ height }) {
                     height: height,
                     display: 'flex',
                     justifyContent: 'flex-start',
-                    paddingLeft: '15px',
-                    paddingRight: '15px',
+                    paddingLeft: '0px',
+                    paddingRight: '0px',
                 }}
             >
-                <label>
-                    Some tools for working with spectra like a record button and
-                    stuff.
-                </label>
+                {getSpectraNames()}
             </div>
         </Card>
     );
