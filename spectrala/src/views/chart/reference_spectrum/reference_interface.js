@@ -5,16 +5,20 @@ import ReferenceSpectrumTools from './reference_tools';
 import SpectrumLine from '../spectrum_line';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    selectLiveReferenceSpectrum,
+    selectValidateLiveReferenceSpectrum,
     selectRecordingStatus,
     cancelRecording,
     startRecording,
 } from '../../../reducers/reference_spectrum';
 
 export default function ReferenceSpectrumChart({ height }) {
-    const data = useSelector(selectLiveReferenceSpectrum);
+    const data = useSelector(selectValidateLiveReferenceSpectrum);
     const recording = useSelector(selectRecordingStatus);
     const dispatch = useDispatch();
+
+    function isCollapsed() {
+        return true;
+    }
 
     function getRecordButton() {
         if (recording) {
@@ -67,13 +71,18 @@ export default function ReferenceSpectrumChart({ height }) {
             <Col xs lg={8}>
                 <Card>
                     {getHeader()}
-                    <div style={{ height: height }}>
-                        <SpectrumLine height={height} referenceSpectrumData={data} />
-                    </div>
+                    {isCollapsed() ? null : (
+                        <div style={{ height: height }}>
+                            <SpectrumLine height={height} spectrumData={data} />
+                        </div>
+                    )}
                 </Card>
             </Col>
             <Col xs lg={3}>
-                <ReferenceSpectrumTools height={height} />
+                <ReferenceSpectrumTools
+                    height={height}
+                    isCollapsed={isCollapsed()}
+                />
             </Col>
         </Row>
     );

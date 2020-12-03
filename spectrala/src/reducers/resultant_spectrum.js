@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
     selectPreferredReferenceSpectrum,
-    selectValidatePixelLine,
+    selectValidateCalibratedPixelLine,
     addNewSpectrum,
 } from './reference_spectrum';
 import SpectralDataResponse from './spectral_data_response';
@@ -57,11 +57,11 @@ const getNeighborY = (parentX, neighborArray) => {
     return closest.y
 };
 
-export const canDisplayLiveSpectrum = (state) => {
+export const selectValidateLiveResultantSpectrum = (state) => {
     // Must not be recording reference.
     // Must be using a reference spectrum.
     let reference = selectPreferredReferenceSpectrum(state);
-    const pixelLine = selectValidatePixelLine(state);
+    const pixelLine = selectValidateCalibratedPixelLine(state);
 
     if (!reference.isValid()) return reference;
     if (!pixelLine.isValid()) return pixelLine;
@@ -77,15 +77,6 @@ export const canDisplayLiveSpectrum = (state) => {
             };
         }),
     });
-};
-
-export const selectResultantSpectrum = (state) => {
-    const validation = canDisplayLiveSpectrum(state);
-    if (!validation.isValid()) {
-        const failureMessage = validation.message;
-        return failureMessage;
-    }
-    return validation.getData();
 };
 
 export const selectRecordedResultants = (state) => {

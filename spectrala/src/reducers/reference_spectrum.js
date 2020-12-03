@@ -10,9 +10,30 @@ import SpectralDataResponse from './spectral_data_response';
 // Default name prefix for saving a reference spectrum. Will start naming as DEFAULT_NAME 1.
 const DEFAULT_NAME = 'Reference Spectrum ';
 
-// Default spectrum to pass to resultant when nothing is selected.
+/**
+ * ZERO_SPECTRUM
+ *      Default spectrum to pass to resultant when nothing is selected.
+ *      This works because of the nearest-neighbor method in the resultant spectrum. 
+ *      Since there is only one x-value, it is the closest x value (which has a y component of 0).
+ */
 const ZERO_SPECTRUM = [{ x: 0, y: 0 }];
 
+/**
+ * addNewSpectrum
+ *      Adds a new spectrum to the list of stored spectra.
+ *      Useful for reference spectra and resultant spectra.
+ * 
+ *      Returns: (array) -- the array of recorded spectra. 
+ *      Format:
+ *      [{
+ *          key: 2
+ *          name: "Water"
+ *          data: [{x: 338.3, y: 44.2}]
+ *      }]
+ * @param {array} currentArray - the current array of recorded spectra
+ * @param {array} data - the spectral data to record in the recorded spectra array
+ * @param {string} defaultName - the default prefix to append before the key in naming the specta
+ */
 export const addNewSpectrum = (currentArray, data, defaultName) => {
     let key = 1;
     if (currentArray.length > 0) {
@@ -77,6 +98,17 @@ export const {
     startRecording,
 } = referenceSpectrumSlice.actions;
 
+
+export const selectRecordingStatus = (state) => {
+    return state.reference.is_recording;
+};
+
+/**
+ * selectValidateCalibrationPoints
+ *      Gets the calibration points in the currently used calibration.
+ * 
+ *      Returns: SpectralDataResponse. If there is data, it looks like this: [CalibrationPoint].
+ */
 export const selectValidateCalibrationPoints = (state) => {
     const calibrationPoints = selectCalibrationPoints(state).map((point) =>
         point.getPlacementLocationDescription()
@@ -84,7 +116,14 @@ export const selectValidateCalibrationPoints = (state) => {
     return validateCalibrationPoints(calibrationPoints);
 };
 
-export const selectValidatePixelLine = (state) => {
+/**
+ * selectValidateCalibratedPixelLine
+ *      Gets the pixel line (raw from the camera source) after validating 
+ *      that the data exists to do the calibration. 
+ * 
+ *      Returns: SpectralDataResponse. If there is data, it looks like this: [{x: 338.3, y: 44.2}].
+ */
+export const selectValidateCalibratedPixelLine = (state) => {
     const intensities = selectIntensities(state);
 
     const calibrationPoints = selectValidateCalibrationPoints(state);
@@ -103,25 +142,21 @@ export const selectValidatePixelLine = (state) => {
     });
 };
 
-export const selectRecordingStatus = (state) => {
-    return state.reference.is_recording;
-};
-
 /**
- * selectLiveReferenceSpectrum
+ * selectValidateLiveReferenceSpectrum
  *      Get the line graph data to show in the Reference Spectrum component.
  *      Will only show when recording.
  *
  *      Returns: SpectralDataResponse. If there is data, it looks like this: [{x: 338.3, y: 44.2}].
  */
-export const selectLiveReferenceSpectrum = (state) => {
+export const selectValidateLiveReferenceSpectrum = (state) => {
     if (!state.reference.is_recording)
         return new SpectralDataResponse({
             valid: false,
             message: 'Waiting for recording to start.',
         });
     // TODO: allow user to view old reference spectra.
-    return selectValidatePixelLine(state);
+    return selectValidateCalibratedPixelLine(state);
 };
 
 /**
