@@ -5,15 +5,13 @@ import {
     validateCalibrationPoints,
     getCalibratedSpectrum,
 } from './calibration/calibration_math';
-import {
-    Arrow90degLeft,
-    ArrowBarLeft,
-    TypeUnderline,
-} from 'react-bootstrap-icons';
+import SpectralDataResponse from './spectral_data_response';
 
+// Default name prefix for saving a reference spectrum. Will start naming as DEFAULT_NAME 1.
 const DEFAULT_NAME = 'Reference Spectrum ';
 
-// TODO: Don't just select from video. Create universal camera source.
+// Default spectrum to pass to resultant when nothing is selected.
+const ZERO_SPECTRUM = [{ x: 0, y: 0 }];
 
 export const addNewSpectrum = (currentArray, data, defaultName) => {
     let key = 1;
@@ -40,7 +38,7 @@ export const referenceSpectrumSlice = createSlice({
     reducers: {
         record_reference: (state, action) => {
             // TODO: Verify spectrum is okay. Right now that is only done in the button.
-            const data = action.payload.data;
+            const data = action.payload.data.data;
             const refs = state.recorded_references;
             const recorded = addNewSpectrum(refs, data, DEFAULT_NAME);
 
@@ -79,69 +77,85 @@ export const {
     startRecording,
 } = referenceSpectrumSlice.actions;
 
-export const selectValidation = (state) => {
+export const selectValidateCalibrationPoints = (state) => {
     const calibrationPoints = selectCalibrationPoints(state).map((point) =>
         point.getPlacementLocationDescription()
     );
     return validateCalibrationPoints(calibrationPoints);
 };
 
-export const validatePixelLine = (state) => {
+export const selectValidatePixelLine = (state) => {
     const intensities = selectIntensities(state);
-    const validation = selectValidation(state);
-    if (!validation.valid) return validation;
+
+    const calibrationPoints = selectValidateCalibrationPoints(state);
+    if (!calibrationPoints.isValid()) return calibrationPoints;
+
     if (!intensities) {
-        return { valid: false, message: 'Loading...' };
+        return new SpectralDataResponse({
+            valid: false,
+            message: 'Loading...',
+        });
     }
-    return {
+
+    return new SpectralDataResponse({
         valid: true,
-        data: getCalibratedSpectrum(
-            intensities,
-            validation.sortedCalibrationPoints
-        ),
-    };
+        data: getCalibratedSpectrum(intensities, calibrationPoints.getData()),
+    });
 };
 
 export const selectRecordingStatus = (state) => {
     return state.reference.is_recording;
 };
 
-// While recording, this is for populating the live feed.
-export const selectReferenceSpectrumChartData = (state) => {
-    if (!state.reference.is_recording) return {
-        valid: false,
-        message: "Waiting for recording to start."
-    }
-
-    return validatePixelLine(state);
+/**
+ * selectLiveReferenceSpectrum
+ *      Get the line graph data to show in the Reference Spectrum component.
+ *      Will only show when recording.
+ *
+ *      Returns: SpectralDataResponse. If there is data, it looks like this: [{x: 338.3, y: 44.2}].
+ */
+export const selectLiveReferenceSpectrum = (state) => {
+    if (!state.reference.is_recording)
+        return new SpectralDataResponse({
+            valid: false,
+            message: 'Waiting for recording to start.',
+        });
+    // TODO: allow user to view old reference spectra.
+    return selectValidatePixelLine(state);
 };
 
-// If not recording, this is the static reference spectrum to use for the resultant spectrum.
-export const selectUsedReferenceSpectrum = (state) => {
+/**
+ * selectPreferredReferenceSpectrum
+ *      Get the reference spectrum used for creating a resultant spectrum.
+ *      This will be what the user has selected, or, a zero-spectrum by default. (just 1 x value which is set to y=0).
+ *
+ *      Returns: SpectralDataResponse. If there is data, it looks like this: [{x: 338.3, y: 44.2}].
+ */
+export const selectPreferredReferenceSpectrum = (state) => {
     const key = state.reference.key_being_used;
 
     // Make sure recording has stopped.
     if (state.is_recording) {
-        return {
+        return new SpectralDataResponse({
             valid: false,
             message: 'Must finish recording a reference spectrum.',
-        };
+        });
     }
 
-    // Make sure there is a selected spectrum
+    // Check if there is a selected spectrum. Otherwise, return a blank reference spectrum.
     if (!key) {
-        return { valid: false, message: 'Must select a reference spectrum.' };
+        return new SpectralDataResponse({ valid: true, data: ZERO_SPECTRUM });
     }
 
-    const data = state.reference.recorded_references.find(s => s.key === key);
+    const data = state.reference.recorded_references.find((s) => s.key === key);
 
-    return { valid: true, data: data };
+    return new SpectralDataResponse({ valid: true, data: data });
 };
 
 /**
  * selectRecordedReferences
  *      Returns (array) -- the list of recorded reference spectra.
- *      Format: 
+ *      Format:
  *      [{
  *          key: 2
  *          name: "Water"

@@ -5,14 +5,14 @@ import ReferenceSpectrumTools from './reference_tools';
 import SpectrumLine from '../spectrum_line';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    selectReferenceSpectrumChartData,
+    selectLiveReferenceSpectrum,
     selectRecordingStatus,
     cancelRecording,
     startRecording,
 } from '../../../reducers/reference_spectrum';
 
 export default function ReferenceSpectrumChart({ height }) {
-    const data = useSelector(selectReferenceSpectrumChartData);
+    const data = useSelector(selectLiveReferenceSpectrum);
     const recording = useSelector(selectRecordingStatus);
     const dispatch = useDispatch();
 
@@ -69,7 +69,7 @@ export default function ReferenceSpectrumChart({ height }) {
                 <Card>
                     {getHeader()}
                     <div style={{ height: height }}>
-                        <SpectrumLine height={height} data={data} />
+                        <SpectrumLine height={height} referenceSpectrumData={data} />
                     </div>
                 </Card>
             </Col>

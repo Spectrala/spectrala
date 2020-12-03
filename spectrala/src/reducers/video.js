@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // Samples included in the moving average
 const PIXEL_LINE_HISTORY_DEPTH = 5;
 
-// Look for absolute maximum, and don't do this in video. this should be raw input. 
+// Look for absolute maximum, and don't do this in video. this should be raw input.
 const OVERSATURATION_CEILING = 98;
 const isNotOversaturated = (val) => val < OVERSATURATION_CEILING;
 
@@ -57,7 +57,6 @@ export const videoSlice = createSlice({
              * Detect oversaturation
              */
             state.isOversaturated = !newline.every(isNotOversaturated);
-
         },
         updateLineCoords: (state, action) => {
             state.lineCoords[action.payload.targetKey] = action.payload.value;
@@ -75,8 +74,13 @@ export const selectIntensities = (state) => {
         );
         var averagedLine = [];
         const len = pixelLines[0].length;
-        for (var i = 0; i<len; i++) {
-            averagedLine.push(pixelLines.map((line) => line[i]).reduce((a,b) => a + b, 0) / pixelLines.length)
+
+        // TODO: Fix "Unsafe" nature of "i" variable in the closure.
+        for (var i = 0; i < len; i++) {
+            averagedLine.push(
+                pixelLines.map((line) => line[i]).reduce((a, b) => a + b, 0) /
+                    pixelLines.length
+            );
         }
         return averagedLine;
     }

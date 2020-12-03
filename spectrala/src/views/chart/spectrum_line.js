@@ -19,9 +19,7 @@ const AREA_OPACITY = "CC";
 // TODO: Fix somewhat sketchy color settings.
 export default function ReferenceSpectrumLine({ height, referenceSpectrumData }) {
 
-    if (!referenceSpectrumData) {
-        return getLoadingScreen();
-    } else if (!referenceSpectrumData.valid) {
+    if (!referenceSpectrumData.isValid()) {
         return getLoadingScreen(referenceSpectrumData.message);
     } else {
         return getLineGraph(referenceSpectrumData.data);
@@ -203,5 +201,5 @@ export default function ReferenceSpectrumLine({ height, referenceSpectrumData })
 
 ReferenceSpectrumLine.propTypes = {
     height: PropTypes.number,
-    data: PropTypes.any,
+    referenceSpectrumData: PropTypes.any,
 };

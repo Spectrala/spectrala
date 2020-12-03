@@ -4,7 +4,7 @@ import {
     Button,
     Form,
 } from 'react-bootstrap';
-import { XCircle, Pencil } from 'react-bootstrap-icons';
+import { XCircle } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';

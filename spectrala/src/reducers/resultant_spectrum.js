@@ -1,17 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { selectIntensities } from './video';
-import { selectCalibrationPoints } from './calibration/calibration';
 import {
-    validateCalibrationPoints,
-    getCalibratedSpectrum,
-} from './calibration/calibration_math';
-import {
-    selectUsedReferenceSpectrum,
-    validatePixelLine,
+    selectPreferredReferenceSpectrum,
+    selectValidatePixelLine,
     addNewSpectrum,
 } from './reference_spectrum';
-import { TypeUnderline } from 'react-bootstrap-icons';
 
+// Default name prefix for saving a resultant spectrum. Will start naming as DEFAULT_NAME 1.
 const DEFAULT_NAME = 'Resultant Spectrum ';
 
 /**
@@ -53,45 +47,45 @@ export const {
     rename_resultant,
 } = resultantSpectrumSlice.actions;
 
+// TODO: make this look professional 
+// get nearest neighbor (in x position) to a parent x value of neighborArray and return the neighborArray y value. 
+const getNeighborY = (parentX, neighborArray) => {
+    console.log(neighborArray);
+    const closest = neighborArray.reduce((a, b) => {
+        return Math.abs(a.x - parentX) < Math.abs(b.X - parentX) ? a : b;
+    });
+    return closest.y
+};
+
 export const canDisplayLiveSpectrum = (state) => {
     // Must not be recording reference.
     // Must be using a reference spectrum.
-    const reference = selectUsedReferenceSpectrum(state);
-    const pixelLine = validatePixelLine(state);
+    let reference = selectPreferredReferenceSpectrum(state);
+    const pixelLine = selectValidatePixelLine(state);
 
-    if (!reference.valid) return reference;
-    if (!pixelLine.valid) return pixelLine;
+    if (!reference.isValid()) return reference;
+    if (!pixelLine.isValid()) return pixelLine;
     const data = pixelLine.data;
+    reference = reference.data;
 
-    /**
-     * TODO: THIS IS REALLY, REALLY BAD. incorrectly assumes all x values are the same. 
-     * Ideally, data is the master, and it subtracts the nearest neighbor from reference. 
-     */
     return {
         valid: true,
         data: data.map((val, idx) => {
             return {
                 x: val.x,
-                y: val.y - reference[idx].y,
+                y: val.y - getNeighborY(val.x, reference),
             };
-        })
+        }),
     };
 };
 
-export const selectResultantFromStream = (state) => {
+export const selectResultantSpectrum = (state) => {
     const validation = canDisplayLiveSpectrum(state);
-    if (!validation.valid) {
+    if (!validation.isValid()) {
         const failureMessage = validation.message;
         return failureMessage;
     }
     return validation.data;
-};
-
-export const selectResultantSpectrumChartData = (state) => {
-    // TODO: probably don't want this all the time.
-
-    // if (isRecording)
-    return selectResultantFromStream(state);
 };
 
 export const selectRecordedResultants = (state) => {

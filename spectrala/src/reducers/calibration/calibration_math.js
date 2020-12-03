@@ -1,22 +1,24 @@
+import SpectralDataResponse from '../spectral_data_response';
+
 export const validateCalibrationPoints = (calibrationPoints) => {
     // Make sure all points are placed.
     const noNulls = calibrationPoints.every(
         (p) => p && p.rawWavelength && p.placement
     );
     if (!noNulls)
-        return {
+        return new SpectralDataResponse({
             valid: false,
             message:
                 'All calibration points must be placed before creating a spectrum.',
-        };
+        });
 
     // Make sure there are at least 2 points.
     if (calibrationPoints.length < 2)
-        return {
+        return new SpectralDataResponse({
             valid: false,
             message:
                 'Waiting for at least two calibratin points to create a spectrum.',
-        };
+        });
 
     // Sort the calibration points by wavelength
     const sortedPoints = calibrationPoints.sort(
@@ -24,15 +26,15 @@ export const validateCalibrationPoints = (calibrationPoints) => {
     );
 
     // Verify these points are also sorted by placement
-    for (let i = 0; i < sortedPoints.length - 1; i++) {
+    for (var i = 0; i < sortedPoints.length - 1; i++) {
         if (sortedPoints[i + 1].placement < sortedPoints[i].placement)
-            return {
+            return new SpectralDataResponse({
                 valid: false,
                 message: 'Calibration points must go in order of wavelength.',
-            };
+            });
     }
 
-    return { valid: true, sortedCalibrationPoints: sortedPoints };
+    return new SpectralDataResponse({ valid: true, data: sortedPoints });
 };
 
 export const getCalibratedSpectrum = (intensities, sortedCalibrationPoints) => {

@@ -6,15 +6,15 @@ import { Button } from 'react-bootstrap';
 import {
     record_reference,
     selectRecordedReferences,
-    selectReferenceSpectrumChartData,
-    selectValidation,
+    selectLiveReferenceSpectrum,
+    selectValidateCalibrationPoints,
 } from '../../../reducers/reference_spectrum';
 import ReferencePointsControl from './reference_points_control';
 export default function ReferenceSpectrumTools({ height }) {
     const dispatch = useDispatch();
     const spectra = useSelector(selectRecordedReferences);
-    const currentSpectrum = useSelector(selectReferenceSpectrumChartData);
-    const valid = useSelector(selectValidation);
+    const currentSpectrum = useSelector(selectLiveReferenceSpectrum);
+    const valid = useSelector(selectValidateCalibrationPoints);
 
     function getSpectraNames() {
         if (!spectra) return <label>No saved reference spectra.</label>;
@@ -36,7 +36,7 @@ export default function ReferenceSpectrumTools({ height }) {
             >
                 Saved References
                 <Button
-                    disabled={valid.valid === false}
+                    disabled={!valid.isValid()}
                     onClick={() => {
                         dispatch(
                             record_reference({
