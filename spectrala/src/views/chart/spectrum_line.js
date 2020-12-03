@@ -29,6 +29,7 @@ export default function SpectrumLine({ height, data }) {
     }
 
     function getLoadingScreen(message) {
+        // TODO: Change this to make it generic.
         var text = 'Please place all calibration points to get a spectrum.';
         if (message) text = message;
         return (

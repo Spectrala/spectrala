@@ -12,7 +12,7 @@ import {
     remove_reference,
     rename_reference,
     selectRecordedReferences,
-} from '../../../reducers/spectrum';
+} from '../../../reducers/reference_spectrum';
 
 export default function ReferencePointsControl({ height }) {
     // TODO: Don't simply return false, bro

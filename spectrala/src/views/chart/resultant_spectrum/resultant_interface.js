@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import ReferenceSpectrumTools from './resultant_tools';
 import SpectrumLine from '../spectrum_line';
 import { useSelector } from 'react-redux';
-import { selectReferenceSpectrumChartData } from '../../../reducers/spectrum';
+import { selectResultantSpectrumChartData } from '../../../reducers/resultant_spectrum';
 
 export default function ResultantSpectrumChart({ height }) {
 
-    const data = useSelector(selectReferenceSpectrumChartData);
+    const data = useSelector(selectResultantSpectrumChartData);
     
     function getHeader() {
         return (
@@ -27,6 +27,7 @@ export default function ResultantSpectrumChart({ height }) {
         );
     }
 
+    console.log(data);
     return (
         <Row style={{ justifyContent: 'center', display: 'flex' }}>
             <Col xs lg={8}>

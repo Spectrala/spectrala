@@ -8,7 +8,7 @@ import {
     selectRecordedReferences,
     selectReferenceSpectrumChartData,
     selectValidation,
-} from '../../../reducers/spectrum';
+} from '../../../reducers/reference_spectrum';
 import ReferencePointsControl from './reference_points_control';
 export default function ReferenceSpectrumTools({ height }) {
     const dispatch = useDispatch();
