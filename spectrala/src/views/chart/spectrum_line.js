@@ -17,20 +17,19 @@ const AREA_OPACITY = "CC";
 
 
 // TODO: Fix somewhat sketchy color settings.
-export default function SpectrumLine({ height, data }) {
+export default function ReferenceSpectrumLine({ height, referenceSpectrumData }) {
 
-    // TODO: Fix ghetto typeof stuff
-    if (!data) {
+    if (!referenceSpectrumData) {
         return getLoadingScreen();
-    } else if (typeof data === typeof 'String') {
-        return getLoadingScreen(data);
+    } else if (!referenceSpectrumData.valid) {
+        return getLoadingScreen(referenceSpectrumData.message);
     } else {
-        return getLineGraph();
+        return getLineGraph(referenceSpectrumData.data);
     }
 
     function getLoadingScreen(message) {
         // TODO: Change this to make it generic.
-        var text = 'Please place all calibration points to get a spectrum.';
+        let text = 'Waiting...';
         if (message) text = message;
         return (
             <label
@@ -111,7 +110,7 @@ export default function SpectrumLine({ height, data }) {
         return hex;
     }
 
-    function addGradients(gradientStroke) {
+    function addGradients(gradientStroke, data) {
         const min = data[0].x;
         const max = data[data.length - 1].x;
         const range = max - min;
@@ -127,7 +126,7 @@ export default function SpectrumLine({ height, data }) {
         });
     }
 
-    function getLineGraph() {
+    function getLineGraph(data) {
         const lineChartData = (canvas) => {
             const ctx = canvas.getContext('2d');
 
@@ -136,7 +135,7 @@ export default function SpectrumLine({ height, data }) {
             const max_x = min_x + frame.width;
 
             var gradientStroke = ctx.createLinearGradient(min_x, 0, max_x, 0);
-            addGradients(gradientStroke);
+            addGradients(gradientStroke, data);
             return {
                 datasets: [
                     {
@@ -202,7 +201,7 @@ export default function SpectrumLine({ height, data }) {
     }
 }
 
-SpectrumLine.propTypes = {
+ReferenceSpectrumLine.propTypes = {
     height: PropTypes.number,
     data: PropTypes.any,
 };

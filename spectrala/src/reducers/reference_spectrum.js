@@ -5,14 +5,18 @@ import {
     validateCalibrationPoints,
     getCalibratedSpectrum,
 } from './calibration/calibration_math';
-import { Arrow90degLeft, ArrowBarLeft, TypeUnderline } from 'react-bootstrap-icons';
+import {
+    Arrow90degLeft,
+    ArrowBarLeft,
+    TypeUnderline,
+} from 'react-bootstrap-icons';
 
 const DEFAULT_NAME = 'Reference Spectrum ';
 
 // TODO: Don't just select from video. Create universal camera source.
 
 export const addNewSpectrum = (currentArray, data, defaultName) => {
-    var key = 1;
+    let key = 1;
     if (currentArray.length > 0) {
         key = Math.max(...currentArray.map((ref) => ref.key)) + 1;
     }
@@ -43,7 +47,6 @@ export const referenceSpectrumSlice = createSlice({
             // To automatically use the reference
             state.key_being_used = recorded[recorded.length - 1].key;
             state.is_recording = false;
-
             state.record_references = recorded;
         },
         remove_reference: (state, action) => {
@@ -83,17 +86,20 @@ export const selectValidation = (state) => {
     return validateCalibrationPoints(calibrationPoints);
 };
 
-export const selectFromStream = (state) => {
+export const validatePixelLine = (state) => {
     const intensities = selectIntensities(state);
     const validation = selectValidation(state);
-    if (!validation.valid) {
-        const failureMessage = validation.message;
-        return failureMessage;
+    if (!validation.valid) return validation;
+    if (!intensities) {
+        return { valid: false, message: 'Loading...' };
     }
-    return getCalibratedSpectrum(
-        intensities,
-        validation.sortedCalibrationPoints
-    );
+    return {
+        valid: true,
+        data: getCalibratedSpectrum(
+            intensities,
+            validation.sortedCalibrationPoints
+        ),
+    };
 };
 
 export const selectRecordingStatus = (state) => {
@@ -102,15 +108,18 @@ export const selectRecordingStatus = (state) => {
 
 // While recording, this is for populating the live feed.
 export const selectReferenceSpectrumChartData = (state) => {
-    // TODO: only return this if a reference spectrum is being recorded.
+    if (!state.reference.is_recording) return {
+        valid: false,
+        message: "Waiting for recording to start."
+    }
 
-    // if (isRecording)
-    return selectFromStream(state);
+    return validatePixelLine(state);
 };
 
 // If not recording, this is the static reference spectrum to use for the resultant spectrum.
 export const selectUsedReferenceSpectrum = (state) => {
     const key = state.reference.key_being_used;
+
     // Make sure recording has stopped.
     if (state.is_recording) {
         return {
@@ -124,18 +133,21 @@ export const selectUsedReferenceSpectrum = (state) => {
         return { valid: false, message: 'Must select a reference spectrum.' };
     }
 
-    // TODO: There must be an ES6 function to do this better
-    // Return the data from the currently selected reference spectrum.
-    let data = null;
-    state.reference.recorded_references.forEach((s) => {
-        if (s.key === key) {
-            data = s.data;
-        }
-    });
+    const data = state.reference.recorded_references.find(s => s.key === key);
 
     return { valid: true, data: data };
 };
 
+/**
+ * selectRecordedReferences
+ *      Returns (array) -- the list of recorded reference spectra.
+ *      Format: 
+ *      [{
+ *          key: 2
+ *          name: "Water"
+ *          data: [{x: 338.3, y: 44.2}]
+ *      }]
+ */
 export const selectRecordedReferences = (state) => {
     return state.reference.recorded_references;
 };

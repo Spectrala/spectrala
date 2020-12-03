@@ -31,7 +31,7 @@ export const videoSlice = createSlice({
     reducers: {
         updateFeed: (state, action) => {
             const newline = action.payload.value;
-            var lineHist = state.pixelLineHistory;
+            let lineHist = state.pixelLineHistory;
             /**
              * Sort of stupid coding but this maintains a history of a certain length
              * of pixel values in order to create a moving average of intensities.

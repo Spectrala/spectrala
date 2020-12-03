@@ -7,7 +7,7 @@ import {
 } from './calibration/calibration_math';
 import {
     selectUsedReferenceSpectrum,
-    selectFromStream,
+    validatePixelLine,
     addNewSpectrum,
 } from './reference_spectrum';
 import { TypeUnderline } from 'react-bootstrap-icons';
@@ -57,10 +57,16 @@ export const canDisplayLiveSpectrum = (state) => {
     // Must not be recording reference.
     // Must be using a reference spectrum.
     const reference = selectUsedReferenceSpectrum(state);
-    const data = selectFromStream(state);
+    const pixelLine = validatePixelLine(state);
 
     if (!reference.valid) return reference;
+    if (!pixelLine.valid) return pixelLine;
+    const data = pixelLine.data;
 
+    /**
+     * TODO: THIS IS REALLY, REALLY BAD. incorrectly assumes all x values are the same. 
+     * Ideally, data is the master, and it subtracts the nearest neighbor from reference. 
+     */
     return {
         valid: true,
         data: data.map((val, idx) => {

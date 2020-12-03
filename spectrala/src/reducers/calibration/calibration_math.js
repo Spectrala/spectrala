@@ -24,7 +24,7 @@ export const validateCalibrationPoints = (calibrationPoints) => {
     );
 
     // Verify these points are also sorted by placement
-    for (var i = 0; i < sortedPoints.length - 1; i++) {
+    for (let i = 0; i < sortedPoints.length - 1; i++) {
         if (sortedPoints[i + 1].placement < sortedPoints[i].placement)
             return {
                 valid: false,
@@ -44,11 +44,11 @@ export const getCalibratedSpectrum = (intensities, sortedCalibrationPoints) => {
 
     const a = cartesian(point_a);
     const b = cartesian(point_b);
-    const m = (b.y-a.y)/(b.x-a.x);
-    const w_end = (x) => m*(x - a.x) + b.y;
+    const m = (b.y - a.y) / (b.x - a.x);
+    const w_end = (x) => m * (x - a.x) + b.y;
 
-    if (!intensities){
-        console.warn("Got null intensities");
+    if (!intensities) {
+        console.warn('Got null intensities');
         return;
     }
 
