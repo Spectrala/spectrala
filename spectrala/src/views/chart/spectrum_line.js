@@ -161,6 +161,7 @@ export default function ReferenceSpectrumLine({
                 <Line
                     data={lineChartData}
                     options={{
+                        tooltips: false,
                         legend: null,
                         hover: false,
                         responsive: true,

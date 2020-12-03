@@ -24,7 +24,6 @@ export default function ReferenceSpectrumChart({ height }) {
                     <Button
                         variant={'outline-secondary'}
                         onClick={() => {
-                            console.log('Cancel recording');
                             dispatch(cancelRecording());
                         }}
                     >
