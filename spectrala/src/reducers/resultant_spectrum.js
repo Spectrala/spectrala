@@ -4,6 +4,7 @@ import {
     selectValidatePixelLine,
     addNewSpectrum,
 } from './reference_spectrum';
+import SpectralDataResponse from './spectral_data_response';
 
 // Default name prefix for saving a resultant spectrum. Will start naming as DEFAULT_NAME 1.
 const DEFAULT_NAME = 'Resultant Spectrum ';
@@ -50,7 +51,6 @@ export const {
 // TODO: make this look professional 
 // get nearest neighbor (in x position) to a parent x value of neighborArray and return the neighborArray y value. 
 const getNeighborY = (parentX, neighborArray) => {
-    console.log(neighborArray);
     const closest = neighborArray.reduce((a, b) => {
         return Math.abs(a.x - parentX) < Math.abs(b.X - parentX) ? a : b;
     });
@@ -65,10 +65,10 @@ export const canDisplayLiveSpectrum = (state) => {
 
     if (!reference.isValid()) return reference;
     if (!pixelLine.isValid()) return pixelLine;
-    const data = pixelLine.data;
-    reference = reference.data;
+    const data = pixelLine.getData();
+    reference = reference.getData();
 
-    return {
+    return new SpectralDataResponse({
         valid: true,
         data: data.map((val, idx) => {
             return {
@@ -76,7 +76,7 @@ export const canDisplayLiveSpectrum = (state) => {
                 y: val.y - getNeighborY(val.x, reference),
             };
         }),
-    };
+    });
 };
 
 export const selectResultantSpectrum = (state) => {
@@ -85,7 +85,7 @@ export const selectResultantSpectrum = (state) => {
         const failureMessage = validation.message;
         return failureMessage;
     }
-    return validation.data;
+    return validation.getData();
 };
 
 export const selectRecordedResultants = (state) => {

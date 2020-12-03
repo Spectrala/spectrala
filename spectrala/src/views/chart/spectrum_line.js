@@ -5,24 +5,27 @@ import { Line } from 'react-chartjs-2';
 // How many digits are skipped when creating color stops.
 const GRADIENT_GRANULARITY = 3;
 
-// The opacity (in hex, from 00 to FF), of the area of the graph. 
-// FF is completely solid, 00 is completely transparent. 
-const AREA_OPACITY = "CC";
+// The opacity (in hex, from 00 to FF), of the area of the graph.
+// FF is completely solid, 00 is completely transparent.
+const AREA_OPACITY = 'CC';
 
 /**
  * SpectrumLine:
- *      This interface is meant to handle both the reference 
+ *      This interface is meant to handle both the reference
  *      spectrum and the resultant spectrum. It's the pretty rainbow.
  */
 
-
 // TODO: Fix somewhat sketchy color settings.
-export default function ReferenceSpectrumLine({ height, referenceSpectrumData }) {
-
-    if (!referenceSpectrumData.isValid()) {
-        return getLoadingScreen(referenceSpectrumData.message);
+export default function ReferenceSpectrumLine({
+    height,
+    referenceSpectrumData,
+}) {
+    if (!referenceSpectrumData) {
+        return getLoadingScreen();
+    } else if (!referenceSpectrumData.isValid()) {
+        return getLoadingScreen(referenceSpectrumData.getMessage());
     } else {
-        return getLineGraph(referenceSpectrumData.data);
+        return getLineGraph(referenceSpectrumData.getData());
     }
 
     function getLoadingScreen(message) {
@@ -120,7 +123,7 @@ export default function ReferenceSpectrumLine({ height, referenceSpectrumData })
             (x, i) => GRADIENT_GRANULARITY * i + min
         );
         wavelengths.forEach((p) => {
-            gradientStroke.addColorStop(get_x(p), convert(p)+AREA_OPACITY);
+            gradientStroke.addColorStop(get_x(p), convert(p) + AREA_OPACITY);
         });
     }
 
@@ -167,7 +170,7 @@ export default function ReferenceSpectrumLine({ height, referenceSpectrumData })
                                 {
                                     type: 'linear',
                                     position: 'bottom',
-                                    display:false,
+                                    display: false,
                                     gridLines: {
                                         drawTicks: false,
                                         display: false,
@@ -176,8 +179,8 @@ export default function ReferenceSpectrumLine({ height, referenceSpectrumData })
                                         beginAtZero: true,
                                         steps: 10,
                                         stepValue: 5,
-                                        max: 100
-                                    }
+                                        max: 100,
+                                    },
                                 },
                             ],
                             xAxes: [
@@ -187,8 +190,8 @@ export default function ReferenceSpectrumLine({ height, referenceSpectrumData })
                                     ticks: {
                                         precision: 0,
                                         min: min_x_value,
-                                        max: max_x_value
-                                    }
+                                        max: max_x_value,
+                                    },
                                 },
                             ],
                         },

@@ -4,7 +4,7 @@
  *          Otherwise, returns { valid: true, data: some-object } 
  **/
 
- class SpectralDataResponse {
+export default class SpectralDataResponse {
     constructor(argmap) {
         const valid = argmap.valid;
         const data = argmap.data;

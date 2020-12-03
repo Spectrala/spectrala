@@ -26,8 +26,7 @@ export default function ResultantSpectrumChart({ height }) {
             </Card.Header>
         );
     }
-
-    console.log(data);
+    
     return (
         <Row style={{ justifyContent: 'center', display: 'flex' }}>
             <Col xs lg={8}>

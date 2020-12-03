@@ -148,8 +148,15 @@ export const selectPreferredReferenceSpectrum = (state) => {
     }
 
     const data = state.reference.recorded_references.find((s) => s.key === key);
+    if (!data) {
+        console.error("Could not find data at provided key.");
+        return new SpectralDataResponse({
+            valid: false,
+            message: 'Could not find the reference spectrum. This is a bug, please report this and try again.',
+        });
+    }
 
-    return new SpectralDataResponse({ valid: true, data: data });
+    return new SpectralDataResponse({ valid: true, data: data.data });
 };
 
 /**
