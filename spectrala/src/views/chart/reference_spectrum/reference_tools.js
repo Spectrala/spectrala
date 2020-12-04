@@ -45,7 +45,7 @@ export default function ReferenceSpectrumTools({ height, isCollapsed }) {
                         );
                     }}
                 >
-                    Record
+                    Capture
                 </Button>
             </Card.Header>
             {isCollapsed ? null : (

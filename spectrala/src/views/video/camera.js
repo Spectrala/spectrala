@@ -255,7 +255,7 @@ export default function CameraView({ height }) {
     return (
         <>
             <Row style={{ justifyContent: 'center', display: 'flex' }}>
-                <Col xs lg={8} style={{ justifyContent: 'center', display: 'flex' }}>
+                <Col>
                     <Card>
                         <Card.Header as="h5" style={{ height: '64px' }}>
                             <SourceSelect
@@ -322,7 +322,7 @@ export default function CameraView({ height }) {
                         </Card.Footer>
                     </Card>
                 </Col>
-                <Col xs lg={3}>
+                <Col xs={1}  lg={3}>
                     <AdjustmentOptions />
                 </Col>
             </Row>

@@ -38,7 +38,7 @@ export default class Dashboard extends React.Component {
         return (
             <Container fluid>
                 <Row style={{ height: '80px' }}>{this.getNavbar()}</Row>
-                <Col
+                <Col 
                     style={{
                         paddingLeft: '20px',
                         paddingRight: '20px',

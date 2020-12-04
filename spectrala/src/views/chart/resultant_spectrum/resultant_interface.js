@@ -10,6 +10,10 @@ export default function ResultantSpectrumChart({ height }) {
 
     const data = useSelector(selectValidateLiveResultantSpectrum);
     
+    function isCollapsed() {
+        return false;
+    }
+
     function getHeader() {
         return (
             <Card.Header
@@ -29,16 +33,16 @@ export default function ResultantSpectrumChart({ height }) {
     
     return (
         <Row style={{ justifyContent: 'center', display: 'flex' }}>
-            <Col xs lg={8}>
+            <Col>
                 <Card>
                     {getHeader()}
-                    <div style={{ height: height }}>
+                    { isCollapsed() ? null : (<div style={{ height: height }}>
                         <SpectrumLine height={height} spectrumData={data}/>
-                    </div>
+                    </div>)}
                 </Card>
             </Col>
-            <Col xs lg={3}>
-                <ReferenceSpectrumTools height={height} />
+            <Col xs={1}  lg={3}>
+                <ReferenceSpectrumTools height={height} isCollapsed={isCollapsed()}/>
             </Col>
         </Row>
     );

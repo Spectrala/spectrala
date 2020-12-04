@@ -26,7 +26,11 @@ import {
     editPlacement,
 } from '../../../reducers/calibration/calibration';
 
-export default function CalibrationPointsControl({ height, maximumPoints }) {
+export default function CalibrationPointsControl({
+    height,
+    maximumPoints,
+    isCollapsed,
+}) {
     // TODO: Don't simply return false, bro
     const calibrationPoints = useSelector(
         selectCalibrationPoints,
@@ -225,10 +229,12 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
                     <Dropdown.Item>Blue, Green LED</Dropdown.Item>
                 </DropdownButton>
             </Card.Header>
-            <div style={{ height: height, overflowY: 'auto'}}>
-                {getCalibrationBoxes()}
-                {getAddButton()}
-            </div>
+            {isCollapsed ? null : (
+                <div style={{ height: height, overflowY: 'auto' }}>
+                    {getCalibrationBoxes()}
+                    {getAddButton()}
+                </div>
+            )}
         </Card>
     );
 }
@@ -236,6 +242,7 @@ export default function CalibrationPointsControl({ height, maximumPoints }) {
 CalibrationPointsControl.propTypes = {
     height: PropTypes.number,
     maximumPoints: PropTypes.number,
+    isCollapsed: PropTypes.bool,
 };
 
 CalibrationPointsControl.defaultProps = {

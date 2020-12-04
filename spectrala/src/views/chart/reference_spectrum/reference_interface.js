@@ -17,7 +17,7 @@ export default function ReferenceSpectrumChart({ height }) {
     const dispatch = useDispatch();
 
     function isCollapsed() {
-        return true;
+        return false;
     }
 
     function getRecordButton() {
@@ -67,8 +67,8 @@ export default function ReferenceSpectrumChart({ height }) {
     }
 
     return (
-        <Row style={{ justifyContent: 'center', display: 'flex' }}>
-            <Col xs lg={8}>
+        <Row style={{ justifyContent: 'center', display: 'flex'}}>
+            <Col>
                 <Card>
                     {getHeader()}
                     {isCollapsed() ? null : (

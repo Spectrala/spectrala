@@ -5,6 +5,10 @@ import CalibrationPointsControl from './points_control';
 import CalibrationLine from './calibration_line';
 
 export default function CalibrationSpectrumChart({ height }) {
+    function isCollapsed() {
+        return false;
+    }
+
     function getHeader() {
         return (
             <Card.Header
@@ -24,16 +28,18 @@ export default function CalibrationSpectrumChart({ height }) {
 
     return (
         <Row style={{ justifyContent: 'center', display: 'flex' }}>
-            <Col xs lg={8}>
+            <Col>
                 <Card>
                     {getHeader()}
-                    <div style={{ height: height }}>
-                        <CalibrationLine/>
-                    </div>
+                    {isCollapsed() ? null : (
+                        <div style={{ height: height }}>
+                            <CalibrationLine />
+                        </div>
+                    )}
                 </Card>
             </Col>
-            <Col xs lg={3}>
-                <CalibrationPointsControl height={height} />
+            <Col xs={1} lg={3}>
+                <CalibrationPointsControl height={height} isCollapsed={isCollapsed()}/>
             </Col>
         </Row>
     );

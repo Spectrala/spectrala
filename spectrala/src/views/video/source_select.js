@@ -108,7 +108,7 @@ export default function SourceSelect(props) {
 
     return (
         <Row style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Col>
+            <Col lg="auto">
                 <Row>
                     <label
                         style={{
@@ -128,7 +128,7 @@ export default function SourceSelect(props) {
                             )}
                             onClick={() => setSelectedSource(SourceEnum.STREAM)}
                         >
-                            Mobile/Raspberry Pi
+                            Stream
                         </Button>
                         <Button
                             variant={getBtnVariant(
