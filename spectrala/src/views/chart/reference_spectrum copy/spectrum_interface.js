@@ -29,7 +29,7 @@ export default function ReferenceSpectrumChart({ height }) {
 
     return (
         <Row style={{ justifyContent: 'center', display: 'flex' }}>
-            <Col>
+            <Col lg={8}>
                 <Card>
                     {getHeader()}
                     <div style={{ height: height }}>
@@ -37,7 +37,7 @@ export default function ReferenceSpectrumChart({ height }) {
                     </div>
                 </Card>
             </Col>
-            <Col xs={1}  lg={3}>
+            <Col xs={1} lg={3}>
                 <ReferenceSpectrumTools height={height} />
             </Col>
         </Row>

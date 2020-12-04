@@ -68,7 +68,7 @@ export default function ReferenceSpectrumChart({ height }) {
 
     return (
         <Row style={{ justifyContent: 'center', display: 'flex'}}>
-            <Col>
+            <Col lg={8}>
                 <Card>
                     {getHeader()}
                     {isCollapsed() ? null : (
