@@ -107,10 +107,26 @@ export default function SourceSelect(props) {
         }
     }, [selectedSource, streamUrl, updateMediaElement]);
 
+    function getWebcamDropdown() {
+        // TODO: Retrieve the webcams availible and allow the user to toggle between them.
+        let dropdown = (
+            <Dropdown>
+                <Dropdown.Toggle variant="dark" id="dropdown-basic">
+                    Browser Default Webcam
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    <Dropdown.Item href="#/action-1">
+                        Macintosh HD Webcam
+                    </Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+        );
+        return null;
+    }
+
     return (
         <Row style={{ justifyContent: 'space-between' }}>
-            <Col xl={9} lg={4} md={12} 
-                sm={6} xs={6}>
+            <Col xl={9} lg={4} md={12} sm={6} xs={6}>
                 <label
                     style={{
                         height: '100%',
@@ -142,18 +158,7 @@ export default function SourceSelect(props) {
                         />
                     </>
                 )}
-                {selectedSource === SourceEnum.WEBCAM && (
-                    <Dropdown>
-                        <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                            Browser Default Webcam
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">
-                                Macintosh HD Webcam
-                            </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                )}
+                {selectedSource === SourceEnum.WEBCAM && getWebcamDropdown()}
                 <ButtonGroup style={{ height: '38px' }}>
                     <Button
                         variant={getBtnVariant(
