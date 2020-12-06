@@ -7,6 +7,7 @@ import {
     Dropdown,
     Row,
 } from 'react-bootstrap';
+import { FileEarmarkArrowUp, CameraVideo, Phone } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 
 const SourceEnum = {
@@ -107,52 +108,29 @@ export default function SourceSelect(props) {
     }, [selectedSource, streamUrl, updateMediaElement]);
 
     return (
-        <Row style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Col lg="auto">
-                <Row>
-                    <label
-                        style={{
-                            paddingLeft: '10px',
-                            paddingRight: '10px',
-                            alignItems: 'center',
-                            display: 'flex',
-                            height: '38px',
-                        }}
-                    >
-                        Source
-                    </label>
-                    <ButtonGroup style={{ height: '38px' }}>
-                        <Button
-                            variant={getBtnVariant(
-                                selectedSource === SourceEnum.STREAM
-                            )}
-                            onClick={() => setSelectedSource(SourceEnum.STREAM)}
-                        >
-                            Stream
-                        </Button>
-                        <Button
-                            variant={getBtnVariant(
-                                selectedSource === SourceEnum.WEBCAM
-                            )}
-                            onClick={() => setSelectedSource(SourceEnum.WEBCAM)}
-                        >
-                            Webcam
-                        </Button>
-                        <Button
-                            variant={getBtnVariant(
-                                selectedSource === SourceEnum.IMAGE
-                            )}
-                            onClick={() => setSelectedSource(SourceEnum.IMAGE)}
-                        >
-                            Upload Image
-                        </Button>
-                    </ButtonGroup>
-                </Row>
+        <Row style={{ justifyContent: 'space-between' }}>
+            <Col xl={9} lg={4} md={12} 
+                sm={6} xs={6}>
+                <label
+                    style={{
+                        height: '100%',
+                        alignItems: 'center',
+                        display: 'flex',
+                    }}
+                >
+                    Source
+                </label>
             </Col>
             <Col
-                xs
-                lg={6}
-                style={{ display: 'flex', justifyContent: 'flex-end' }}
+                xl={3}
+                lg={8}
+                md={12}
+                sm={6}
+                xs={6}
+                style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                }}
             >
                 {selectedSource === SourceEnum.STREAM && (
                     <>
@@ -176,6 +154,38 @@ export default function SourceSelect(props) {
                         </Dropdown.Menu>
                     </Dropdown>
                 )}
+                <ButtonGroup style={{ height: '38px' }}>
+                    <Button
+                        variant={getBtnVariant(
+                            selectedSource === SourceEnum.STREAM
+                        )}
+                        onClick={() => setSelectedSource(SourceEnum.STREAM)}
+                        ariaLabel={'Stream'}
+                        title={'Stream'}
+                    >
+                        <Phone />
+                    </Button>
+                    <Button
+                        variant={getBtnVariant(
+                            selectedSource === SourceEnum.WEBCAM
+                        )}
+                        ariaLabel={'Webcam'}
+                        title={'Webcam'}
+                        onClick={() => setSelectedSource(SourceEnum.WEBCAM)}
+                    >
+                        <CameraVideo />
+                    </Button>
+                    <Button
+                        variant={getBtnVariant(
+                            selectedSource === SourceEnum.IMAGE
+                        )}
+                        ariaLabel={'File Upload'}
+                        title={'File Upload'}
+                        onClick={() => setSelectedSource(SourceEnum.IMAGE)}
+                    >
+                        <FileEarmarkArrowUp />
+                    </Button>
+                </ButtonGroup>
             </Col>
         </Row>
     );

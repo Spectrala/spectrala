@@ -156,7 +156,6 @@ export default function CameraView({ height }) {
     useEffect(() => {
         let frameCounter = 0;
         const videoInterval = setInterval(() => {
-
             const canvasElem = canvas.current;
             if (!canvasElem) return;
             const ctx = canvasElem.getContext('2d');
@@ -255,9 +254,16 @@ export default function CameraView({ height }) {
     return (
         <>
             <Row style={{ justifyContent: 'center', display: 'flex' }}>
-                <Col lg={8}>
+                <Col
+                    style={{ paddingBottom: '1vh' }}
+                    xl={8}
+                    lg={8}
+                    md={6}
+                    sm={12}
+                    xs={12}
+                >
                     <Card>
-                        <Card.Header as="h5" style={{ height: '64px' }}>
+                        <Card.Header as="h5">
                             <SourceSelect
                                 onChange={setVideoSrc}
                                 calibCoords={calibCoords}
@@ -283,8 +289,7 @@ export default function CameraView({ height }) {
                             <Row style={{ display: 'flex' }}>
                                 <LineSelector />
                                 <Col
-                                    xs
-                                    xl={4}
+                                    xl={2} lg={8} md={6} sm={12} xs={12}
                                     style={{
                                         display: 'flex',
                                         justifyContent: 'flex-end',
@@ -298,8 +303,8 @@ export default function CameraView({ height }) {
                                         }
                                         ref={saveOverlayTarget}
                                     >
-                                        <CameraFill /> Snapshot Mode
-                                    </Button>
+                                        <CameraFill/> Snapshot Mode
+                                    </Button> 
                                     <Overlay
                                         show={inSaveMode}
                                         target={saveOverlayTarget.current}
@@ -322,7 +327,14 @@ export default function CameraView({ height }) {
                         </Card.Footer>
                     </Card>
                 </Col>
-                <Col xs={1}  lg={3}>
+                <Col
+                    style={{ paddingBottom: '1vh' }}
+                    xl={4}
+                    lg={4}
+                    md={6}
+                    sm={12}
+                    xs={12}
+                >
                     <AdjustmentOptions />
                 </Col>
             </Row>

@@ -7,9 +7,8 @@ import { useSelector } from 'react-redux';
 import { selectValidateLiveResultantSpectrum } from '../../../reducers/resultant_spectrum';
 
 export default function ResultantSpectrumChart({ height }) {
-
     const data = useSelector(selectValidateLiveResultantSpectrum);
-    
+
     function isCollapsed() {
         return false;
     }
@@ -30,19 +29,38 @@ export default function ResultantSpectrumChart({ height }) {
             </Card.Header>
         );
     }
-    
+
     return (
         <Row style={{ justifyContent: 'center', display: 'flex' }}>
-            <Col lg={8}>
+            <Col
+                style={{ paddingBottom: '1vh' }}
+                xl={8}
+                lg={8}
+                md={6}
+                sm={12}
+                xs={12}
+            >
                 <Card>
                     {getHeader()}
-                    { isCollapsed() ? null : (<div style={{ height: height }}>
-                        <SpectrumLine height={height} spectrumData={data}/>
-                    </div>)}
+                    {isCollapsed() ? null : (
+                        <div style={{ height: height }}>
+                            <SpectrumLine height={height} spectrumData={data} />
+                        </div>
+                    )}
                 </Card>
             </Col>
-            <Col xs={1}  lg={3}>
-                <ReferenceSpectrumTools height={height} isCollapsed={isCollapsed()}/>
+            <Col
+                style={{ paddingBottom: '1vh' }}
+                xl={4}
+                lg={4}
+                md={6}
+                sm={12}
+                xs={12}
+            >
+                <ReferenceSpectrumTools
+                    height={height}
+                    isCollapsed={isCollapsed()}
+                />
             </Col>
         </Row>
     );

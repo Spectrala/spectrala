@@ -67,8 +67,15 @@ export default function ReferenceSpectrumChart({ height }) {
     }
 
     return (
-        <Row style={{ justifyContent: 'center', display: 'flex'}}>
-            <Col lg={8}>
+        <Row style={{ justifyContent: 'center', display: 'flex' }}>
+            <Col
+                style={{ paddingBottom: '1vh' }}
+                xl={8}
+                lg={8}
+                md={6}
+                sm={12}
+                xs={12}
+            >
                 <Card>
                     {getHeader()}
                     {isCollapsed() ? null : (
@@ -78,7 +85,14 @@ export default function ReferenceSpectrumChart({ height }) {
                     )}
                 </Card>
             </Col>
-            <Col xs lg={3}>
+            <Col
+                style={{ paddingBottom: '1vh' }}
+                xl={4}
+                lg={4}
+                md={6}
+                sm={12}
+                xs={12}
+            >
                 <ReferenceSpectrumTools
                     height={height}
                     isCollapsed={isCollapsed()}

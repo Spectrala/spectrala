@@ -36,60 +36,35 @@ export default class Dashboard extends React.Component {
 
     render() {
         return (
-            <Container fluid>
-                <Row style={{ height: '80px' }}>{this.getNavbar()}</Row>
-                <Col 
-                    style={{
-                        paddingLeft: '20px',
-                        paddingRight: '20px',
-                    }}
-                >
+            <>
+                {this.getNavbar()}
+                <br/>
+                <br/>
+                <br/>
+                <Container fluid>
                     <Row
-                        xs
-                        xl={1}
                         style={{
-                            display: 'flex',
                             justifyContent: 'center',
-                            paddingBottom: '16px',
                         }}
                     >
-                        <CameraView height={250} />
+                        <Col
+                            xl={10}
+                            style={{
+                                flexFlow: 'column nowrap',
+                                display: 'flex',
+                                flex: 1,
+                                width: '100vw',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <CameraView height={250} />
+                            <CalibrationSpectrumChart height={350} />
+                            <ReferenceSpectrumChart height={350} />
+                            <ResultantSpectrumChart height={350} />
+                        </Col>
                     </Row>
-                    <Row
-                        xs
-                        xl={1}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            paddingBottom: '16px',
-                        }}
-                    >
-                        <CalibrationSpectrumChart height={350} />
-                    </Row>
-                    <Row
-                        xs
-                        xl={1}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            paddingBottom: '16px',
-                        }}
-                    >
-                        <ReferenceSpectrumChart height={350} />
-                    </Row>
-                    <Row
-                        xs
-                        xl={1}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            paddingBottom: '16px',
-                        }}
-                    >
-                        <ResultantSpectrumChart height={350} />
-                    </Row>
-                </Col>
-            </Container>
+                </Container>
+            </>
         );
     }
 }

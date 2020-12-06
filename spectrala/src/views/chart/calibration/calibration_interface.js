@@ -27,8 +27,20 @@ export default function CalibrationSpectrumChart({ height }) {
     }
 
     return (
-        <Row style={{ justifyContent: 'center', display: 'flex' }}>
-            <Col lg={8}>
+        <Row
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+            }}
+        >
+            <Col
+                style={{ paddingBottom: '1vh' }}
+                xl={8}
+                lg={8}
+                md={6}
+                sm={12}
+                xs={12}
+            >
                 <Card>
                     {getHeader()}
                     {isCollapsed() ? null : (
@@ -38,8 +50,18 @@ export default function CalibrationSpectrumChart({ height }) {
                     )}
                 </Card>
             </Col>
-            <Col xs={1} lg={3}>
-                <CalibrationPointsControl height={height} isCollapsed={isCollapsed()}/>
+            <Col
+                style={{ paddingBottom: '1vh' }}
+                xl={4}
+                lg={4}
+                md={6}
+                sm={12}
+                xs={12}
+            >
+                <CalibrationPointsControl
+                    height={height}
+                    isCollapsed={isCollapsed()}
+                />
             </Col>
         </Row>
     );

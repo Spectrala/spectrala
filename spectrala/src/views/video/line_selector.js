@@ -37,8 +37,8 @@ export default function LineSelector() {
 
     return (
         <>
-            <Col>
-                <InputGroup>
+            <Col xl={5} lg xs={12}>
+                <InputGroup style={{display: 'flex'}}>
                     <InputGroup.Prepend>
                         <InputGroup.Text>Low Energy</InputGroup.Text>
                     </InputGroup.Prepend>
@@ -46,7 +46,7 @@ export default function LineSelector() {
                     {createFormControl('Y', 'lowY')}
                 </InputGroup>
             </Col>
-            <Col>
+            <Col xl={5} lg xs={12}>
                 <InputGroup>
                     <InputGroup.Prepend>
                         <InputGroup.Text>High Energy</InputGroup.Text>
