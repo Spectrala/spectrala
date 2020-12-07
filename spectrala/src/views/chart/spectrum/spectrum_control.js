@@ -1,6 +1,12 @@
 import React from 'react';
-import { InputGroup, Button, Form } from 'react-bootstrap';
-import { XCircle, Droplet, CaretDown, CaretUp } from 'react-bootstrap-icons';
+import {
+    InputGroup,
+    Button,
+    Form,
+    Dropdown,
+    DropdownButton,
+} from 'react-bootstrap';
+import { XCircle, Droplet } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,11 +14,62 @@ import {
     renameSpectrum,
     selectRecordedSpectra,
     removeSpectrum,
+    removeReference,
+    setReference,
+    downloadSpectrum,
 } from '../../../reducers/spectrum';
 
 export default function SpectrumControl({ height }) {
     const dispatch = useDispatch();
     const recordedSpectra = useSelector(selectRecordedSpectra);
+
+    function getActionDropdown(spectrum, idx) {
+        return (
+            <DropdownButton
+                title=""
+                as={InputGroup.Append}
+                variant="outline-secondary"
+                id="collasible-nav-dropdown"
+                key={`more_${idx}`}
+            >
+                <Dropdown.Item
+                    key={'reference'}
+                    onClick={() => {
+                        spectrum.isReference
+                            ? dispatch(removeReference())
+                            : dispatch(setReference({ targetIndex: idx }));
+                    }}
+                >
+                    {spectrum.isReference
+                        ? 'Unset reference'
+                        : 'Use as reference'}
+                </Dropdown.Item>
+
+                <Dropdown.Item
+                    key={'download'}
+                    onClick={() => {
+                        dispatch(downloadSpectrum({ targetIndex: idx }));
+                    }}
+                >
+                    Download as CSV
+                </Dropdown.Item>
+
+                <Dropdown.Divider />
+                <Dropdown.Item
+                    key={'delete'}
+                    onClick={() => {
+                        dispatch(
+                            removeSpectrum({
+                                targetIndex: idx,
+                            })
+                        );
+                    }}
+                >
+                    Delete Spectrum
+                </Dropdown.Item>
+            </DropdownButton>
+        );
+    }
 
     function getCells() {
         return (
@@ -22,7 +79,7 @@ export default function SpectrumControl({ height }) {
                     return (
                         <Form
                             className="mb-3"
-                            key={idx}
+                            key={`spectrum_options_${idx}`}
                             style={{
                                 paddingLeft: '15px',
                                 paddingRight: '15px',
@@ -31,19 +88,16 @@ export default function SpectrumControl({ height }) {
                         >
                             <InputGroup>
                                 <InputGroup.Prepend>
-                                    <Button
-                                        variant="outline-secondary"
-                                        onClick={() => {
-                                            console.log('reference');
-                                        }}
-                                    >
-                                        <Droplet
-                                            style={{
-                                                display: 'flex',
-                                                alignSelf: 'flex-center',
-                                            }}
-                                        />
-                                    </Button>
+                                    {point.isReference ? (
+                                        <InputGroup.Text>
+                                            <Droplet
+                                                style={{
+                                                    display: 'flex',
+                                                    alignSelf: 'flex-center',
+                                                }}
+                                            />
+                                        </InputGroup.Text>
+                                    ) : null}
                                 </InputGroup.Prepend>
                                 <Form.Control
                                     value={point.name ? point.name : ''}
@@ -61,24 +115,7 @@ export default function SpectrumControl({ height }) {
                                 />
 
                                 <InputGroup.Append>
-                                    {getUpDown(point, idx)}
-                                    <Button
-                                        variant="outline-secondary"
-                                        onClick={() => {
-                                            dispatch(
-                                                removeSpectrum({
-                                                    targetIndex: idx,
-                                                })
-                                            );
-                                        }}
-                                    >
-                                        <XCircle
-                                            style={{
-                                                display: 'flex',
-                                                alignSelf: 'flex-center',
-                                            }}
-                                        />
-                                    </Button>
+                                    {getActionDropdown(point, idx)}
                                 </InputGroup.Append>
 
                                 <Form.Control.Feedback type="invalid">
@@ -98,27 +135,6 @@ export default function SpectrumControl({ height }) {
 
     function getValidationFeedback(point) {
         return null;
-    }
-
-    function getUpDown(point, idx) {
-        return (
-            <>
-                <Button
-                    variant="outline-secondary"
-                >
-                    <CaretUp
-                        style={{ display: 'flex', alignSelf: 'flex-center' }}
-                    />
-                </Button>
-                <Button
-                    variant="outline-secondary"
-                >
-                    <CaretDown
-                        style={{ display: 'flex', alignSelf: 'flex-center' }}
-                    />
-                </Button>
-            </>
-        );
     }
 
     function getAddButton() {

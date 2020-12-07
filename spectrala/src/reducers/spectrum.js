@@ -11,18 +11,18 @@ import SpectralDataResponse from './spectral_data_response';
 const DEFAULT_NAME = 'New Spectrum ';
 
 /**
- * ZERO_SPECTRUM
+ * FULL_SPECTRUM
  *      Default spectrum to pass to resultant when nothing is selected.
- *      This works because of the nearest-neighbor method in the resultant spectrum. 
+ *      This works because of the nearest-neighbor method in the resultant spectrum.
  *      Since there is only one x-value, it is the closest x value (which has a y component of 0).
  */
-const ZERO_SPECTRUM = [{ x: 0, y: 0 }];
+const FULL_SPECTRUM = [{ x: 0, y: 1 }];
 
 /**
  * addNewSpectrum
  *      Adds a new spectrum to the list of stored spectra.
- * 
- *      Returns: (array) -- the array of recorded spectra. 
+ *
+ *      Returns: (array) -- the array of recorded spectra.
  *      Format:
  *      [{
  *          key: 2
@@ -43,8 +43,17 @@ export const addNewSpectrum = (currentArray, data, defaultName) => {
         key: key,
         name: name,
         data: data,
+        isReference: false,
     });
     return currentArray;
+};
+
+export const setIsReferenceFalse = (currentArray) => {
+    return currentArray.map((pt) => {
+        let newObj = Object.assign({}, pt);
+        newObj.isReference = false;
+        return newObj;
+    });
 };
 
 export const spectrumSlice = createSlice({
@@ -63,7 +72,6 @@ export const spectrumSlice = createSlice({
 
             // To automatically use the reference
             state.key_being_used = recorded[recorded.length - 1].key;
-            state.is_recording = false;
             state.recorded_spectra = recorded;
         },
         removeSpectrum: (state, action) => {
@@ -79,6 +87,22 @@ export const spectrumSlice = createSlice({
             recorded[idx].name = name;
             state.recorded_spectra = recorded;
         },
+        removeReference: (state, action) => {
+            state.recorded_spectra = setIsReferenceFalse(
+                state.recorded_spectra
+            );
+        },
+        setReference: (state, action) => {
+            const idx = action.payload.targetIndex;
+            let recorded = setIsReferenceFalse(state.recorded_spectra);
+            recorded[idx].isReference = true;
+            state.recorded_spectra = recorded;
+        },
+        downloadSpectrum: (state, action) => {
+            const idx = action.payload.targetIndex;
+            const spectrum = state.recorded_spectra[idx];
+            console.log('DOWNLOAD');
+        },
     },
 });
 
@@ -86,12 +110,15 @@ export const {
     recordSpectrum,
     removeSpectrum,
     renameSpectrum,
+    removeReference,
+    setReference,
+    downloadSpectrum,
 } = spectrumSlice.actions;
 
 /**
  * selectValidateCalibrationPoints
  *      Gets the calibration points in the currently used calibration.
- * 
+ *
  *      Returns: SpectralDataResponse. If there is data, it looks like this: [CalibrationPoint].
  */
 export const selectValidateCalibrationPoints = (state) => {
@@ -103,9 +130,9 @@ export const selectValidateCalibrationPoints = (state) => {
 
 /**
  * selectValidateCalibratedPixelLine
- *      Gets the pixel line (raw from the camera source) after validating 
- *      that the data exists to do the calibration. 
- * 
+ *      Gets the pixel line (raw from the camera source) after validating
+ *      that the data exists to do the calibration.
+ *
  *      Returns: SpectralDataResponse. If there is data, it looks like this: [{x: 338.3, y: 44.2}].
  */
 export const selectValidateCalibratedPixelLine = (state) => {
@@ -135,34 +162,51 @@ export const selectValidateCalibratedPixelLine = (state) => {
  */
 export const selectValidateLiveSpectrum = (state) => {
     // TODO: allow user to view old reference spectra.
-    return selectValidateCalibratedPixelLine(state);
+    const pixelLine = selectValidateCalibratedPixelLine(state);
+    if (!pixelLine.valid) return pixelLine;
+    const data = pixelLine.data;
+    const ref = selectReferenceAbsorbance(state);
+    const intensity = computeIntensity(data, ref);
+
+    return new SpectralDataResponse({
+        valid: true,
+        data: intensity,
+    });
 };
 
 /**
- * selectReferenceSpectrum
- *      Get the reference spectrum used for creating a resultant spectrum.
- *      This will be what the user has selected, or, a zero-spectrum by default. (just 1 x value which is set to y=0).
+ * selectReferenceAbsorbance
+ *      Get the absorbance values of the reference spectrum used for creating a resultant spectrum.
+ *      This will be what the user has selected, or, a ones-spectrum by default. (just 1 x value which is set to y=1).
  *
- *      Returns: SpectralDataResponse. If there is data, it looks like this: [{x: 338.3, y: 44.2}].
+ *      Returns: array. Data looks like this: [{x: 338.3, y: 44.2}].
  */
-export const selectReferenceSpectrum = (state) => {
-    const key = state.spectra.key_being_used;
-
-    // Check if there is a selected spectrum. Otherwise, return a blank reference spectrum.
-    if (!key) {
-        return new SpectralDataResponse({ valid: true, data: ZERO_SPECTRUM });
+export const selectReferenceAbsorbance = (state) => {
+    const reference = state.spectra.recorded_spectra.filter(
+        (s) => s.isReference
+    );
+    if (reference.length === 0) {
+        return FULL_SPECTRUM;
     }
+    return reference[0].data;
+};
 
-    const data = state.spectra.recorded_spectra.find((s) => s.key === key);
-    if (!data) {
-        console.error("Could not find data at provided key.");
-        return new SpectralDataResponse({
-            valid: false,
-            message: 'Could not find the spectrum. This is a bug, please report this and try again.',
-        });
-    }
+// TODO: make this look professional
+// get nearest neighbor (in x position) to a parent x value of neighborArray and return the neighborArray y value.
+const getNeighborY = (parentX, neighborArray) => {
+    const closest = neighborArray.reduce((a, b) => {
+        return Math.abs(a.x - parentX) < Math.abs(b.X - parentX) ? a : b;
+    });
+    return closest.y;
+};
 
-    return new SpectralDataResponse({ valid: true, data: data.data });
+export const computeIntensity = (target, reference) => {
+    let intensity = target.map((t) => {
+        const r = getNeighborY(t.x, reference);
+        const intensity = r === 0 ? 0 : t.y / r;
+        return { x: t.x, y: intensity };
+    });
+    return intensity;
 };
 
 /**
