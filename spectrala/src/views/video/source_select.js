@@ -125,74 +125,67 @@ export default function SourceSelect(props) {
     }
 
     return (
-        <Row style={{ justifyContent: 'space-between' }}>
-            <Col xl={9} lg={4} md={12} sm={6} xs={6}>
-                <label
-                    style={{
-                        height: '100%',
-                        alignItems: 'center',
-                        display: 'flex',
-                    }}
-                >
-                    Source
-                </label>
-            </Col>
-            <Col
-                xl={3}
-                lg={8}
-                md={12}
-                sm={6}
-                xs={6}
-                style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                }}
-            >
-                {selectedSource === SourceEnum.STREAM && (
-                    <>
-                        <FormControl
-                            type="text"
-                            placeholder="Stream URL (e.g. http://192.0.2.1:8000/stream.mp4)"
-                            value={streamUrl}
-                            onChange={(e) => setStreamUrl(e.target.value)}
-                        />
-                    </>
-                )}
-                {selectedSource === SourceEnum.WEBCAM && getWebcamDropdown()}
-                <ButtonGroup style={{ height: '38px' }}>
-                    <Button
-                        variant={getBtnVariant(
-                            selectedSource === SourceEnum.STREAM
-                        )}
-                        onClick={() => setSelectedSource(SourceEnum.STREAM)}
-                        ariaLabel={'Stream'}
-                        title={'Stream'}
+        <div style={{ paddingRight: '10px', paddingLeft: '10px' }}>
+            <Row style={{ justifyContent: 'space-between' }}>
+                <div>
+                    <label
+                        style={{
+                            height: '100%',
+                            alignItems: 'center',
+                            display: 'flex',
+                        }}
                     >
-                        <Phone />
-                    </Button>
-                    <Button
-                        variant={getBtnVariant(
-                            selectedSource === SourceEnum.WEBCAM
-                        )}
-                        ariaLabel={'Webcam'}
-                        title={'Webcam'}
-                        onClick={() => setSelectedSource(SourceEnum.WEBCAM)}
-                    >
-                        <CameraVideo />
-                    </Button>
-                    <Button
-                        variant={getBtnVariant(
-                            selectedSource === SourceEnum.IMAGE
-                        )}
-                        ariaLabel={'File Upload'}
-                        title={'File Upload'}
-                        onClick={() => setSelectedSource(SourceEnum.IMAGE)}
-                    >
-                        <FileEarmarkArrowUp />
-                    </Button>
-                </ButtonGroup>
-            </Col>
-        </Row>
+                        Source
+                    </label>
+                </div>
+                <div>
+                    {selectedSource === SourceEnum.WEBCAM &&
+                        getWebcamDropdown()}
+                    <ButtonGroup style={{ height: '38px' }}>
+                        <Button
+                            variant={getBtnVariant(
+                                selectedSource === SourceEnum.STREAM
+                            )}
+                            onClick={() => setSelectedSource(SourceEnum.STREAM)}
+                            aria-label={'Stream'}
+                            title={'Stream'}
+                        >
+                            <Phone />
+                        </Button>
+                        <Button
+                            variant={getBtnVariant(
+                                selectedSource === SourceEnum.WEBCAM
+                            )}
+                            aria-label={'Webcam'}
+                            title={'Webcam'}
+                            onClick={() => setSelectedSource(SourceEnum.WEBCAM)}
+                        >
+                            <CameraVideo />
+                        </Button>
+                        <Button
+                            variant={getBtnVariant(
+                                selectedSource === SourceEnum.IMAGE
+                            )}
+                            aria-label={'File Upload'}
+                            title={'File Upload'}
+                            onClick={() => setSelectedSource(SourceEnum.IMAGE)}
+                        >
+                            <FileEarmarkArrowUp />
+                        </Button>
+                    </ButtonGroup>
+                </div>
+            </Row>
+            {selectedSource === SourceEnum.STREAM && (
+                <Row style={{ alignSelf: 'flex-end', paddingTop: '10px' }}>
+                    <FormControl
+                        type="text"
+                        placeholder="Stream URL (e.g. http://192.0.2.1:8000/stream.mp4)"
+                        value={streamUrl}
+                        onChange={(e) => setStreamUrl(e.target.value)}
+                    />
+                </Row>
+            )}
+        </div>
     );
 }
 
