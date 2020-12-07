@@ -104,8 +104,17 @@ export default function CalibrationLine() {
     }
 
     function isValidPlacement(point, xPosition) {
-        console.warn('TODO: implement isValidPlacement');
-        return true;
+        return getSetPoints().every((setPoint) => {
+            const p1 = setPoint.getPlacementLocationDescription();
+            const p2 = {
+                rawWavelength: point.getWavelength(),
+                placement: xPosition,
+            };
+            const slope =
+                (p2.rawWavelength - p1.rawWavelength) /
+                (p2.placement - p1.placement);
+            return slope > 0;
+        });
     }
 
     function getPointIndexThatFallsOnLocation(location) {
