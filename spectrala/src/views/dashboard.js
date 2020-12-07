@@ -6,29 +6,34 @@ import CalibrationSpectrumChart from './chart/calibration/calibration_interface'
 import SpectrumChart from './chart/spectrum/spectrum_interface';
 
 export default class Dashboard extends React.Component {
+
+    // TODO: make the help menu do something before you show it to the user
+    getHelpMenu = () => {
+        const helpMenu = (
+            <NavDropdown title="Help" id="collasible-nav-dropdown">
+                <NavDropdown.Item href="#action/3.1">
+                    Connecting a camera
+                </NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.2">
+                    Calibration
+                </NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.3">
+                    Data collection
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="#action/3.4">About</NavDropdown.Item>
+            </NavDropdown>
+        );
+        return null;
+    };
+
     getNavbar = () => {
         return (
             <Navbar bg="light" variant="light" fixed="top">
                 <Navbar.Brand href="#home">
                     <img style={{ height: '40px' }} src={logo} alt="logo" />
                 </Navbar.Brand>
-                <Nav className="mr-auto">
-                    <NavDropdown title="Help" id="collasible-nav-dropdown">
-                        <NavDropdown.Item href="#action/3.1">
-                            Connecting a camera
-                        </NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.2">
-                            Calibration
-                        </NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.3">
-                            Data collection
-                        </NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action/3.4">
-                            About
-                        </NavDropdown.Item>
-                    </NavDropdown>
-                </Nav>
+                <Nav className="mr-auto">{this.getHelpMenu()}</Nav>
             </Navbar>
         );
     };
@@ -37,9 +42,9 @@ export default class Dashboard extends React.Component {
         return (
             <>
                 {this.getNavbar()}
-                <br/>
-                <br/>
-                <br/>
+                <br />
+                <br />
+                <br />
                 <Container fluid>
                     <Row
                         style={{
