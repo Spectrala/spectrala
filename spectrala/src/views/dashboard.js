@@ -3,8 +3,7 @@ import { Container, Col, Navbar, Nav, NavDropdown, Row } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import CameraView from './video/camera';
 import CalibrationSpectrumChart from './chart/calibration/calibration_interface';
-import ReferenceSpectrumChart from './chart/reference_spectrum/reference_interface';
-import ResultantSpectrumChart from './chart/resultant_spectrum/resultant_interface';
+import SpectrumChart from './chart/spectrum/spectrum_interface';
 
 export default class Dashboard extends React.Component {
     getNavbar = () => {
@@ -59,8 +58,7 @@ export default class Dashboard extends React.Component {
                         >
                             <CameraView height={250} />
                             <CalibrationSpectrumChart height={350} />
-                            <ReferenceSpectrumChart height={350} />
-                            <ResultantSpectrumChart height={350} />
+                            <SpectrumChart height={350} />
                         </Col>
                     </Row>
                 </Container>

@@ -246,5 +246,5 @@ CalibrationPointsControl.propTypes = {
 };
 
 CalibrationPointsControl.defaultProps = {
-    maximumPoints: 5,
+    maximumPoints: 2,
 };

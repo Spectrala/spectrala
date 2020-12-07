@@ -1,52 +1,21 @@
 import React from 'react';
 import { Col, Card, Row, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import ReferenceSpectrumTools from './reference_tools';
-import SpectrumLine from '../spectrum_line';
+import SpectrumTools from './spectrum_tools';
+import SpectrumLine from './spectrum_line';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    selectValidateLiveReferenceSpectrum,
-    selectRecordingStatus,
-    cancelRecording,
-    startRecording,
-} from '../../../reducers/reference_spectrum';
+    selectValidateLiveSpectrum,
+} from '../../../reducers/spectrum';
 
-export default function ReferenceSpectrumChart({ height }) {
-    const data = useSelector(selectValidateLiveReferenceSpectrum);
-    const recording = useSelector(selectRecordingStatus);
+export default function SpectrumChart({ height }) {
+    const data = useSelector(selectValidateLiveSpectrum);
     const dispatch = useDispatch();
 
     function isCollapsed() {
         return false;
     }
 
-    function getRecordButton() {
-        if (recording) {
-            return (
-                <div>
-                    {'Recording '}
-                    <Button
-                        variant={'outline-secondary'}
-                        onClick={() => {
-                            dispatch(cancelRecording());
-                        }}
-                    >
-                        Cancel
-                    </Button>
-                </div>
-            );
-        }
-        return (
-            <Button
-                variant={'outline-secondary'}
-                onClick={() => {
-                    dispatch(startRecording());
-                }}
-            >
-                Record new
-            </Button>
-        );
-    }
     function getHeader() {
         return (
             <Card.Header
@@ -60,8 +29,7 @@ export default function ReferenceSpectrumChart({ height }) {
                     justifyContent: 'space-between',
                 }}
             >
-                Reference Spectrum
-                {getRecordButton()}
+                Spectrum
             </Card.Header>
         );
     }
@@ -93,7 +61,7 @@ export default function ReferenceSpectrumChart({ height }) {
                 sm={12}
                 xs={12}
             >
-                <ReferenceSpectrumTools
+                <SpectrumTools
                     height={height}
                     isCollapsed={isCollapsed()}
                 />
@@ -102,6 +70,6 @@ export default function ReferenceSpectrumChart({ height }) {
     );
 }
 
-ReferenceSpectrumChart.propTypes = {
+SpectrumChart.propTypes = {
     height: PropTypes.number,
 };

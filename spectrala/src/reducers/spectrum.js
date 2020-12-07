@@ -7,8 +7,8 @@ import {
 } from './calibration/calibration_math';
 import SpectralDataResponse from './spectral_data_response';
 
-// Default name prefix for saving a reference spectrum. Will start naming as DEFAULT_NAME 1.
-const DEFAULT_NAME = 'Reference Spectrum ';
+// Default name prefix for saving a spectrum. Will start naming as DEFAULT_NAME 1.
+const DEFAULT_NAME = 'New Spectrum ';
 
 /**
  * ZERO_SPECTRUM
@@ -21,7 +21,6 @@ const ZERO_SPECTRUM = [{ x: 0, y: 0 }];
 /**
  * addNewSpectrum
  *      Adds a new spectrum to the list of stored spectra.
- *      Useful for reference spectra and resultant spectra.
  * 
  *      Returns: (array) -- the array of recorded spectra. 
  *      Format:
@@ -48,60 +47,46 @@ export const addNewSpectrum = (currentArray, data, defaultName) => {
     return currentArray;
 };
 
-export const referenceSpectrumSlice = createSlice({
-    name: 'reference',
+export const spectrumSlice = createSlice({
+    name: 'spectra',
     initialState: {
         spectrum: null,
-        recorded_references: [],
-        is_recording: true,
+        recorded_spectra: [],
         key_being_used: null,
     },
     reducers: {
-        record_reference: (state, action) => {
+        recordSpectrum: (state, action) => {
             // TODO: Verify spectrum is okay. Right now that is only done in the button.
             const data = action.payload.data.data;
-            const refs = state.recorded_references;
+            const refs = state.recorded_spectra;
             const recorded = addNewSpectrum(refs, data, DEFAULT_NAME);
 
             // To automatically use the reference
             state.key_being_used = recorded[recorded.length - 1].key;
             state.is_recording = false;
-            state.record_references = recorded;
+            state.recorded_spectra = recorded;
         },
-        remove_reference: (state, action) => {
+        removeSpectrum: (state, action) => {
             const idx = action.payload.targetIndex;
-            let recorded = state.recorded_references;
+            let recorded = state.recorded_spectra;
             recorded.splice(idx, 1);
-            state.record_references = recorded;
+            state.recorded_spectra = recorded;
         },
-        rename_reference: (state, action) => {
+        renameSpectrum: (state, action) => {
             const idx = action.payload.targetIndex;
             const name = action.payload.name;
-            let recorded = state.recorded_references;
+            let recorded = state.recorded_spectra;
             recorded[idx].name = name;
-            state.record_references = recorded;
-        },
-        cancelRecording: (state, action) => {
-            state.is_recording = false;
-        },
-        startRecording: (state, action) => {
-            state.is_recording = true;
+            state.recorded_spectra = recorded;
         },
     },
 });
 
 export const {
-    record_reference,
-    remove_reference,
-    rename_reference,
-    cancelRecording,
-    startRecording,
-} = referenceSpectrumSlice.actions;
-
-
-export const selectRecordingStatus = (state) => {
-    return state.reference.is_recording;
-};
+    recordSpectrum,
+    removeSpectrum,
+    renameSpectrum,
+} = spectrumSlice.actions;
 
 /**
  * selectValidateCalibrationPoints
@@ -143,51 +128,37 @@ export const selectValidateCalibratedPixelLine = (state) => {
 };
 
 /**
- * selectValidateLiveReferenceSpectrum
- *      Get the line graph data to show in the Reference Spectrum component.
- *      Will only show when recording.
+ * selectValidateLiveSpectrum
+ *      Get the line graph data to show in the Spectrum component.
  *
  *      Returns: SpectralDataResponse. If there is data, it looks like this: [{x: 338.3, y: 44.2}].
  */
-export const selectValidateLiveReferenceSpectrum = (state) => {
-    if (!state.reference.is_recording)
-        return new SpectralDataResponse({
-            valid: false,
-            message: 'Waiting for recording to start.',
-        });
+export const selectValidateLiveSpectrum = (state) => {
     // TODO: allow user to view old reference spectra.
     return selectValidateCalibratedPixelLine(state);
 };
 
 /**
- * selectPreferredReferenceSpectrum
+ * selectReferenceSpectrum
  *      Get the reference spectrum used for creating a resultant spectrum.
  *      This will be what the user has selected, or, a zero-spectrum by default. (just 1 x value which is set to y=0).
  *
  *      Returns: SpectralDataResponse. If there is data, it looks like this: [{x: 338.3, y: 44.2}].
  */
-export const selectPreferredReferenceSpectrum = (state) => {
-    const key = state.reference.key_being_used;
-
-    // Make sure recording has stopped.
-    if (state.is_recording) {
-        return new SpectralDataResponse({
-            valid: false,
-            message: 'Must finish recording a reference spectrum.',
-        });
-    }
+export const selectReferenceSpectrum = (state) => {
+    const key = state.spectra.key_being_used;
 
     // Check if there is a selected spectrum. Otherwise, return a blank reference spectrum.
     if (!key) {
         return new SpectralDataResponse({ valid: true, data: ZERO_SPECTRUM });
     }
 
-    const data = state.reference.recorded_references.find((s) => s.key === key);
+    const data = state.spectra.recorded_spectra.find((s) => s.key === key);
     if (!data) {
         console.error("Could not find data at provided key.");
         return new SpectralDataResponse({
             valid: false,
-            message: 'Could not find the reference spectrum. This is a bug, please report this and try again.',
+            message: 'Could not find the spectrum. This is a bug, please report this and try again.',
         });
     }
 
@@ -195,8 +166,8 @@ export const selectPreferredReferenceSpectrum = (state) => {
 };
 
 /**
- * selectRecordedReferences
- *      Returns (array) -- the list of recorded reference spectra.
+ * selectRecordedSpectra
+ *      Returns (array) -- the list of recorded spectra.
  *      Format:
  *      [{
  *          key: 2
@@ -204,8 +175,8 @@ export const selectPreferredReferenceSpectrum = (state) => {
  *          data: [{x: 338.3, y: 44.2}]
  *      }]
  */
-export const selectRecordedReferences = (state) => {
-    return state.reference.recorded_references;
+export const selectRecordedSpectra = (state) => {
+    return state.spectra.recorded_spectra;
 };
 
-export default referenceSpectrumSlice.reducer;
+export default spectrumSlice.reducer;

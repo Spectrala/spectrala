@@ -4,21 +4,21 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import {
-    record_reference,
-    selectRecordedReferences,
-    selectValidateLiveReferenceSpectrum,
+    selectRecordedSpectra,
+    selectValidateLiveSpectrum,
     selectValidateCalibrationPoints,
-} from '../../../reducers/reference_spectrum';
-import ReferencePointsControl from './reference_points_control';
-export default function ReferenceSpectrumTools({ height, isCollapsed }) {
+    recordSpectrum,
+} from '../../../reducers/spectrum';
+import SpectrumControl from './spectrum_control';
+export default function SpectrumTools({ height, isCollapsed }) {
     const dispatch = useDispatch();
-    const spectra = useSelector(selectRecordedReferences);
-    const currentSpectrum = useSelector(selectValidateLiveReferenceSpectrum);
+    const spectra = useSelector(selectRecordedSpectra);
+    const currentSpectrum = useSelector(selectValidateLiveSpectrum);
     const valid = useSelector(selectValidateCalibrationPoints);
 
     function getSpectraNames() {
-        if (!spectra) return <label>No saved reference spectra.</label>;
-        return ReferencePointsControl(height);
+        if (!spectra) return <label>No saved spectra.</label>;
+        return SpectrumControl(height);
     }
 
     return (
@@ -34,12 +34,12 @@ export default function ReferenceSpectrumTools({ height, isCollapsed }) {
                     paddingRight: '15px',
                 }}
             >
-                Saved References
+                Saved Spectra
                 <Button
                     disabled={!valid.isValid()}
                     onClick={() => {
                         dispatch(
-                            record_reference({
+                            recordSpectrum({
                                 data: currentSpectrum,
                             })
                         );
@@ -65,7 +65,7 @@ export default function ReferenceSpectrumTools({ height, isCollapsed }) {
     );
 }
 
-ReferenceSpectrumTools.propTypes = {
+SpectrumTools.propTypes = {
     height: PropTypes.number,
     isCollapsed: PropTypes.bool,
 };

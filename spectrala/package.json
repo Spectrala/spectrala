@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^7.1.2",
     "bootstrap": "^4.5.3",
     "chart.js": "^2.9.4",
+    "cubic-spline": "^3.0.3",
     "jimp": "^0.16.1",
     "nivo": "^0.31.0",
     "rc-slider": "^9.5.4",

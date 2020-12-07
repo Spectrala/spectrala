@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import CalibrationPointsControl from './points_control';
+import CalibrationPointsControl from './calibration_points_control';
 import CalibrationLine from './calibration_line';
 
 export default function CalibrationSpectrumChart({ height }) {

@@ -9,24 +9,21 @@ import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    remove_reference,
-    rename_reference,
-    selectRecordedReferences,
-} from '../../../reducers/reference_spectrum';
+    renameSpectrum,
+    selectRecordedSpectra,
+    removeSpectrum,
+} from '../../../reducers/spectrum';
 
-export default function ReferencePointsControl({ height }) {
-    // TODO: Don't simply return false, bro
-    const referenceSpectra = useSelector(
-        selectRecordedReferences,
-        (a, b) => false
-    );
+export default function SpectrumControl({ height }) {
+
     const dispatch = useDispatch();
+    const recordedSpectra = useSelector(selectRecordedSpectra);
 
-    function getCalibrationBoxes() {
+    function getCells() {
         return (
             <>
                 <div style={{ height: '15px' }} />
-                {referenceSpectra.map((point, idx) => {
+                {recordedSpectra.map((point, idx) => {
                     return (
                         <Form
                             className="mb-3"
@@ -44,7 +41,7 @@ export default function ReferencePointsControl({ height }) {
                                     aria-describedby="basic-addon2"
                                     onChange={(event) => {
                                         dispatch(
-                                            rename_reference({
+                                            renameSpectrum({
                                                 targetIndex: idx,
                                                 name: event.target.value,
                                             })
@@ -59,7 +56,7 @@ export default function ReferencePointsControl({ height }) {
                                         variant="outline-secondary"
                                         onClick={() => {
                                             dispatch(
-                                                remove_reference({
+                                                removeSpectrum({
                                                     targetIndex: idx,
                                                 })
                                             );
@@ -113,12 +110,12 @@ export default function ReferencePointsControl({ height }) {
 
     return (
         <div style={{ height: height, overflowY:'auto', width: "100%"}}>
-            {getCalibrationBoxes()}
+            {getCells()}
             {getAddButton()}
         </div>
     );
 }
 
-ReferencePointsControl.propTypes = {
+SpectrumControl.propTypes = {
     height: PropTypes.number,
 };

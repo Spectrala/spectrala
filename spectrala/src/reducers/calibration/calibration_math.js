@@ -1,4 +1,5 @@
 import SpectralDataResponse from '../spectral_data_response';
+const Spline = require('cubic-spline');
 
 export const validateCalibrationPoints = (calibrationPoints) => {
     // Make sure all points are placed.
@@ -37,27 +38,76 @@ export const validateCalibrationPoints = (calibrationPoints) => {
     return new SpectralDataResponse({ valid: true, data: sortedPoints });
 };
 
-export const getCalibratedSpectrum = (intensities, sortedCalibrationPoints) => {
-    const point_a = sortedCalibrationPoints[0];
-    const point_b = sortedCalibrationPoints[sortedCalibrationPoints.length - 1];
-    const cartesian = (point) => {
-        return { x: point.placement, y: point.rawWavelength };
-    };
+const cartesian = (point) => {
+    return { x: point.placement, y: point.rawWavelength };
+};
 
-    const a = cartesian(point_a);
-    const b = cartesian(point_b);
+const pointSlope = (a, b) => {
     const m = (b.y - a.y) / (b.x - a.x);
-    const w_end = (x) => m * (x - a.x) + b.y;
+    const equation = (x) => m * (x - a.x) + b.y;
+    return equation;
+};
+
+const cubicSpline = (pts) => {
+    const xs = pts.map((p) => p.x);
+    const ys = pts.map((p) => p.y);
+    const spline = new Spline(ys, xs);
+    return (x) => spline.at(x);
+};
+
+const linearSpline = (pts, x) => {
+    for (let i = 0; i < pts.length - 1; i++) {
+        const a = pts[i];
+        const b = pts[i + 1];
+        if (a.x < x && x < b.x) {
+            return pointSlope(a, b)(x);
+        }
+    }
+    return null;
+};
+
+/**
+ * getCalibratedSpectrum:
+ *      Input a raw array of pixel intensities and calibration points and output an array of wavelength and intensitiy pairs.
+ *      The method used to do this is
+ *          1. Assign each calibration point an x value of placement and a y value of wavelength
+ *          2. Use point-slope to get a straight line between the points with the lowest x and highest x
+ *          3. Use linearSpline to draw a linear spline through all points
+ *          4. Create a wavelength(x) function which uses the line from step 3 for x values between the two endpoints and otherwise the line from step 2
+ *          5. Map all pixel intensities to wavelength values
+ *              i. Calculate position fom 0 to 1 inside the array
+ *              ii. Use value from step 5i for wavelength(x)
+ *              iii. return { x: wavelength(x), y: pixel intensity }
+ *
+ *      Returns: (array) Pixel intensities at wavelengths. Looks like this: [{ x: wavelength(x), y: pixel intensity }]
+ */
+export const getCalibratedSpectrum = (intensities, sortedCalibrationPoints) => {
+    // Convert points to cartesian
+    const pts = sortedCalibrationPoints.map((point) => cartesian(point));
+
+    // Get endpoints
+    const a = pts[0];
+    const b = pts[pts.length - 1];
+
+    const w_end = pointSlope(a, b);
+    const w_middle = (x) => linearSpline(pts, x);
+
+    const wavelength = (x) => {
+        if (pts.length < 3) return w_end(x);
+        if (x > a.x && x < b.x) return w_middle(x);
+        return w_end(x);
+    };
 
     if (!intensities) {
         console.warn('Got null intensities');
         return;
     }
 
+
     return intensities.map((y, idx) => {
         const x_position = idx / (intensities.length - 1);
         return {
-            x: w_end(x_position),
+            x: wavelength(x_position),
             y: y,
         };
     });

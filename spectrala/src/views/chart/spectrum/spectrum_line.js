@@ -11,12 +11,11 @@ const AREA_OPACITY = 'CC';
 
 /**
  * SpectrumLine:
- *      This interface is meant to handle both the reference
- *      spectrum and the resultant spectrum. It's the pretty rainbow.
+ *      This interface is the pretty rainbow.
  */
 
 // TODO: Fix somewhat sketchy color settings.
-export default function ReferenceSpectrumLine({
+export default function SpectrumLine({
     height,
     spectrumData,
 }) {
@@ -203,7 +202,7 @@ export default function ReferenceSpectrumLine({
     }
 }
 
-ReferenceSpectrumLine.propTypes = {
+SpectrumLine.propTypes = {
     height: PropTypes.number,
-    referenceSpectrumData: PropTypes.any,
+    spectrumData: PropTypes.any,
 };
