@@ -289,7 +289,7 @@ export default function CameraView({ height }) {
                             <Row style={{ display: 'flex' }}>
                                 <LineSelector />
                                 <Col
-                                    xl={2} lg={8} md={6} sm={12} xs={12}
+                                    xl={2} lg={2} md={12} sm={12} xs={12}
                                     style={{
                                         display: 'flex',
                                         justifyContent: 'flex-end',
@@ -302,8 +302,11 @@ export default function CameraView({ height }) {
                                             setInSaveMode(!inSaveMode)
                                         }
                                         ref={saveOverlayTarget}
-                                    >
-                                        <CameraFill/> Snapshot Mode
+                                        title="Snapshot Mode"
+                                        aria-label="Snapshot Mode"
+                                    >   
+
+                                        <CameraFill/>
                                     </Button> 
                                     <Overlay
                                         show={inSaveMode}
