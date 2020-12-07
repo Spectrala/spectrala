@@ -44,7 +44,7 @@ const cartesian = (point) => {
 
 const pointSlope = (a, b) => {
     const m = (b.y - a.y) / (b.x - a.x);
-    const equation = (x) => m * (x - a.x) + b.y;
+    const equation = (x) => m * (x - a.x) + a.y;
     return equation;
 };
 
@@ -59,7 +59,7 @@ const linearSpline = (pts, x) => {
     for (let i = 0; i < pts.length - 1; i++) {
         const a = pts[i];
         const b = pts[i + 1];
-        if (a.x < x && x < b.x) {
+        if (a.x <= x && x <= b.x) {
             return pointSlope(a, b)(x);
         }
     }
@@ -90,6 +90,11 @@ export const getCalibratedSpectrum = (intensities, sortedCalibrationPoints) => {
     const b = pts[pts.length - 1];
 
     const w_end = pointSlope(a, b);
+
+    // Originally planning to use cubic spline, but this doesn't work. (Maybe linear is better). 
+    // const hermiteSpline = cubicSpline(pts);
+    // const w_middle = (x) => hermiteSpline(x);
+
     const w_middle = (x) => linearSpline(pts, x);
 
     const wavelength = (x) => {

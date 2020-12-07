@@ -1,10 +1,6 @@
 import React from 'react';
-import {
-    InputGroup,
-    Button,
-    Form,
-} from 'react-bootstrap';
-import { XCircle } from 'react-bootstrap-icons';
+import { InputGroup, Button, Form } from 'react-bootstrap';
+import { XCircle, Droplet, CaretDown, CaretUp } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,7 +11,6 @@ import {
 } from '../../../reducers/spectrum';
 
 export default function SpectrumControl({ height }) {
-
     const dispatch = useDispatch();
     const recordedSpectra = useSelector(selectRecordedSpectra);
 
@@ -35,6 +30,21 @@ export default function SpectrumControl({ height }) {
                             }}
                         >
                             <InputGroup>
+                                <InputGroup.Prepend>
+                                    <Button
+                                        variant="outline-secondary"
+                                        onClick={() => {
+                                            console.log('reference');
+                                        }}
+                                    >
+                                        <Droplet
+                                            style={{
+                                                display: 'flex',
+                                                alignSelf: 'flex-center',
+                                            }}
+                                        />
+                                    </Button>
+                                </InputGroup.Prepend>
                                 <Form.Control
                                     value={point.name ? point.name : ''}
                                     aria-label={`Calibration point ${idx + 1}`}
@@ -51,7 +61,7 @@ export default function SpectrumControl({ height }) {
                                 />
 
                                 <InputGroup.Append>
-                                    {getEditButton(point, idx)}
+                                    {getUpDown(point, idx)}
                                     <Button
                                         variant="outline-secondary"
                                         onClick={() => {
@@ -90,18 +100,25 @@ export default function SpectrumControl({ height }) {
         return null;
     }
 
-    function getEditButton(point, idx) {
-        return null;
-        /**return (
-            <Button
-                variant="outline-secondary"
-                onClick={() => {
-                    console.log('Edit');
-                }}
-            >
-                <Pencil style={{ display: 'flex', alignSelf: 'flex-center' }} />
-            </Button>
-        ); */
+    function getUpDown(point, idx) {
+        return (
+            <>
+                <Button
+                    variant="outline-secondary"
+                >
+                    <CaretUp
+                        style={{ display: 'flex', alignSelf: 'flex-center' }}
+                    />
+                </Button>
+                <Button
+                    variant="outline-secondary"
+                >
+                    <CaretDown
+                        style={{ display: 'flex', alignSelf: 'flex-center' }}
+                    />
+                </Button>
+            </>
+        );
     }
 
     function getAddButton() {
@@ -109,7 +126,7 @@ export default function SpectrumControl({ height }) {
     }
 
     return (
-        <div style={{ height: height, overflowY:'auto', width: "100%"}}>
+        <div style={{ height: height, overflowY: 'auto', width: '100%' }}>
             {getCells()}
             {getAddButton()}
         </div>

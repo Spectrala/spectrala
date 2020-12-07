@@ -51,6 +51,9 @@ export default function AdjustmentOptions() {
         );
     }
 
+    // TODO: Make adjustments do something, then show it to the user.
+    return null;
+
     return (
         <Card style={{ height: '100%' }}>
             <Card.Header
