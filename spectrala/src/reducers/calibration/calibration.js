@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import CalibrationPoint from './calibration_point';
-import { calibrationPresets } from './calibration_constants';
+import { calibrationPresets, expandPreset } from './calibration_constants';
 
-export const defaultCalibration = calibrationPresets.cfl;
+export const defaultCalibration = calibrationPresets[1];
 
 export const setAllPlacementStatusesFalse = (calibrationPoints) => {
     calibrationPoints.map((point) => point.setPlacementStatus(false));
@@ -11,7 +11,7 @@ export const setAllPlacementStatusesFalse = (calibrationPoints) => {
 export const calibrationSlice = createSlice({
     name: 'calibration',
     initialState: {
-        calibrationPoints: defaultCalibration,
+        calibrationPoints: expandPreset(defaultCalibration),
     },
     reducers: {
         modifyWavelength: (state, action) => {
@@ -58,7 +58,11 @@ export const calibrationSlice = createSlice({
             const point = points[action.payload.targetIndex];
             point.setPlacementStatus(true);
             point.setPlacement(null);
-        }
+        },
+        setPreset: (state, action) => {
+            const preset = action.payload.preset;
+            state.calibrationPoints = expandPreset(preset);
+        },
     },
 });
 
@@ -71,6 +75,7 @@ export const {
     placePoint,
     cancelPlace,
     editPlacement,
+    setPreset,
 } = calibrationSlice.actions;
 
 export const selectCalibrationPoints = (state) =>

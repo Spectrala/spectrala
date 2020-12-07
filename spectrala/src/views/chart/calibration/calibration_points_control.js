@@ -13,6 +13,8 @@ import PropTypes from 'prop-types';
 import {
     MINIMUM_WAVELENGTH,
     MAXIMUM_WAVELENGTH,
+    currentAndOtherCalibrationPresets,
+    presetOfTitle
 } from '../../../reducers/calibration/calibration_constants';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,6 +26,8 @@ import {
     beginPlace,
     cancelPlace,
     editPlacement,
+    setPreset,
+    
 } from '../../../reducers/calibration/calibration';
 
 export default function CalibrationPointsControl({
@@ -204,6 +208,38 @@ export default function CalibrationPointsControl({
         );
     }
 
+    function getDropdown() {
+        const presets = currentAndOtherCalibrationPresets(calibrationPoints);
+        return (
+            <DropdownButton
+                title={presets.current.title}
+                variant="primary-link"
+                id="collasible-nav-dropdown"
+            >
+                {presets.other.map((preset, idx) => {
+                    return (
+                        <Dropdown.Item
+                            key={idx}
+                            onClick={() => {
+                                dispatch(
+                                    setPreset({
+                                        preset: preset,
+                                    })
+                                );
+                            }}
+                        >
+                            {preset.title}
+                        </Dropdown.Item>
+                    );
+                })}
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={() => {
+                    dispatch(setPreset({preset: presetOfTitle(presets.current.title)}))
+                }}>Reset {presets.current.title}</Dropdown.Item>
+            </DropdownButton>
+        );
+    }
+
     return (
         <Card style={{ width: '100%' }}>
             <Card.Header
@@ -218,16 +254,7 @@ export default function CalibrationPointsControl({
                 }}
             >
                 Set points
-                <DropdownButton
-                    title="Custom"
-                    variant="primary-link"
-                    id="collasible-nav-dropdown"
-                >
-                    <Dropdown.Item>CFL Bulb</Dropdown.Item>
-                    <Dropdown.Item>Red, Blue LED</Dropdown.Item>
-                    <Dropdown.Item>Red, Green LED</Dropdown.Item>
-                    <Dropdown.Item>Blue, Green LED</Dropdown.Item>
-                </DropdownButton>
+                {getDropdown()}
             </Card.Header>
             {isCollapsed ? null : (
                 <div style={{ height: height, overflowY: 'auto' }}>
