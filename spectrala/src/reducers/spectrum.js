@@ -128,6 +128,7 @@ export const spectrumSlice = createSlice({
                 this_spectra.data.map((pt) => pt.y)
             );
             let csv_columns = [wavelength, intensity];
+            // TODO: Only include transmittance/absorbance for spectra that aren't the reference spectrum.
             if (reference_spectrum) {
                 // TODO: computeAbsorbence/transmittance use nearest-neighbor;
                 // if calibration is way different, this will be way off. We should warn the user.
