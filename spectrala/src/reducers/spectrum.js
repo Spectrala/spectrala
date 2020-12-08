@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { selectIntensities } from './video';
 import { selectCalibrationPoints } from './calibration/calibration';
+import * as CalibPt from './calibration/calibration_point';
 import {
     validateCalibrationPoints,
     getCalibratedSpectrum,
@@ -144,8 +145,8 @@ export const {
  *      Returns: SpectralDataResponse. If there is data, it looks like this: [CalibrationPoint].
  */
 export const selectValidateCalibrationPoints = (state) => {
-    const calibrationPoints = selectCalibrationPoints(state).map((point) =>
-        point.getPlacementLocationDescription()
+    const calibrationPoints = selectCalibrationPoints(state).map(
+        CalibPt.getPlacementLocationDescription
     );
     return validateCalibrationPoints(calibrationPoints);
 };

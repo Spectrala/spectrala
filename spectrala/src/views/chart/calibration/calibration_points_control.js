@@ -14,8 +14,9 @@ import {
     MINIMUM_WAVELENGTH,
     MAXIMUM_WAVELENGTH,
     currentAndOtherCalibrationPresets,
-    presetOfTitle
+    presetOfTitle,
 } from '../../../reducers/calibration/calibration_constants';
+import * as CalibPt from '../../../reducers/calibration/calibration_point';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -27,7 +28,6 @@ import {
     cancelPlace,
     editPlacement,
     setPreset,
-    
 } from '../../../reducers/calibration/calibration';
 
 export default function CalibrationPointsControl({
@@ -45,7 +45,7 @@ export default function CalibrationPointsControl({
     function isDuplicateWavelength(wavelength) {
         if (wavelength === null || wavelength === '') return false;
         return calibrationPoints.every(
-            (point) => point.getWavelength() !== wavelength
+            (point) => CalibPt.getWavelength(point) !== wavelength
         );
     }
 
@@ -124,17 +124,17 @@ export default function CalibrationPointsControl({
     }
 
     function getValidationFeedback(point) {
-        if (point.wavelengthIsEmpty()) {
+        if (CalibPt.wavelengthIsEmpty(point)) {
             return null;
-        } else if (!point.wavelengthIsValid()) {
+        } else if (!CalibPt.wavelengthIsValid(point)) {
             return `Select a wavelength between ${MINIMUM_WAVELENGTH} and ${MAXIMUM_WAVELENGTH}`;
-        } else if (isDuplicateWavelength(point.getWavelength())) {
+        } else if (isDuplicateWavelength(CalibPt.getWavelength(point))) {
             return 'Duplicated wavelength found.';
         }
     }
 
     function getPrependedGroup(point, idx) {
-        var description = point.getPlacementStatusDescription();
+        var description = CalibPt.getPlacementStatusDescription(point);
         if (description['isBeingPlaced']) {
             return (
                 <Button
@@ -150,7 +150,7 @@ export default function CalibrationPointsControl({
         return (
             <Button
                 variant="outline-secondary"
-                disabled={!point.wavelengthIsValid()}
+                disabled={!CalibPt.wavelengthIsValid(point)}
                 onClick={() => dispatch(beginPlace({ targetIndex: idx }))}
             >
                 Place
@@ -159,7 +159,7 @@ export default function CalibrationPointsControl({
     }
 
     function getEditButton(point, idx) {
-        if (point.hasBeenPlaced() && point.wavelengthIsValid()) {
+        if (CalibPt.hasBeenPlaced(point) && CalibPt.wavelengthIsValid(point)) {
             return (
                 <Button
                     variant="outline-secondary"
@@ -233,9 +233,17 @@ export default function CalibrationPointsControl({
                     );
                 })}
                 <Dropdown.Divider />
-                <Dropdown.Item onClick={() => {
-                    dispatch(setPreset({preset: presetOfTitle(presets.current.title)}))
-                }}>Reset {presets.current.title}</Dropdown.Item>
+                <Dropdown.Item
+                    onClick={() => {
+                        dispatch(
+                            setPreset({
+                                preset: presetOfTitle(presets.current.title),
+                            })
+                        );
+                    }}
+                >
+                    Reset {presets.current.title}
+                </Dropdown.Item>
             </DropdownButton>
         );
     }

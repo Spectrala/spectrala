@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import CalibrationPoint from './calibration_point';
+import * as CalibPt from './calibration_point';
 import { calibrationPresets, expandPreset } from './calibration_constants';
 
 export const defaultCalibration = calibrationPresets[1];
 
 export const setAllPlacementStatusesFalse = (calibrationPoints) => {
-    calibrationPoints.map((point) => point.setPlacementStatus(false));
+    calibrationPoints.map((point) => CalibPt.setPlacementStatus(point, false));
 };
 
 export const calibrationSlice = createSlice({
@@ -17,10 +17,10 @@ export const calibrationSlice = createSlice({
         modifyWavelength: (state, action) => {
             const point =
                 state.calibrationPoints.value[action.payload.targetIndex];
-            point.setWavelength(action.payload.value);
+            CalibPt.setWavelength(point, action.payload.value);
             /** Make sure the point cannot be placed if the new value is invalid. */
-            if (point.isBeingPlaced && !point.isValidToPlace()) {
-                point.setPlacementStatus(false);
+            if (point.isBeingPlaced && !CalibPt.isValidToPlace(point)) {
+                CalibPt.setPlacementStatus(point, false);
             }
         },
         removePoint: (state, action) => {
@@ -31,33 +31,33 @@ export const calibrationSlice = createSlice({
         },
         addOption: (state) => {
             state.calibrationPoints.value.push(
-                new CalibrationPoint(null, null, false)
+                CalibPt.construct(null, null, false)
             );
         },
         beginPlace: (state, action) => {
             const points = state.calibrationPoints.value;
             const point = points[action.payload.targetIndex];
             setAllPlacementStatusesFalse(points);
-            point.setPlacementStatus(true);
-            point.setPlacement(null);
+            CalibPt.setPlacementStatus(point, true);
+            CalibPt.setPlacement(point, null);
         },
         placePoint: (state, action) => {
             const points = state.calibrationPoints.value;
             const point = points[action.payload.targetIndex];
             const location = action.payload.value;
-            point.setPlacementStatus(false);
-            point.setPlacement(location);
+            CalibPt.setPlacementStatus(point, false);
+            CalibPt.setPlacement(point, location);
         },
         cancelPlace: (state, action) => {
             const points = state.calibrationPoints.value;
             const point = points[action.payload.targetIndex];
-            point.setPlacementStatus(false);
+            CalibPt.setPlacementStatus(point, false);
         },
         editPlacement: (state, action) => {
             const points = state.calibrationPoints.value;
             const point = points[action.payload.targetIndex];
-            point.setPlacementStatus(true);
-            point.setPlacement(null);
+            CalibPt.setPlacementStatus(point, true);
+            CalibPt.setPlacement(point, null);
         },
         setPreset: (state, action) => {
             const preset = action.payload.preset;

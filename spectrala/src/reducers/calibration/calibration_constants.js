@@ -1,4 +1,4 @@
-import CalibrationPoint from './calibration_point';
+import * as CalibPt from './calibration_point';
 export const MINIMUM_WAVELENGTH = 300;
 export const MAXIMUM_WAVELENGTH = 800;
 export const calibrationPresetsOrder = ['custom', 'cfl'];
@@ -17,7 +17,7 @@ export const calibrationPresets = [
 export const expandPreset = (preset) => {
     return {
         title: preset.title,
-        value: preset.value.map((w) => new CalibrationPoint(w, null, false)),
+        value: preset.value.map((w) => CalibPt.construct(w, null, false)),
     };
 };
 
@@ -26,7 +26,7 @@ export const presetOfTitle = (title) =>
 
 export const currentCalibrationPreset = (calibrationPoints) => {
     let possiblePresets = [];
-    let currentPoints = calibrationPoints.map((p) => p.getWavelength());
+    let currentPoints = calibrationPoints.map(CalibPt.getWavelength);
     for (const calibration of calibrationPresets) {
         const sameLength = calibration.value.length === currentPoints.length;
         const samePoints = calibration.value.every((p) =>

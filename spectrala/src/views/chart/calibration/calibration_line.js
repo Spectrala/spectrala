@@ -6,6 +6,7 @@ import {
     selectCalibrationPoints,
     placePoint,
 } from '../../../reducers/calibration/calibration';
+import * as CalibPt from '../../../reducers/calibration/calibration_point';
 // import { calibrationPresets } from '../../../reducers/calibration/calibration_constants';
 
 export default function CalibrationLine() {
@@ -41,13 +42,13 @@ export default function CalibrationLine() {
     }
 
     function getSetPoints() {
-        return calibrationPoints.filter((point) => point.hasBeenPlaced());
+        return calibrationPoints.filter(CalibPt.hasBeenPlaced);
     }
 
     function getPlacedMarkers() {
         return getSetPoints().map((point) => {
-            var description = point.getWavelengthDescription();
-            var location = point.getPlacement();
+            var description = CalibPt.getWavelengthDescription(point);
+            var location = CalibPt.getPlacement(point);
             return {
                 axis: 'x',
                 value: location,
@@ -65,7 +66,7 @@ export default function CalibrationLine() {
         if (!point) {
             return null;
         }
-        var label = point.getWavelengthDescription();
+        var label = CalibPt.getWavelengthDescription(point);
         return (
             <div
                 style={{
@@ -105,9 +106,9 @@ export default function CalibrationLine() {
 
     function isValidPlacement(point, xPosition) {
         return getSetPoints().every((setPoint) => {
-            const p1 = setPoint.getPlacementLocationDescription();
+            const p1 = CalibPt.getPlacementLocationDescription(setPoint);
             const p2 = {
-                rawWavelength: point.getWavelength(),
+                rawWavelength: CalibPt.getWavelength(point),
                 placement: xPosition,
             };
             const slope =
@@ -121,7 +122,7 @@ export default function CalibrationLine() {
         var pointDistances = [];
         // Want to get the point closest to the click
         calibrationPoints.forEach((point, idx) => {
-            var placement = point.getPlacement();
+            var placement = CalibPt.getPlacement(point);
             if (placement) {
                 pointDistances.push({
                     idx: idx,

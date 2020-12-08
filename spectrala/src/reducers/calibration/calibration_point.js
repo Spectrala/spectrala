@@ -3,74 +3,56 @@ import {
     MAXIMUM_WAVELENGTH,
 } from './calibration_constants';
 
-export default class CalibrationPoint {
-    constructor(wavelength, placement, isBeingPlaced) {
-        this.wavelength = wavelength;
-        this.placement = placement;
-        this.isBeingPlaced = isBeingPlaced;
+// This module contains utilities for working with calibration points, which are of the form:
+// {
+//     wavelength: Number,
+//     placement: Number | null,
+//     isBeingPlaced: Boolean,
+// }
+// This is not a class because it must go into the Redux store and therefore be serializable.
+// For ergononomics, use it like "import * as CalibPt from 'path/to/file'"
+
+export const construct = (wavelength, placement, isBeingPlaced) => ({
+    wavelength,
+    placement,
+    isBeingPlaced,
+});
+export const getPlacement = (cp) => cp.placement;
+export const getWavelength = (cp) => cp.wavelength;
+export const hasBeenPlaced = (cp) => !!cp.placement;
+export const getWavelengthDescription = (cp) => cp.wavelength + 'nm';
+export const getPlacementLocationDescription = (cp) => {
+    if (!hasBeenPlaced(cp)) {
+        return null;
     }
-
-    getPlacement = () => {
-        return this.placement;
+    return {
+        wavelength: getWavelengthDescription(cp),
+        rawWavelength: cp.wavelength,
+        placement: cp.placement,
     };
+};
+export const getPlacementStatusDescription = (cp) => ({
+    isBeingPlaced: cp.isBeingPlaced,
+    hasBeenPlaced: hasBeenPlaced(cp),
+});
+export const setWavelength = (cp, wavelength) => {
+    cp.wavelength = parseInt(wavelength);
+    setPlacement(cp, null);
+};
 
-    getWavelength = () => {
-        return this.wavelength;
-    };
+export const setPlacementStatus = (cp, beingPlaced) => {
+    cp.isBeingPlaced = beingPlaced;
+};
 
-    hasBeenPlaced = () => {
-        // Has not been placed if value is null.
-        return !!this.placement;
-    };
+export const setPlacement = (cp, x) => {
+    cp.placement = x;
+};
 
-    getWavelengthDescription = () => {
-        return this.wavelength + 'nm';
-    };
+export const wavelengthIsValid = (cp) =>
+    !isNaN(cp.wavelength) &&
+    cp.wavelength >= MINIMUM_WAVELENGTH &&
+    cp.wavelength <= MAXIMUM_WAVELENGTH;
 
-    getPlacementLocationDescription = () => {
-        if (!this.hasBeenPlaced()) {
-            return null;
-        }
-        return {
-            wavelength: this.getWavelengthDescription(),
-            rawWavelength: this.wavelength,
-            placement: this.placement,
-        };
-    };
+export const wavelengthIsEmpty = (cp) => cp.wavelength === '' || !cp.wavelength;
 
-    getPlacementStatusDescription = () => {
-        return {
-            isBeingPlaced: this.isBeingPlaced,
-            hasBeenPlaced: this.hasBeenPlaced(),
-        };
-    };
-
-    setWavelength = (wavelength) => {
-        this.wavelength = parseInt(wavelength);
-        this.setPlacement(null);
-    };
-
-    setPlacementStatus = (beingPlaced) => {
-        this.isBeingPlaced = beingPlaced;
-    };
-
-    setPlacement = (x) => {
-        this.placement = x;
-    };
-
-    wavelengthIsValid = () => {
-        return (
-            !isNaN(this.wavelength) &&
-            this.wavelength >= MINIMUM_WAVELENGTH &&
-            this.wavelength <= MAXIMUM_WAVELENGTH
-        );
-    };
-
-    wavelengthIsEmpty = () => {
-        return this.wavelength === '' || !this.wavelength;
-    };
-
-    isValidToPlace = () => {
-        return this.wavelengthIsValid();
-    };
-}
+export const isValidToPlace = (cp) => wavelengthIsValid(cp);
