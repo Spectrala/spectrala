@@ -280,6 +280,11 @@ export const selectReferenceIntensity = (state) => {
 // TODO: make this look professional
 // get nearest neighbor (in x position) to a parent x value of neighborArray and return the neighborArray y value.
 const getNeighborY = (parentX, neighborArray) => {
+    if (!neighborArray) {
+        console.error("Tried to compute neighbor Y of a null array");
+        return null;
+    }
+
     const closest = neighborArray.reduce((a, b) => {
         return Math.abs(a.x - parentX) < Math.abs(b.x - parentX) ? a : b;
     });
