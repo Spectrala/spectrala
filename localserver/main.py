@@ -62,7 +62,7 @@ class Application(tk.Frame):
         self.text = tk.Text(
             self,
             width=max(map(len, RUNNING_MESSAGE.splitlines())),
-            height=RUNNING_MESSAGE.count("\n"),
+            height=RUNNING_MESSAGE.count("\n") + 1,
         )
         self.text.insert("1.0", RUNNING_MESSAGE)
         self.text.tag_configure("big", font=("Verdana", 24, "bold"))
