@@ -36,3 +36,8 @@ if is_dev():
     BROWSER_NEW_BEHAVIOR = 2  # new tab
 else:
     BROWSER_NEW_BEHAVIOR = 1  # new window
+
+if is_pyinst_bundled():
+    RESOURCE_DIR = Path(sys._MEIPASS)
+else:
+    RESOURCE_DIR = Path(sys.argv[0]).parent

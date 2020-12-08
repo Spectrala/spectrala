@@ -88,10 +88,7 @@ class ServerRoot:
 
 
 def main(args, dir_root=None):
-    if not dir_root:
-        dir_root = Path(__file__).parent
-    dir_root = dir_root.resolve(strict=True)
-    static_dir = dir_root / "static"
+    static_dir = config.RESOURCE_DIR / "static"
 
     logger.info("Using static asset directory", static_dir)
 
@@ -121,4 +118,4 @@ def main(args, dir_root=None):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[0:], Path(sys.argv[0]).parent))
+    sys.exit(main(sys.argv[0:]))
