@@ -13,7 +13,7 @@ app: pyinst
 
 pyinst: webapp_prod
 	cp -R spectrala/build/. localserver/static
-	cd localserver && pyinstaller spectrala.spec
+	cd localserver && ./pyinstaller.sh
 .PHONY: pyinst
 
 webapp_prod:
@@ -26,4 +26,5 @@ clean:
 	rm -r -f localserver/dist
 	rm -r -f localserver/build
 	rm -r -f localserver/static
+	rm -r -f localserver/*.spec
 .PHONY: clean

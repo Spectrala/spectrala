@@ -24,5 +24,5 @@ Building Pyinstaller:
 ```sh
 cd $ROOT
 make pyinst
-./localserver/dist/spectrala/spectrala
+# check the ./dist folder
 ```
