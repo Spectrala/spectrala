@@ -40,4 +40,4 @@ else:
 if is_pyinst_bundled():
     RESOURCE_DIR = Path(sys._MEIPASS)
 else:
-    RESOURCE_DIR = Path(sys.argv[0]).parent
+    RESOURCE_DIR = Path(__file__).parent
