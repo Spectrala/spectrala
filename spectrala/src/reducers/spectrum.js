@@ -114,7 +114,11 @@ export const spectrumSlice = createSlice({
         },
         downloadSpectrum: (state, action) => {
             const idx = action.payload.targetIndex;
-            const spectrum = state.recorded_spectra[idx];
+            const intensities = state.recorded_spectra[idx];
+            /**
+             * Retrieve the reference intensity and use computeAbsorbance and
+             * computeTransmittance for the absorbance and transmittance columns
+             * */
             console.log('DOWNLOAD');
         },
         setPreferredSpectrum: (state, action) => {
@@ -177,7 +181,6 @@ export const selectPreferredSpectrumOption = (state) => {
 };
 
 export const selectHasReference = (state) => !!selectReferenceIntensity(state);
-
 
 // FOR DOWNLOADING CSV
 export const selectIntensity = (state) => {
