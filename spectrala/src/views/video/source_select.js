@@ -28,6 +28,9 @@ export default function SourceSelect(props) {
 
     const { selectedVariant, unselectedVariant, onChange } = props;
 
+    const getBtnVariant = (isActive) =>
+        isActive ? selectedVariant : unselectedVariant;
+
     const updateMediaElement = useCallback(
         (e) => {
             // setMediaElement(e);
@@ -36,9 +39,6 @@ export default function SourceSelect(props) {
         },
         [onChange /*, setMediaElement*/]
     );
-
-    const getBtnVariant = (isActive) =>
-        isActive ? selectedVariant : unselectedVariant;
 
     // Handle stream creation
     useEffect(() => {
@@ -187,6 +187,8 @@ export default function SourceSelect(props) {
         </div>
     );
 }
+
+
 
 SourceSelect.propTypes = {
     onChange: PropTypes.func,

@@ -6,6 +6,7 @@ import {
     getCalibratedSpectrum,
 } from './calibration/calibration_math';
 import SpectralDataResponse from './spectral_data_response';
+import { act } from 'react-dom/test-utils';
 
 // Default name prefix for saving a spectrum. Will start naming as DEFAULT_NAME 1.
 const DEFAULT_NAME = 'New Spectrum ';
@@ -17,6 +18,17 @@ const DEFAULT_NAME = 'New Spectrum ';
  *      Since there is only one x-value, it is the closest x value (which has a y component of 0).
  */
 const FULL_SPECTRUM = [{ x: 0, y: 1 }];
+
+/**
+ * SPECTRUM_OPTIONS
+ *      The different ways the user can view the spectrum.
+ *      Absorbance is the only option without a reference spectrum.
+ */
+export const SPECTRUM_OPTIONS = {
+    ABSORBANCE: 'Absorbance',
+    TRANSMITTANCE: 'Transmittance',
+    INTENSITY: 'Intensity',
+};
 
 /**
  * addNewSpectrum
@@ -62,6 +74,7 @@ export const spectrumSlice = createSlice({
         spectrum: null,
         recorded_spectra: [],
         key_being_used: null,
+        preferredSpectrum: SPECTRUM_OPTIONS.INTENSITY,
     },
     reducers: {
         recordSpectrum: (state, action) => {
@@ -91,6 +104,7 @@ export const spectrumSlice = createSlice({
             state.recorded_spectra = setIsReferenceFalse(
                 state.recorded_spectra
             );
+            state.preferredSpectrum = SPECTRUM_OPTIONS.INTENSITY;
         },
         setReference: (state, action) => {
             const idx = action.payload.targetIndex;
@@ -103,6 +117,9 @@ export const spectrumSlice = createSlice({
             const spectrum = state.recorded_spectra[idx];
             console.log('DOWNLOAD');
         },
+        setPreferredSpectrum: (state, action) => {
+            state.preferredSpectrum = action.payload.preferredSpectrum;
+        },
     },
 });
 
@@ -113,6 +130,7 @@ export const {
     removeReference,
     setReference,
     downloadSpectrum,
+    setPreferredSpectrum,
 } = spectrumSlice.actions;
 
 /**
@@ -154,39 +172,69 @@ export const selectValidateCalibratedPixelLine = (state) => {
     });
 };
 
+export const selectPreferredSpectrumOption = (state) => {
+    return state.spectra.preferredSpectrum;
+};
+
+export const selectHasReference = (state) => !!selectReferenceIntensity(state);
+
+
+// FOR DOWNLOADING CSV
+export const selectIntensity = (state) => {
+    const pixelLine = selectValidateCalibratedPixelLine(state);
+    if (!pixelLine.valid) return pixelLine;
+    return pixelLine.data;
+};
+export const selectTransmittance = (state) => {
+    const intensity = selectIntensity(state);
+    const reference = selectReferenceIntensity(state);
+    return computeTransmittance(intensity, reference);
+};
+export const selectAbsorbance = (state) => {
+    const intensity = selectIntensity(state);
+    const reference = selectReferenceIntensity(state);
+    return computeAbsorbance(intensity, reference);
+};
+
 /**
  * selectValidateLiveSpectrum
  *      Get the line graph data to show in the Spectrum component.
  *
- *      Returns: SpectralDataResponse. If there is data, it looks like this: [{x: 338.3, y: 44.2}].
+ *      Returns: array. Looks like this: [{x: 338.3, y: 44.2}].
  */
 export const selectValidateLiveSpectrum = (state) => {
     // TODO: allow user to view old reference spectra.
-    const pixelLine = selectValidateCalibratedPixelLine(state);
-    if (!pixelLine.valid) return pixelLine;
-    const data = pixelLine.data;
-    const ref = selectReferenceIntensity(state);
-    const transmission = computeTransmission(data, ref);
-
-    return new SpectralDataResponse({
-        valid: true,
-        data: transmission,
-    });
+    const spectrumOption = selectPreferredSpectrumOption(state);
+    if (spectrumOption === SPECTRUM_OPTIONS.INTENSITY) {
+        return selectValidateCalibratedPixelLine(state);
+    } else if (spectrumOption === SPECTRUM_OPTIONS.TRANSMITTANCE) {
+        return new SpectralDataResponse({
+            valid: true,
+            data: selectTransmittance(state),
+        });
+    } else if (spectrumOption === SPECTRUM_OPTIONS.ABSORBANCE) {
+        return new SpectralDataResponse({
+            valid: true,
+            data: selectAbsorbance(state),
+        });
+    }
+    console.error(`Received unexpected spectrum option of ${spectrumOption}`);
+    return null;
 };
 
 /**
  * selectReferenceIntensity
  *      Get the intensity values of the reference spectrum used for creating a resultant spectrum.
- *      This will be what the user has selected, or, a ones-spectrum by default. (just 1 x value which is set to y=1).
+ *      This will be what the user has selected.
  *
- *      Returns: array. Data looks like this: [{x: 338.3, y: 44.2}].
+ *      Returns: array. Looks like this: [{x: 338.3, y: 44.2}].
  */
 export const selectReferenceIntensity = (state) => {
     const reference = state.spectra.recorded_spectra.filter(
         (s) => s.isReference
     );
     if (reference.length === 0) {
-        return FULL_SPECTRUM;
+        return null;
     }
     return reference[0].data;
 };
@@ -200,13 +248,21 @@ const getNeighborY = (parentX, neighborArray) => {
     return closest.y;
 };
 
-export const computeTransmission = (target, reference) => {
-    let transmission = target.map((t) => {
+export const computeTransmittance = (target, reference) => {
+    let transmittance = target.map((t) => {
         const r = getNeighborY(t.x, reference);
         const transmit = r === 0 ? 0 : t.y / r;
         return { x: t.x, y: transmit };
     });
-    return transmission;
+    return transmittance;
+};
+
+export const computeAbsorbance = (target, reference) => {
+    let transmittance = computeTransmittance(target, reference);
+    let absorbance = transmittance.map((t) => {
+        return { x: t.x, y: -Math.log10(t.y) };
+    });
+    return absorbance;
 };
 
 /**
