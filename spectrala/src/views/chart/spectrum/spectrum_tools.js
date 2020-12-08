@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import {
     selectRecordedSpectra,
-    selectValidateLiveSpectrum,
+    selectIntensity,
     selectValidateCalibrationPoints,
     recordSpectrum,
 } from '../../../reducers/spectrum';
@@ -13,7 +13,7 @@ import SpectrumControl from './spectrum_control';
 export default function SpectrumTools({ height, isCollapsed }) {
     const dispatch = useDispatch();
     const spectra = useSelector(selectRecordedSpectra);
-    const currentSpectrum = useSelector(selectValidateLiveSpectrum);
+    const intensities = useSelector(selectIntensity);
     const valid = useSelector(selectValidateCalibrationPoints);
 
     function getSpectraNames() {
@@ -39,9 +39,7 @@ export default function SpectrumTools({ height, isCollapsed }) {
                     disabled={!valid.isValid()}
                     onClick={() => {
                         dispatch(
-                            recordSpectrum({
-                                data: currentSpectrum,
-                            })
+                            recordSpectrum({data: intensities})
                         );
                     }}
                 >

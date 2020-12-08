@@ -19,7 +19,7 @@ export default function SpectrumChart({
 }) {
     const data = useSelector(selectValidateLiveSpectrum);
     const viewSpect = useSelector(selectPreferredSpectrumOption);
-    const hasReference = useSelector(selectHasReference)
+    const hasReference = useSelector(selectHasReference);
     const dispatch = useDispatch();
 
     const getBtnVariant = (spectrumOption) => {

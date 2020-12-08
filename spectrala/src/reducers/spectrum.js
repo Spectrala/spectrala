@@ -79,7 +79,7 @@ export const spectrumSlice = createSlice({
     reducers: {
         recordSpectrum: (state, action) => {
             // TODO: Verify spectrum is okay. Right now that is only done in the button.
-            const data = action.payload.data.data;
+            const data = action.payload.data;
             const refs = state.recorded_spectra;
             const recorded = addNewSpectrum(refs, data, DEFAULT_NAME);
 
