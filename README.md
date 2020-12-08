@@ -21,13 +21,16 @@ cd spectrala
 yarn install
 ```
 
+On Windows, equivalent steps must be carried out such that you have a Python3.8 install at `python` with dependencies satisfied, and `pyinstaller` in the `PATH`.
+
 Build the redistributable app:
 
 ```sh
-make
+cd $ROOT
+python build.py
 ```
 
-The redistributable folder is now at `dist/spectrala`. It should be runnable as `./dist/spectrala/spectrala`.
+The redistributable app is now at `dist/spectrala`. It should be runnable as normal on your platform.
 
 ## Copyright
 

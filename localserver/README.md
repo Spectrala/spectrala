@@ -23,6 +23,6 @@ Building Pyinstaller:
 
 ```sh
 cd $ROOT
-make pyinst
+python build.py
 # check the ./dist folder
 ```
