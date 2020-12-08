@@ -8,6 +8,7 @@ import {
 } from './calibration/calibration_math';
 import SpectralDataResponse from './spectral_data_response';
 import { act } from 'react-dom/test-utils';
+import { arrayOfColumnsToCSV, downloadToFile } from '../util/persistence';
 
 // Default name prefix for saving a spectrum. Will start naming as DEFAULT_NAME 1.
 const DEFAULT_NAME = 'New Spectrum ';
@@ -114,13 +115,45 @@ export const spectrumSlice = createSlice({
             state.recorded_spectra = recorded;
         },
         downloadSpectrum: (state, action) => {
+            // TODO: this doesn't mutate state. Does it belong in a reducer?
             const idx = action.payload.targetIndex;
-            const intensities = state.recorded_spectra[idx];
-            /**
-             * Retrieve the reference intensity and use computeAbsorbance and
-             * computeTransmittance for the absorbance and transmittance columns
-             * */
-            console.log('DOWNLOAD');
+            const this_spectra = state.recorded_spectra[idx];
+            const reference_spectrum = state.recorded_spectra.find(
+                (s) => s.isReference
+            );
+            const wavelength = ['wavelength_nm'].concat(
+                this_spectra.data.map((pt) => pt.x)
+            );
+            const intensity = ['intensity_pct'].concat(
+                this_spectra.data.map((pt) => pt.y)
+            );
+            let csv_columns = [wavelength, intensity];
+            if (reference_spectrum) {
+                // TODO: computeAbsorbence/transmittance use nearest-neighbor;
+                // if calibration is way different, this will be way off. We should warn the user.
+                csv_columns.push(
+                    ['transmittance_pct'].concat(
+                        computeTransmittance(
+                            this_spectra.data,
+                            reference_spectrum.data
+                        ).map((pt) => pt.y)
+                    )
+                );
+                csv_columns.push(
+                    ['absorbance'].concat(
+                        computeAbsorbance(
+                            this_spectra.data,
+                            reference_spectrum.data
+                        ).map((pt) => pt.y)
+                    )
+                );
+            }
+
+            downloadToFile(
+                arrayOfColumnsToCSV(csv_columns),
+                this_spectra.name + '.csv',
+                'text/csv'
+            );
         },
         setPreferredSpectrum: (state, action) => {
             state.preferredSpectrum = action.payload.preferredSpectrum;
@@ -247,7 +280,7 @@ export const selectReferenceIntensity = (state) => {
 // get nearest neighbor (in x position) to a parent x value of neighborArray and return the neighborArray y value.
 const getNeighborY = (parentX, neighborArray) => {
     const closest = neighborArray.reduce((a, b) => {
-        return Math.abs(a.x - parentX) < Math.abs(b.X - parentX) ? a : b;
+        return Math.abs(a.x - parentX) < Math.abs(b.x - parentX) ? a : b;
     });
     return closest.y;
 };

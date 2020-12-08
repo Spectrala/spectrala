@@ -1,7 +1,7 @@
-import { serializedState, downloadToFile } from '../../store/persistence';
-
 import React from 'react';
 import { Button } from 'react-bootstrap';
+import { serializedState } from '../../store/persistence';
+import { downloadToFile } from '../../util/persistence';
 
 export default function SaveButton() {
     const saveAction = () => {
