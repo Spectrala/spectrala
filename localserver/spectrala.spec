@@ -2,7 +2,7 @@
 
 block_cipher = None
 
-added_files = [("static/*", "static")]
+added_files = [("static", "static")]
 
 a = Analysis(
     ["main.py"],
