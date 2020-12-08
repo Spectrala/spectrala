@@ -3,7 +3,7 @@ import logging
 import webbrowser
 from pathlib import Path
 
-import wx
+import tkinter as tk
 import cherrypy
 from cherrypy._cpnative_server import CPHTTPServer
 
@@ -30,7 +30,7 @@ def preferred_browser():
     return default
 
 
-def open_in_browser():
+def open_in_browser(*args, **kwargs):
     preferred_browser().open(
         config.LOCAL_BASE_URL, new=config.BROWSER_NEW_BEHAVIOR, autoraise=True
     )
@@ -50,37 +50,35 @@ Keep this window open while you are using Spectrala.\
 )
 
 
-class MainFrame(wx.Frame):
-    def __init__(self, parent, title):
-        wx.Frame.__init__(
+class Application(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.master = master
+        self.pack()
+        self.create_widgets()
+        self.grid(padx=20)
+
+    def create_widgets(self):
+        self.text = tk.Text(
             self,
-            parent,
-            title=title,
-            # Prevent resizing
-            style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX),
+            width=max(map(len, RUNNING_MESSAGE.splitlines())),
+            height=RUNNING_MESSAGE.count("\n") + 1,
         )
-        self.CreateStatusBar()
-        panel = wx.Panel(self)
-        text = wx.StaticText(panel, label=RUNNING_MESSAGE)
-        browser_btn = wx.Button(panel, label="Open in Browser")
-        self.Bind(wx.EVT_BUTTON, self.OpenInBrowser, browser_btn)
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(text, 0, wx.ALL, 20)
-        sizer.Add(browser_btn, 0, wx.ALIGN_CENTER | wx.ALL, 5)
-        panel.SetSizer(sizer)
-        panel.Layout()
-        self.SetSize(wx.Size(400, 300))
+        self.text.insert("1.0", RUNNING_MESSAGE)
+        self.text.tag_configure("big", font=("Verdana", 24, "bold"))
+        self.text.grid(row=0, column=0, pady=10)
 
-    def OpenInBrowser(self, evt):
-        open_in_browser()
+        self.open_btn = tk.Button(self)
+        self.open_btn["text"] = "Open in Browser"
+        self.open_btn["command"] = open_in_browser
+        self.open_btn.grid(row=1, column=0, pady=10)
 
 
-class MainApp(wx.App):
-    def OnInit(self):
-        frame = MainFrame(None, "Spectrala")
-        self.SetTopWindow(frame)
-        frame.Show(True)
-        return True
+def block_on_gui():
+    root = tk.Tk()
+    root.title("Spectrala")
+    app = Application(master=root)
+    app.mainloop()
 
 
 class ServerRoot:
@@ -90,10 +88,7 @@ class ServerRoot:
 
 
 def main(args, dir_root=None):
-    if not dir_root:
-        dir_root = Path(__file__).parent
-    dir_root = dir_root.resolve(strict=True)
-    static_dir = dir_root / "static"
+    static_dir = config.RESOURCE_DIR / "static"
 
     logger.info("Using static asset directory", static_dir)
 
@@ -116,12 +111,11 @@ def main(args, dir_root=None):
         config.LOCAL_BASE_URL, new=config.BROWSER_NEW_BEHAVIOR, autoraise=True
     )
     # cherrypy.engine.block()  # We block on the GUI thread below, so we exit when the window exits.
-    app = MainApp(redirect=False)
-    app.MainLoop()
+    block_on_gui()
     cherrypy.engine.stop()  # Exit webserver cleanly
     cherrypy.engine.exit()  # Required for clean exit when running as a pyinst bundle
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[0:], Path(sys.argv[0]).parent))
+    sys.exit(main(sys.argv[0:]))
