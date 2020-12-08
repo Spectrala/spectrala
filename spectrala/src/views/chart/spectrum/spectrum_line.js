@@ -170,7 +170,7 @@ export default function SpectrumLine({
                                 {
                                     type: 'linear',
                                     position: 'bottom',
-                                    display: false,
+                                    display: true,
                                     gridLines: {
                                         drawTicks: false,
                                         display: false,
@@ -179,7 +179,6 @@ export default function SpectrumLine({
                                         beginAtZero: true,
                                         steps: 10,
                                         stepValue: 5,
-                                        max: 100,
                                     },
                                 },
                             ],

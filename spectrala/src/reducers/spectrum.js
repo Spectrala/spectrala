@@ -165,23 +165,23 @@ export const selectValidateLiveSpectrum = (state) => {
     const pixelLine = selectValidateCalibratedPixelLine(state);
     if (!pixelLine.valid) return pixelLine;
     const data = pixelLine.data;
-    const ref = selectReferenceAbsorbance(state);
-    const intensity = computeIntensity(data, ref);
+    const ref = selectReferenceIntensity(state);
+    const transmission = computeTransmission(data, ref);
 
     return new SpectralDataResponse({
         valid: true,
-        data: intensity,
+        data: transmission,
     });
 };
 
 /**
- * selectReferenceAbsorbance
- *      Get the absorbance values of the reference spectrum used for creating a resultant spectrum.
+ * selectReferenceIntensity
+ *      Get the intensity values of the reference spectrum used for creating a resultant spectrum.
  *      This will be what the user has selected, or, a ones-spectrum by default. (just 1 x value which is set to y=1).
  *
  *      Returns: array. Data looks like this: [{x: 338.3, y: 44.2}].
  */
-export const selectReferenceAbsorbance = (state) => {
+export const selectReferenceIntensity = (state) => {
     const reference = state.spectra.recorded_spectra.filter(
         (s) => s.isReference
     );
@@ -200,13 +200,13 @@ const getNeighborY = (parentX, neighborArray) => {
     return closest.y;
 };
 
-export const computeIntensity = (target, reference) => {
-    let intensity = target.map((t) => {
+export const computeTransmission = (target, reference) => {
+    let transmission = target.map((t) => {
         const r = getNeighborY(t.x, reference);
-        const intensity = r === 0 ? 0 : t.y / r;
-        return { x: t.x, y: intensity };
+        const transmit = r === 0 ? 0 : t.y / r;
+        return { x: t.x, y: transmit };
     });
-    return intensity;
+    return transmission;
 };
 
 /**
