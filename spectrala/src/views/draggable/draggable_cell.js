@@ -1,7 +1,9 @@
 import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
-const style = {};
+const style = {
+    cursor: 'move',
+};
 
 /**
  * Drag and drop capability is from here:
@@ -57,7 +59,7 @@ export const DraggableCell = ({ id, itemType, getCell, moveCard, index }) => {
             isDragging: monitor.isDragging(),
         }),
     });
-    const opacity = isDragging ? 0 : 1;
+    const opacity = isDragging ? 0.5 : 1;
     drag(drop(ref));
     return (
         <div ref={ref} style={{ ...style, opacity }}>

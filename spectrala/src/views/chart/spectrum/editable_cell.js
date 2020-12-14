@@ -14,7 +14,6 @@ const style = {
     display: 'flex',
 };
 
-
 export const EditableCell = ({
     index,
     prepend,

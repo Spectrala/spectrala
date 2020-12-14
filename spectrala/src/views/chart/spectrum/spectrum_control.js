@@ -80,8 +80,8 @@ export default function SpectrumControl({ height }) {
         return (
             <>
                 <div style={{ height: '15px' }} />
-                {recordedSpectra.map((point, idx) => {
-                    const dropdown = () => getActionDropdown(point, idx);
+                {recordedSpectra.map((spectrum, idx) => {
+                    const dropdown = () => getActionDropdown(spectrum, idx);
                     const onTextEdit = (value) => {
                         dispatch(
                             renameSpectrum({
@@ -91,7 +91,7 @@ export default function SpectrumControl({ height }) {
                         );
                     };
                     const prepend = () => {
-                        return point.isReference ? (
+                        return spectrum.isReference ? (
                             <InputGroup.Text>
                                 <Droplet
                                     style={{
@@ -102,7 +102,7 @@ export default function SpectrumControl({ height }) {
                             </InputGroup.Text>
                         ) : null;
                     };
-                    const text = point.name ? point.name : '';
+                    const text = spectrum.name ? spectrum.name : '';
                     const aria = `Saved Spectrum ${idx + 1}`;
                     const getCell = () => {
                         return (
@@ -132,8 +132,8 @@ export default function SpectrumControl({ height }) {
                     };
                     return (
                         <DraggableCell
-                            key={idx}
-                            id={idx}
+                            key={spectrum.key}
+                            id={spectrum.key}
                             itemType={ItemTypes.EDITABLE_CELL}
                             getCell={getCell}
                             moveCard={moveCard}
