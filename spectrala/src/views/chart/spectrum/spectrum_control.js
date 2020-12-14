@@ -8,7 +8,7 @@ import {
 } from 'react-bootstrap';
 import { XCircle, Droplet } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
-
+import update from 'immutability-helper';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     renameSpectrum,
@@ -17,7 +17,12 @@ import {
     removeReference,
     setReference,
     downloadSpectrum,
+    setRecordedSpectra,
 } from '../../../reducers/spectrum';
+
+import { ItemTypes } from '../../draggable/item_types';
+import { DraggableCell } from '../../draggable/draggable_cell';
+import { EditableCell } from './editable_cell';
 
 export default function SpectrumControl({ height }) {
     const dispatch = useDispatch();
@@ -76,75 +81,71 @@ export default function SpectrumControl({ height }) {
             <>
                 <div style={{ height: '15px' }} />
                 {recordedSpectra.map((point, idx) => {
-                    return (
-                        <Form
-                            className="mb-3"
-                            key={`spectrum_options_${idx}`}
-                            style={{
-                                paddingLeft: '15px',
-                                paddingRight: '15px',
-                                display: 'flex',
-                            }}
-                        >
-                            <InputGroup>
-                                <InputGroup.Prepend>
-                                    {point.isReference ? (
-                                        <InputGroup.Text>
-                                            <Droplet
-                                                style={{
-                                                    display: 'flex',
-                                                    alignSelf: 'flex-center',
-                                                }}
-                                            />
-                                        </InputGroup.Text>
-                                    ) : null}
-                                </InputGroup.Prepend>
-                                <Form.Control
-                                    value={point.name ? point.name : ''}
-                                    aria-label={`Calibration point ${idx + 1}`}
-                                    aria-describedby="basic-addon2"
-                                    onChange={(event) => {
-                                        dispatch(
-                                            renameSpectrum({
-                                                targetIndex: idx,
-                                                name: event.target.value,
-                                            })
-                                        );
+                    const dropdown = () => getActionDropdown(point, idx);
+                    const onTextEdit = (value) => {
+                        dispatch(
+                            renameSpectrum({
+                                targetIndex: idx,
+                                name: value,
+                            })
+                        );
+                    };
+                    const prepend = () => {
+                        return point.isReference ? (
+                            <InputGroup.Text>
+                                <Droplet
+                                    style={{
+                                        display: 'flex',
+                                        alignSelf: 'flex-center',
                                     }}
-                                    isInvalid={pointIsInvalid(point)}
                                 />
-
-                                <InputGroup.Append>
-                                    {getActionDropdown(point, idx)}
-                                </InputGroup.Append>
-
-                                <Form.Control.Feedback type="invalid">
-                                    {getValidationFeedback(point)}
-                                </Form.Control.Feedback>
-                            </InputGroup>
-                        </Form>
+                            </InputGroup.Text>
+                        ) : null;
+                    };
+                    const text = point.name ? point.name : '';
+                    const aria = `Saved Spectrum ${idx + 1}`;
+                    const getCell = () => {
+                        return (
+                            <EditableCell
+                                key={idx}
+                                index={idx}
+                                prepend={prepend}
+                                text={text}
+                                aria={aria}
+                                dropdown={dropdown}
+                                onTextEdit={onTextEdit}
+                            />
+                        );
+                    };
+                    const moveCard = (dragIndex, hoverIndex) => {
+                        const dragCard = recordedSpectra[dragIndex];
+                        setRecordedSpectra(
+                            update(recordedSpectra, {
+                                $splice: [
+                                    [dragIndex, 1],
+                                    [hoverIndex, 0, dragCard],
+                                ],
+                            })
+                        );
+                    };
+                    return (
+                        <DraggableCell
+                            key={idx}
+                            id={idx}
+                            itemType={ItemTypes.EDITABLE_CELL}
+                            getCell={getCell}
+                            moveCard={moveCard}
+                            index={idx}
+                        />
                     );
                 })}
             </>
         );
     }
 
-    function pointIsInvalid(point) {
-        return !!getValidationFeedback(point);
-    }
-
-    function getValidationFeedback(point) {
-        return null;
-    }
-
-    function getAddButton() {
-        return null;
-    }
-
     return (
         <div style={{ height: height, overflowY: 'auto', width: '100%' }}>
             {getCells()}
-            {getAddButton()}
         </div>
     );
 }

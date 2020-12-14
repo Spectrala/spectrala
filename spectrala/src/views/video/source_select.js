@@ -114,7 +114,7 @@ export default function SourceSelect(props) {
                     Browser Default Webcam
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                    <Dropdown.Item href="#/action-1">
+                    <Dropdown.Item>
                         Macintosh HD Webcam
                     </Dropdown.Item>
                 </Dropdown.Menu>
@@ -189,7 +189,6 @@ export default function SourceSelect(props) {
 }
 
 
-
 SourceSelect.propTypes = {
     onChange: PropTypes.func,
     selectedVariant: PropTypes.string,
@@ -203,3 +202,4 @@ SourceSelect.defaultProps = {
     selectedVariant: 'dark',
     unselectedVariant: 'outline-dark',
 };
+

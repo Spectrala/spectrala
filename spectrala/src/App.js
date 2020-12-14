@@ -1,11 +1,16 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './App.css';
-import Dashboard from "./views/dashboard.js";
+import Dashboard from './views/dashboard.js';
+
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export default class App extends Component {
-  render() {
-    return (
-        <Dashboard/> 
-    );
-  }
+    render() {
+        return (
+            <DndProvider backend={HTML5Backend}>
+                <Dashboard />
+            </DndProvider>
+        );
+    }
 }

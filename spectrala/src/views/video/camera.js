@@ -278,7 +278,7 @@ export default function CameraView({ height }) {
                                 {saturatedChannels
                                     .map((e) => ChannelToText[e])
                                     .join(', ')}
-                                .<Alert.Link href="#">Learn more</Alert.Link>.
+                                .<Alert.Link>Learn more</Alert.Link>.
                             </Alert>
                         )}
                         <canvas

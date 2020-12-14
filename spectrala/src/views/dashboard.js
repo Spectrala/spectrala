@@ -31,7 +31,7 @@ export default class Dashboard extends React.Component {
     getNavbar = () => {
         return (
             <Navbar bg="light" variant="light" fixed="top">
-                <Navbar.Brand href="#home">
+                <Navbar.Brand>
                     <img style={{ height: '40px' }} src={logo} alt="logo" />
                 </Navbar.Brand>
                 <Nav className="mr-auto">

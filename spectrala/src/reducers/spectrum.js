@@ -114,6 +114,9 @@ export const spectrumSlice = createSlice({
             recorded[idx].isReference = true;
             state.recorded_spectra = recorded;
         },
+        setRecordedSpectra: (state, action) => {
+            console.log("asdfasdf")
+        },
         downloadSpectrum: (state, action) => {
             // TODO: this doesn't mutate state. Does it belong in a reducer?
             const idx = action.payload.targetIndex;
@@ -170,6 +173,7 @@ export const {
     setReference,
     downloadSpectrum,
     setPreferredSpectrum,
+    setRecordedSpectra,
 } = spectrumSlice.actions;
 
 /**
