@@ -1,12 +1,8 @@
 import React from 'react';
 import {
     InputGroup,
-    Button,
     Form,
-    Dropdown,
-    DropdownButton,
 } from 'react-bootstrap';
-import { ItemTypes } from '../../draggable/item_types';
 
 const style = {
     paddingLeft: '15px',
@@ -19,13 +15,13 @@ export const EditableCell = ({
     prepend,
     text,
     aria,
-    dropdown,
+    append,
     onTextEdit,
 }) => {
     return (
         <Form className="mb-3" key={`${index}`} style={style}>
             <InputGroup>
-                <InputGroup.Prepend>{prepend()}</InputGroup.Prepend>
+                <InputGroup.Prepend>{prepend}</InputGroup.Prepend>
 
                 <Form.Control
                     value={text}
@@ -34,7 +30,7 @@ export const EditableCell = ({
                     onChange={(event) => onTextEdit(event.target.value)}
                 />
 
-                <InputGroup.Append>{dropdown()}</InputGroup.Append>
+                <InputGroup.Append>{append}</InputGroup.Append>
             </InputGroup>
         </Form>
     );

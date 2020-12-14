@@ -10,7 +10,7 @@ const style = {
  *  https://react-dnd.github.io/react-dnd/examples/sortable/simple
  */
 
-export const DraggableCell = ({ id, itemType, getCell, moveCard, index }) => {
+export const DraggableCell = ({ id, itemType, cell, moveCard, index }) => {
     const ref = useRef(null);
     const [, drop] = useDrop({
         accept: itemType,
@@ -59,11 +59,11 @@ export const DraggableCell = ({ id, itemType, getCell, moveCard, index }) => {
             isDragging: monitor.isDragging(),
         }),
     });
-    const opacity = isDragging ? 0.5 : 1;
+    const opacity = isDragging ? 0 : 1;
     drag(drop(ref));
     return (
         <div ref={ref} style={{ ...style, opacity }}>
-            {getCell()}
+            {cell}
         </div>
     );
 };

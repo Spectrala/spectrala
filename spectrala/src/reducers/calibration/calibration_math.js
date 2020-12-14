@@ -1,5 +1,4 @@
 import SpectralDataResponse from '../spectral_data_response';
-const Spline = require('cubic-spline');
 
 export const validateCalibrationPoints = (calibrationPoints) => {
     // Make sure all points are placed.
@@ -48,12 +47,6 @@ const pointSlope = (a, b) => {
     return equation;
 };
 
-const cubicSpline = (pts) => {
-    const xs = pts.map((p) => p.x);
-    const ys = pts.map((p) => p.y);
-    const spline = new Spline(ys, xs);
-    return (x) => spline.at(x);
-};
 
 const linearSpline = (pts, x) => {
     for (let i = 0; i < pts.length - 1; i++) {
@@ -90,10 +83,6 @@ export const getCalibratedSpectrum = (intensities, sortedCalibrationPoints) => {
     const b = pts[pts.length - 1];
 
     const w_end = pointSlope(a, b);
-
-    // Originally planning to use cubic spline, but this doesn't work. (Maybe linear is better). 
-    // const hermiteSpline = cubicSpline(pts);
-    // const w_middle = (x) => hermiteSpline(x);
 
     const w_middle = (x) => linearSpline(pts, x);
 

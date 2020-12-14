@@ -14,11 +14,20 @@ export const calibrationPresets = [
     },
 ];
 
-export const expandPreset = (preset) => {
+export const expandPresetDebug = (preset) => {
+    console.warn("IN TEST MODE")
     return {
         title: preset.title,
-        value: preset.value.map((w) => CalibPt.construct(w, null, false)),
+        value: preset.value.map((w, idx) => CalibPt.construct(w, (idx+0.1)/(preset.value.length+1), false)),
     };
+}
+
+export const expandPreset = (preset) => {
+    return expandPresetDebug(preset);
+    // return {
+    //     title: preset.title,
+    //     value: preset.value.map((w) => CalibPt.construct(w, null, false)),
+    // };
 };
 
 export const presetOfTitle = (title) =>
