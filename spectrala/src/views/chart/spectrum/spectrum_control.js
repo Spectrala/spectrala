@@ -119,12 +119,14 @@ export default function SpectrumControl({ height }) {
                     };
                     const moveCard = (dragIndex, hoverIndex) => {
                         const dragCard = recordedSpectra[dragIndex];
-                        setRecordedSpectra(
-                            update(recordedSpectra, {
-                                $splice: [
-                                    [dragIndex, 1],
-                                    [hoverIndex, 0, dragCard],
-                                ],
+                        dispatch(
+                            setRecordedSpectra({
+                                value: update(recordedSpectra, {
+                                    $splice: [
+                                        [dragIndex, 1],
+                                        [hoverIndex, 0, dragCard],
+                                    ],
+                                }),
                             })
                         );
                     };
@@ -144,9 +146,11 @@ export default function SpectrumControl({ height }) {
     }
 
     return (
-        <div style={{ height: height, overflowY: 'auto', width: '100%' }}>
-            {getCells()}
-        </div>
+        <>
+            <div style={{ height: height, overflowY: 'auto', width: '100%' }}>
+                {getCells()}
+            </div>
+        </>
     );
 }
 

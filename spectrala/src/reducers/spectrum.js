@@ -115,7 +115,8 @@ export const spectrumSlice = createSlice({
             state.recorded_spectra = recorded;
         },
         setRecordedSpectra: (state, action) => {
-            console.log("asdfasdf")
+            const recorded = action.payload.value;
+            state.recorded_spectra = recorded;
         },
         downloadSpectrum: (state, action) => {
             // TODO: this doesn't mutate state. Does it belong in a reducer?
@@ -285,7 +286,7 @@ export const selectReferenceIntensity = (state) => {
 // get nearest neighbor (in x position) to a parent x value of neighborArray and return the neighborArray y value.
 const getNeighborY = (parentX, neighborArray) => {
     if (!neighborArray) {
-        console.error("Tried to compute neighbor Y of a null array");
+        console.error('Tried to compute neighbor Y of a null array');
         return null;
     }
 

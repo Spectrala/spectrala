@@ -1,9 +1,7 @@
 import React, { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
-const style = {
-    border: '1px dashed gray',
-};
+const style = {};
 
 /**
  * Drag and drop capability is from here:
