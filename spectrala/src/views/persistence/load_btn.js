@@ -23,7 +23,8 @@ export default function LoadButton() {
                 reader.readAsText(file);
             });
             const data = JSON.parse(content);
-            console.log(data);
+
+            console.log(`loadAction data: ${data}`);
             recreateUsingState(data);
         }
         reloadFromFile();

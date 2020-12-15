@@ -46,12 +46,96 @@ export default function CalibrationPointsControl({
     );
     const dispatch = useDispatch();
 
-    function isDuplicateWavelength(wavelength) {
-        if (wavelength === null || wavelength === '') return false;
-        return calibrationPoints.every(
-            (point) => CalibPt.getWavelength(point) !== wavelength
-        );
-    }
+    const isDuplicateWavelength = useCallback(
+        (wavelength) => {
+            if (wavelength === null || wavelength === '') return false;
+            return calibrationPoints.every(
+                (point) => CalibPt.getWavelength(point) !== wavelength
+            );
+        },
+        [calibrationPoints]
+    );
+
+    const getValidationFeedback = useCallback(
+        (point) => {
+            if (CalibPt.wavelengthIsEmpty(point)) {
+                return null;
+            } else if (!CalibPt.wavelengthIsValid(point)) {
+                return `Select a wavelength between ${MINIMUM_WAVELENGTH} and ${MAXIMUM_WAVELENGTH}`;
+            } else if (isDuplicateWavelength(CalibPt.getWavelength(point))) {
+                return 'Duplicated wavelength found.';
+            }
+        },
+        [isDuplicateWavelength]
+    );
+
+    const pointIsInvalid = useCallback(
+        (point) => {
+            return !!getValidationFeedback(point);
+        },
+        [getValidationFeedback]
+    );
+
+    const getPrependedGroup = useCallback(
+        (point, idx) => {
+            var description = CalibPt.getPlacementStatusDescription(point);
+            if (description['isBeingPlaced']) {
+                return (
+                    <Button
+                        variant="outline-secondary"
+                        onClick={() =>
+                            dispatch(cancelPlace({ targetIndex: idx }))
+                        }
+                    >
+                        Placing
+                    </Button>
+                );
+            } else if (description['hasBeenPlaced']) {
+                return <InputGroup.Text>Done</InputGroup.Text>;
+            }
+            return (
+                <Button
+                    variant="outline-secondary"
+                    disabled={!CalibPt.wavelengthIsValid(point)}
+                    onClick={() => dispatch(beginPlace({ targetIndex: idx }))}
+                >
+                    Place
+                </Button>
+            );
+        },
+        [dispatch]
+    );
+
+    const getEditButton = useCallback(
+        (point, idx) => {
+            if (
+                CalibPt.hasBeenPlaced(point) &&
+                CalibPt.wavelengthIsValid(point)
+            ) {
+                return (
+                    <Button
+                        variant="outline-secondary"
+                        onClick={() => {
+                            dispatch(
+                                editPlacement({
+                                    targetIndex: idx,
+                                })
+                            );
+                        }}
+                    >
+                        <Pencil
+                            style={{
+                                display: 'flex',
+                                alignSelf: 'flex-center',
+                            }}
+                        />
+                    </Button>
+                );
+            }
+            return null;
+        },
+        [dispatch]
+    );
 
     const getCell = useCallback(
         (point, idx) => {
@@ -115,26 +199,26 @@ export default function CalibrationPointsControl({
         [
             getPrependedGroup,
             dispatch,
-            modifyWavelength,
             pointIsInvalid,
-            removePoint,
             getValidationFeedback,
-            CalibPt,
+            getEditButton,
         ]
     );
 
-    // TODO: Make this more thorough like the saved spectra
-    function getKey(point, idx) {
-        return point.key;
-    }
+    const onReorder = useCallback(
+        (list) => {
+            dispatch(
+                setCalibrationPoints({
+                    value: list,
+                })
+            );
+        },
+        [dispatch]
+    );
 
-    const onReorder = (list) => {
-        dispatch(
-            setCalibrationPoints({
-                value: list,
-            })
-        );
-    };
+    const getKey = useCallback((point) => {
+        return point.key;
+    }, []);
 
     const getCalibrationBoxes = useCallback(() => {
         return (
@@ -148,76 +232,12 @@ export default function CalibrationPointsControl({
         );
     }, [calibrationPoints, getCell, getKey, onReorder]);
 
-    function pointIsInvalid(point) {
-        return !!getValidationFeedback(point);
-    }
-
-    function getValidationFeedback(point) {
-        if (CalibPt.wavelengthIsEmpty(point)) {
-            return null;
-        } else if (!CalibPt.wavelengthIsValid(point)) {
-            return `Select a wavelength between ${MINIMUM_WAVELENGTH} and ${MAXIMUM_WAVELENGTH}`;
-        } else if (isDuplicateWavelength(CalibPt.getWavelength(point))) {
-            return 'Duplicated wavelength found.';
-        }
-    }
-
-    function getPrependedGroup(point, idx) {
-        var description = CalibPt.getPlacementStatusDescription(point);
-        if (description['isBeingPlaced']) {
-            return (
-                <Button
-                    variant="outline-secondary"
-                    onClick={() => dispatch(cancelPlace({ targetIndex: idx }))}
-                >
-                    Placing
-                </Button>
-            );
-        } else if (description['hasBeenPlaced']) {
-            return <InputGroup.Text>Done</InputGroup.Text>;
-        }
-        return (
-            <Button
-                variant="outline-secondary"
-                disabled={!CalibPt.wavelengthIsValid(point)}
-                onClick={() => dispatch(beginPlace({ targetIndex: idx }))}
-            >
-                Place
-            </Button>
-        );
-    }
-
-    function getEditButton(point, idx) {
-        if (CalibPt.hasBeenPlaced(point) && CalibPt.wavelengthIsValid(point)) {
-            return (
-                <Button
-                    variant="outline-secondary"
-                    onClick={() => {
-                        dispatch(
-                            editPlacement({
-                                targetIndex: idx,
-                            })
-                        );
-                    }}
-                >
-                    <Pencil
-                        style={{ display: 'flex', alignSelf: 'flex-center' }}
-                    />
-                </Button>
-            );
-        }
-        return null;
-    }
-
     function getAddButton() {
         if (!(calibrationPoints.length < maximumPoints)) {
             return;
         }
         return (
-            <Button
-                variant="outline"
-                onClick={() => dispatch(addOption())}
-            >
+            <Button variant="outline" onClick={() => dispatch(addOption())}>
                 <PlusCircle
                     style={{ display: 'flex', alignSelf: 'flex-center' }}
                 />
@@ -279,7 +299,13 @@ export default function CalibrationPointsControl({
                 }}
             >
                 Set points
-                <div style={{width: "50%", display: 'flex', justifyContent: "flex-end"}}>
+                <div
+                    style={{
+                        width: '50%',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                    }}
+                >
                     {getAddButton()}
                     {getDropdown()}
                 </div>

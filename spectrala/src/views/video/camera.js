@@ -12,10 +12,8 @@ import PropTypes from 'prop-types';
 import SourceSelect from './source_select';
 import LineSelector from './line_selector';
 import { CameraFill } from 'react-bootstrap-icons';
-import AdjustmentOptions from './adjustments';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLineCoords, updateFeed } from '../../reducers/video';
-// import { selectAdjustments } from '../../reducers/adjustments';
 
 const FRAME_RENDER_INTERVAL_MS = 67; // 15fps
 
@@ -252,99 +250,63 @@ export default function CameraView({ height }) {
     }, [canvas, videoSrc, calibCoords, dispatch, inSaveMode]);
 
     return (
-        <>
-            <Row style={{ justifyContent: 'center', display: 'flex' }}>
-                <Col
-                    style={{ paddingBottom: '1vh' }}
-                    xl={8}
-                    lg={8}
-                    md={6}
-                    sm={12}
-                    xs={12}
-                >
-                    <Card>
-                        <Card.Header as="h5">
-                            <SourceSelect
-                                onChange={setVideoSrc}
-                                calibCoords={calibCoords}
-                            />
-                        </Card.Header>
-                        {saturatedChannels.length > 0 && (
-                            <Alert
-                                variant={'warning'}
-                                style={{ marginBottom: '0px' }}
-                            >
-                                Oversaturation in channel(s)
-                                {saturatedChannels
-                                    .map((e) => ChannelToText[e])
-                                    .join(', ')}
-                                .<Alert.Link>Learn more</Alert.Link>.
-                            </Alert>
-                        )}
-                        <canvas
-                            ref={canvas}
-                            style={{ width: '100%', height: height }}
-                        />
-                        <Card.Footer>
-                            <Row style={{ display: 'flex' }}>
-                                <LineSelector />
-                                <Col
-                                    xl={2}
-                                    lg={2}
-                                    md={12}
-                                    sm={12}
-                                    xs={12}
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'flex-end',
-                                    }}
-                                >
-                                    <Button
-                                        variant="outline-primary"
-                                        style={{ alignItems: 'center' }}
-                                        onClick={() =>
-                                            setInSaveMode(!inSaveMode)
-                                        }
-                                        ref={saveOverlayTarget}
-                                        title="Snapshot Mode"
-                                        aria-label="Snapshot Mode"
-                                    >
-                                        <CameraFill />
-                                    </Button>
-                                    <Overlay
-                                        show={inSaveMode}
-                                        target={saveOverlayTarget.current}
-                                        placement="left-start"
-                                    >
-                                        <Popover id="snapshot-popover">
-                                            <Popover.Title>
-                                                Snapshot Mode
-                                            </Popover.Title>
-                                            <Popover.Content>
-                                                Right-click the preview and
-                                                select "Save image as..." Click
-                                                again when you are done to
-                                                re-enable the overlay.
-                                            </Popover.Content>
-                                        </Popover>
-                                    </Overlay>
-                                </Col>
-                            </Row>
-                        </Card.Footer>
-                    </Card>
-                </Col>
-                <Col
-                    style={{ paddingBottom: '1vh' }}
-                    xl={4}
-                    lg={4}
-                    md={6}
-                    sm={12}
-                    xs={12}
-                >
-                    <AdjustmentOptions />
-                </Col>
-            </Row>
-        </>
+        <Card>
+            <Card.Header as="h5">
+                <SourceSelect
+                    onChange={setVideoSrc}
+                    calibCoords={calibCoords}
+                />
+            </Card.Header>
+            {saturatedChannels.length > 0 && (
+                <Alert variant={'warning'} style={{ marginBottom: '0px' }}>
+                    Oversaturation in channel(s)
+                    {saturatedChannels.map((e) => ChannelToText[e]).join(', ')}.
+                    <Alert.Link>Learn more</Alert.Link>.
+                </Alert>
+            )}
+            <canvas ref={canvas} style={{ width: '100%', height: height }} />
+            <Card.Footer>
+                <Row style={{ display: 'flex' }}>
+                    <LineSelector />
+                    <Col
+                        xl={2}
+                        lg={2}
+                        md={12}
+                        sm={12}
+                        xs={12}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                        }}
+                    >
+                        <Button
+                            variant="outline-primary"
+                            style={{ alignItems: 'center' }}
+                            onClick={() => setInSaveMode(!inSaveMode)}
+                            ref={saveOverlayTarget}
+                            title="Snapshot Mode"
+                            aria-label="Snapshot Mode"
+                        >
+                            <CameraFill />
+                        </Button>
+                        <Overlay
+                            show={inSaveMode}
+                            target={saveOverlayTarget.current}
+                            placement="left-start"
+                        >
+                            <Popover id="snapshot-popover">
+                                <Popover.Title>Snapshot Mode</Popover.Title>
+                                <Popover.Content>
+                                    Right-click the preview and select "Save
+                                    image as..." Click again when you are done
+                                    to re-enable the overlay.
+                                </Popover.Content>
+                            </Popover>
+                        </Overlay>
+                    </Col>
+                </Row>
+            </Card.Footer>
+        </Card>
     );
 }
 

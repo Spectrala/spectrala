@@ -3,7 +3,6 @@ import {
     Button,
     FormControl,
     ButtonGroup,
-    Dropdown,
     Row,
 } from 'react-bootstrap';
 import { FileEarmarkArrowUp, CameraVideo, Phone } from 'react-bootstrap-icons';
@@ -108,18 +107,18 @@ export default function SourceSelect(props) {
 
     function getWebcamDropdown() {
         // TODO: Retrieve the webcams availible and allow the user to toggle between them.
-        let dropdown = (
-            <Dropdown>
-                <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                    Browser Default Webcam
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                    <Dropdown.Item>
-                        Macintosh HD Webcam
-                    </Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
-        );
+        // let dropdown = (
+        //     <Dropdown>
+        //         <Dropdown.Toggle variant="dark" id="dropdown-basic">
+        //             Browser Default Webcam
+        //         </Dropdown.Toggle>
+        //         <Dropdown.Menu>
+        //             <Dropdown.Item>
+        //                 Macintosh HD Webcam
+        //             </Dropdown.Item>
+        //         </Dropdown.Menu>
+        //     </Dropdown>
+        // );
         return null;
     }
 

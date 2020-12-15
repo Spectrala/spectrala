@@ -1,7 +1,7 @@
 import React from 'react';
-import { Container, Col, Navbar, Nav, NavDropdown, Row } from 'react-bootstrap';
+import { Container, Col, Navbar, Nav, Row } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
-import CameraView from './video/camera';
+import Video from './video/video';
 import CalibrationSpectrumChart from './chart/calibration/calibration_interface';
 import SpectrumChart from './chart/spectrum/spectrum_interface';
 import SaveButton from './persistence/save_btn';
@@ -10,21 +10,21 @@ import LoadButton from './persistence/load_btn';
 export default class Dashboard extends React.Component {
     // TODO: make the help menu do something before you show it to the user
     getHelpMenu = () => {
-        const helpMenu = (
-            <NavDropdown title="Help" id="collasible-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">
-                    Connecting a camera
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">
-                    Calibration
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">
-                    Data collection
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">About</NavDropdown.Item>
-            </NavDropdown>
-        );
+        // const helpMenu = (
+        //     <NavDropdown title="Help" id="collasible-nav-dropdown">
+        //         <NavDropdown.Item href="#action/3.1">
+        //             Connecting a camera
+        //         </NavDropdown.Item>
+        //         <NavDropdown.Item href="#action/3.2">
+        //             Calibration
+        //         </NavDropdown.Item>
+        //         <NavDropdown.Item href="#action/3.3">
+        //             Data collection
+        //         </NavDropdown.Item>
+        //         <NavDropdown.Divider />
+        //         <NavDropdown.Item href="#action/3.4">About</NavDropdown.Item>
+        //     </NavDropdown>
+        // );
         return null;
     };
 
@@ -66,7 +66,7 @@ export default class Dashboard extends React.Component {
                                 justifyContent: 'center',
                             }}
                         >
-                            <CameraView height={250} />
+                            <Video height={250} />
                             <CalibrationSpectrumChart height={350} />
                             <SpectrumChart height={350} />
                         </Col>

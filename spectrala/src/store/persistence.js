@@ -10,7 +10,7 @@ export const recreateUsingState = (state) => {
 // from the current state
 export const serializedState = () => {
     const state = store.store.getState();
-    console.log(state);
+    console.log(`Serialized state: ${state}`);
     try {
         return JSON.stringify({
             video: {

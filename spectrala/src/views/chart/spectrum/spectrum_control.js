@@ -1,9 +1,5 @@
-import React, {useCallback} from 'react';
-import {
-    InputGroup,
-    Dropdown,
-    DropdownButton,
-} from 'react-bootstrap';
+import React, { useCallback } from 'react';
+import { InputGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import { Droplet } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,63 +21,57 @@ export default function SpectrumControl({ height }) {
     const dispatch = useDispatch();
     const recordedSpectra = useSelector(selectRecordedSpectra);
 
-    function getActionDropdown(spectrum, idx) {
-        return (
-            <DropdownButton
-                title=""
-                as={InputGroup.Append}
-                variant="outline-secondary"
-                id="collasible-nav-dropdown"
-            >
-                <Dropdown.Item
-                    key={'reference'}
-                    onClick={() => {
-                        spectrum.isReference
-                            ? dispatch(removeReference())
-                            : dispatch(setReference({ targetIndex: idx }));
-                    }}
+    const getActionDropdown = useCallback(
+        (spectrum, idx) => {
+            return (
+                <DropdownButton
+                    title=""
+                    as={InputGroup.Append}
+                    variant="outline-secondary"
+                    id="collasible-nav-dropdown"
                 >
-                    {spectrum.isReference
-                        ? 'Unset reference'
-                        : 'Use as reference'}
-                </Dropdown.Item>
+                    <Dropdown.Item
+                        key={'reference'}
+                        onClick={() => {
+                            spectrum.isReference
+                                ? dispatch(removeReference())
+                                : dispatch(setReference({ targetIndex: idx }));
+                        }}
+                    >
+                        {spectrum.isReference
+                            ? 'Unset reference'
+                            : 'Use as reference'}
+                    </Dropdown.Item>
 
-                <Dropdown.Item
-                    key={'download'}
-                    onClick={() => {
-                        dispatch(downloadSpectrum({ targetIndex: idx }));
-                    }}
-                >
-                    Download as CSV
-                </Dropdown.Item>
+                    <Dropdown.Item
+                        key={'download'}
+                        onClick={() => {
+                            dispatch(downloadSpectrum({ targetIndex: idx }));
+                        }}
+                    >
+                        Download as CSV
+                    </Dropdown.Item>
 
-                <Dropdown.Divider />
-                <Dropdown.Item
-                    key={'delete'}
-                    onClick={() => {
-                        dispatch(
-                            removeSpectrum({
-                                targetIndex: idx,
-                            })
-                        );
-                    }}
-                >
-                    Delete Spectrum
-                </Dropdown.Item>
-            </DropdownButton>
-        );
-    }
+                    <Dropdown.Divider />
+                    <Dropdown.Item
+                        key={'delete'}
+                        onClick={() => {
+                            dispatch(
+                                removeSpectrum({
+                                    targetIndex: idx,
+                                })
+                            );
+                        }}
+                    >
+                        Delete Spectrum
+                    </Dropdown.Item>
+                </DropdownButton>
+            );
+        },
+        [dispatch]
+    );
 
-    function onTextEdit(value, idx) {
-        dispatch(
-            renameSpectrum({
-                targetIndex: idx,
-                name: value,
-            })
-        );
-    }
-
-    function prepend(spectrum) {
+    const prepend = useCallback((spectrum) => {
         return spectrum.isReference ? (
             <InputGroup.Text>
                 <Droplet
@@ -92,25 +82,39 @@ export default function SpectrumControl({ height }) {
                 />
             </InputGroup.Text>
         ) : null;
-    }
+    }, []);
 
+    const onTextEdit = useCallback(
+        (value, idx) => {
+            dispatch(
+                renameSpectrum({
+                    targetIndex: idx,
+                    name: value,
+                })
+            );
+        },
+        [dispatch]
+    );
 
-    const getCell = useCallback((spectrum, idx) => {
-        const text = spectrum.name ? spectrum.name : '';
-        const aria = `Saved Spectrum ${idx + 1}`;
+    const getCell = useCallback(
+        (spectrum, idx) => {
+            const text = spectrum.name ? spectrum.name : '';
+            const aria = `Saved Spectrum ${idx + 1}`;
 
-        return (
-            <EditableCell
-                key={idx}
-                index={idx}
-                prepend={prepend(spectrum)}
-                text={text}
-                aria={aria}
-                append={getActionDropdown(spectrum, idx)}
-                onTextEdit={(value) => onTextEdit(value, idx)}
-            />
-        );
-    }, [prepend, getActionDropdown, onTextEdit])
+            return (
+                <EditableCell
+                    key={idx}
+                    index={idx}
+                    prepend={prepend(spectrum)}
+                    text={text}
+                    aria={aria}
+                    append={getActionDropdown(spectrum, idx)}
+                    onTextEdit={(value) => onTextEdit(value, idx)}
+                />
+            );
+        },
+        [prepend, getActionDropdown, onTextEdit]
+    );
 
     const getKey = (spectrum) => spectrum.key;
 

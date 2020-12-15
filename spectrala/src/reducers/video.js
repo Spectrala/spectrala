@@ -75,10 +75,14 @@ export const selectIntensities = (state) => {
         var averagedLine = [];
         const len = pixelLines[0].length;
 
-        // TODO: Fix "Unsafe" nature of "i" variable in the closure.
         for (var i = 0; i < len; i++) {
+            let column = [];
+            for (var j = 0; j < pixelLines.length; j++) {
+                column.push(pixelLines[j][i]);
+            }
+
             averagedLine.push(
-                pixelLines.map((line) => line[i]).reduce((a, b) => a + b, 0) /
+                column.reduce((a, b) => a + b, 0) /
                     pixelLines.length
             );
         }

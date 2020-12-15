@@ -7,7 +7,6 @@ import {
     getCalibratedSpectrum,
 } from './calibration/calibration_math';
 import SpectralDataResponse from './spectral_data_response';
-import { act } from 'react-dom/test-utils';
 import { arrayOfColumnsToCSV, downloadToFile } from '../util/persistence';
 
 // Default name prefix for saving a spectrum. Will start naming as DEFAULT_NAME 1.
@@ -19,7 +18,7 @@ const DEFAULT_NAME = 'New Spectrum ';
  *      This works because of the nearest-neighbor method in the resultant spectrum.
  *      Since there is only one x-value, it is the closest x value (which has a y component of 0).
  */
-const FULL_SPECTRUM = [{ x: 0, y: 1 }];
+// const FULL_SPECTRUM = [{ x: 0, y: 1 }];
 
 /**
  * SPECTRUM_OPTIONS
