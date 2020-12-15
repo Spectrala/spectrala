@@ -23,11 +23,11 @@ export const expandPresetDebug = (preset) => {
 }
 
 export const expandPreset = (preset) => {
-    return expandPresetDebug(preset);
-    // return {
-    //     title: preset.title,
-    //     value: preset.value.map((w) => CalibPt.construct(w, null, false)),
-    // };
+    // return expandPresetDebug(preset);
+    return {
+        title: preset.title,
+        value: preset.value.map((w) => CalibPt.construct(w, null, false)),
+    };
 };
 
 export const presetOfTitle = (title) =>

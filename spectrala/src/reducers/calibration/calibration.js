@@ -8,10 +8,63 @@ export const setAllPlacementStatusesFalse = (calibrationPoints) => {
     calibrationPoints.map((point) => CalibPt.setPlacementStatus(point, false));
 };
 
+/**
+ * addNewCalibPt
+ *      Adds a new calibration point to the list
+ *
+ *      Returns: (array) -- the array of calibration points.
+ */
+const addNewCalibPt = (currentArray, newPoint) => {
+    let key = newPoint.key;
+    if (!key) {
+        key = 1;
+        if (currentArray.length > 0) {
+            key = Math.max(...currentArray.map((obj) => obj.key)) + 1;
+        }
+    }
+    currentArray.push({ key, ...newPoint });
+    return currentArray;
+};
+
+const addBulkCalibPt = (currentPoints) => {
+    // TODO: Find a more ES6 way of doing this
+    let arr = [];
+    if (currentPoints) {
+        console.log(currentPoints)
+        currentPoints.forEach((pt) => arr = addNewCalibPt(arr, pt));
+    }
+    
+    return arr;
+}
+
+const initializeCalibrationPoints = (calibrationPoints) => {
+    let obj = expandPreset(calibrationPoints);
+    obj.value = addBulkCalibPt(obj.value);
+    return obj;
+}  
+
+
+/**
+ * Calibration points object:
+ *  Object consists of a title (like "CFL Bulb" or "Custom") and a
+ *  value (array of calibration points),
+ *
+ * Example object:
+ *  {
+ *      title: "Custom",
+ *      value: [
+ *         {
+ *             "wavelength":436,
+ *             "placement":0.204,
+ *             "isBeingPlaced":false,
+ *         },
+ *      ]
+ *  }
+ */
 export const calibrationSlice = createSlice({
     name: 'calibration',
     initialState: {
-        calibrationPoints: expandPreset(defaultCalibration),
+        calibrationPoints: initializeCalibrationPoints(defaultCalibration),
     },
     reducers: {
         modifyWavelength: (state, action) => {
@@ -30,9 +83,7 @@ export const calibrationSlice = createSlice({
             console.log('Save the calibration');
         },
         addOption: (state) => {
-            state.calibrationPoints.value.push(
-                CalibPt.construct(null, null, false)
-            );
+            state.calibrationPoints.value = addNewCalibPt(state.calibrationPoints.value, CalibPt.construct(null, null, false))
         },
         beginPlace: (state, action) => {
             const points = state.calibrationPoints.value;
@@ -61,7 +112,11 @@ export const calibrationSlice = createSlice({
         },
         setPreset: (state, action) => {
             const preset = action.payload.preset;
-            state.calibrationPoints = expandPreset(preset);
+            state.calibrationPoints = initializeCalibrationPoints(preset);
+        },
+        setCalibrationPoints: (state, action) => {
+            const points = action.payload.value;
+            state.calibrationPoints.value = addBulkCalibPt(points);
         },
     },
 });
@@ -76,6 +131,7 @@ export const {
     cancelPlace,
     editPlacement,
     setPreset,
+    setCalibrationPoints,
 } = calibrationSlice.actions;
 
 export const selectCalibrationPoints = (state) =>
@@ -84,7 +140,6 @@ export const selectCalibrationPoints = (state) =>
 export const selectTooltipLabel = (state) => {
     var pointBeingPlaced = null;
     state.calibrationPoints.value.forEach((point, idx) => {
-        console.log(point);
         if (point.isBeingPlaced) {
             pointBeingPlaced = point;
         }

@@ -110,7 +110,7 @@ export default function SpectrumControl({ height }) {
                 onTextEdit={(value) => onTextEdit(value, idx)}
             />
         );
-    })
+    }, [prepend, getActionDropdown, onTextEdit])
 
     const getKey = (spectrum) => spectrum.key;
 

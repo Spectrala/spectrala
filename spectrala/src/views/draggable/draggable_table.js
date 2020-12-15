@@ -18,7 +18,7 @@ function DraggableTable({
                 <div style={{ height: '15px' }} />
                 {list.map((ele, idx) => {
                     const cell = getCell(ele);
-                    const key = getKey(ele);
+                    const key = getKey(ele, idx);
 
                     const moveCard = (dragIndex, hoverIndex) => {
                         const dragCard = list[dragIndex];

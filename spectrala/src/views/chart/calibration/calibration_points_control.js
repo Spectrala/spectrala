@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
     Card,
     InputGroup,
@@ -7,7 +7,7 @@ import {
     Form,
     DropdownButton,
 } from 'react-bootstrap';
-import { XCircle, Pencil } from 'react-bootstrap-icons';
+import { XCircle, Pencil, PlusCircle } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 
 import {
@@ -27,8 +27,12 @@ import {
     beginPlace,
     cancelPlace,
     editPlacement,
+    setCalibrationPoints,
     setPreset,
 } from '../../../reducers/calibration/calibration';
+
+import { ItemTypes } from '../../draggable/item_types';
+import DraggableTable from '../../draggable/draggable_table';
 
 export default function CalibrationPointsControl({
     height,
@@ -49,75 +53,100 @@ export default function CalibrationPointsControl({
         );
     }
 
-    function getCalibrationBoxes() {
-        return (
-            <>
-                <div style={{ height: '15px' }} />
-                {calibrationPoints.map((point, idx) => {
-                    return (
-                        <Form
-                            className="mb-3"
-                            key={idx}
-                            style={{
-                                paddingLeft: '15px',
-                                paddingRight: '15px',
-                                display: 'flex',
+    const getCell = useCallback(
+        (point, idx) => {
+            return (
+                <Form
+                    className="mb-3"
+                    key={idx}
+                    style={{
+                        paddingLeft: '15px',
+                        paddingRight: '15px',
+                        display: 'flex',
+                    }}
+                >
+                    <InputGroup>
+                        <InputGroup.Prepend>
+                            {getPrependedGroup(point, idx)}
+                        </InputGroup.Prepend>
+                        <Form.Control
+                            value={point.wavelength ? point.wavelength : ''}
+                            aria-label={`Calibration point ${idx + 1}`}
+                            aria-describedby="basic-addon2"
+                            onChange={(event) => {
+                                dispatch(
+                                    modifyWavelength({
+                                        targetIndex: idx,
+                                        value: parseInt(event.target.value),
+                                    })
+                                );
                             }}
-                        >
-                            <InputGroup>
-                                <InputGroup.Prepend>
-                                    {getPrependedGroup(point, idx)}
-                                </InputGroup.Prepend>
-                                <Form.Control
-                                    value={
-                                        point.wavelength ? point.wavelength : ''
-                                    }
-                                    aria-label={`Calibration point ${idx + 1}`}
-                                    aria-describedby="basic-addon2"
-                                    onChange={(event) => {
-                                        dispatch(
-                                            modifyWavelength({
-                                                targetIndex: idx,
-                                                value: parseInt(
-                                                    event.target.value
-                                                ),
-                                            })
-                                        );
+                            isInvalid={pointIsInvalid(point)}
+                        />
+
+                        <InputGroup.Append>
+                            {getEditButton(point, idx)}
+                            <Button
+                                variant="outline-secondary"
+                                onClick={() => {
+                                    dispatch(
+                                        removePoint({
+                                            targetIndex: idx,
+                                        })
+                                    );
+                                }}
+                            >
+                                <XCircle
+                                    style={{
+                                        display: 'flex',
+                                        alignSelf: 'flex-center',
                                     }}
-                                    isInvalid={pointIsInvalid(point)}
                                 />
+                            </Button>
+                        </InputGroup.Append>
 
-                                <InputGroup.Append>
-                                    {getEditButton(point, idx)}
-                                    <Button
-                                        variant="outline-secondary"
-                                        onClick={() => {
-                                            dispatch(
-                                                removePoint({
-                                                    targetIndex: idx,
-                                                })
-                                            );
-                                        }}
-                                    >
-                                        <XCircle
-                                            style={{
-                                                display: 'flex',
-                                                alignSelf: 'flex-center',
-                                            }}
-                                        />
-                                    </Button>
-                                </InputGroup.Append>
+                        <Form.Control.Feedback type="invalid">
+                            {getValidationFeedback(point)}
+                        </Form.Control.Feedback>
+                    </InputGroup>
+                </Form>
+            );
+        },
+        [
+            getPrependedGroup,
+            dispatch,
+            modifyWavelength,
+            pointIsInvalid,
+            removePoint,
+            getValidationFeedback,
+            CalibPt,
+        ]
+    );
 
-                                <Form.Control.Feedback type="invalid">
-                                    {getValidationFeedback(point)}
-                                </Form.Control.Feedback>
-                            </InputGroup>
-                        </Form>
-                    );
-                })}
-            </>
-        );
+    // TODO: Make this more thorough like the saved spectra
+    function getKey(point, idx) {
+        return point.key;
     }
+
+    const onReorder = (list) => {
+        dispatch(
+            setCalibrationPoints({
+                value: list,
+            })
+        );
+    };
+
+    const getCalibrationBoxes = useCallback(() => {
+        return (
+            <DraggableTable
+                list={calibrationPoints}
+                getCell={getCell}
+                getKey={getKey}
+                onReorder={onReorder}
+                itemType={ItemTypes.CALIBRATION_POINT_CELL}
+            />
+        );
+    }, [calibrationPoints, getCell, getKey, onReorder]);
 
     function pointIsInvalid(point) {
         return !!getValidationFeedback(point);
@@ -185,26 +214,14 @@ export default function CalibrationPointsControl({
             return;
         }
         return (
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    paddingLeft: '15px',
-                    paddingRight: '15px',
-                }}
+            <Button
+                variant="outline"
+                onClick={() => dispatch(addOption())}
             >
-                <Button
-                    variant="outline-secondary"
-                    onClick={() => dispatch(addOption())}
-                    style={{
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                    }}
-                >
-                    Add point
-                </Button>
-            </div>
+                <PlusCircle
+                    style={{ display: 'flex', alignSelf: 'flex-center' }}
+                />
+            </Button>
         );
     }
 
@@ -262,12 +279,14 @@ export default function CalibrationPointsControl({
                 }}
             >
                 Set points
-                {getDropdown()}
+                <div style={{width: "50%", display: 'flex', justifyContent: "flex-end"}}>
+                    {getAddButton()}
+                    {getDropdown()}
+                </div>
             </Card.Header>
             {isCollapsed ? null : (
                 <div style={{ height: height, overflowY: 'auto' }}>
                     {getCalibrationBoxes()}
-                    {getAddButton()}
                 </div>
             )}
         </Card>
