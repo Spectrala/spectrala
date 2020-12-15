@@ -4,10 +4,6 @@ import { calibrationPresets, expandPreset } from './calibration_constants';
 
 export const defaultCalibration = calibrationPresets[1];
 
-export const setAllPlacementStatusesFalse = (calibrationPoints) => {
-    calibrationPoints.map((point) => CalibPt.setPlacementStatus(point, false));
-};
-
 /**
  * addNewCalibPt
  *      Adds a new calibration point to the list
@@ -29,20 +25,15 @@ const addNewCalibPt = (currentArray, newPoint) => {
 const addBulkCalibPt = (currentPoints) => {
     // TODO: Find a more ES6 way of doing this
     let arr = [];
-    if (currentPoints) {
-        console.log(currentPoints)
-        currentPoints.forEach((pt) => arr = addNewCalibPt(arr, pt));
-    }
-    
+    currentPoints.forEach((pt) => (arr = addNewCalibPt(arr, pt)));
     return arr;
-}
+};
 
 const initializeCalibrationPoints = (calibrationPoints) => {
     let obj = expandPreset(calibrationPoints);
     obj.value = addBulkCalibPt(obj.value);
     return obj;
-}  
-
+};
 
 /**
  * Calibration points object:
@@ -83,14 +74,22 @@ export const calibrationSlice = createSlice({
             console.log('Save the calibration');
         },
         addOption: (state) => {
-            state.calibrationPoints.value = addNewCalibPt(state.calibrationPoints.value, CalibPt.construct(null, null, false))
+            state.calibrationPoints.value = addNewCalibPt(
+                state.calibrationPoints.value,
+                CalibPt.construct(null, null, false)
+            );
         },
         beginPlace: (state, action) => {
             const points = state.calibrationPoints.value;
-            const point = points[action.payload.targetIndex];
-            setAllPlacementStatusesFalse(points);
-            CalibPt.setPlacementStatus(point, true);
-            CalibPt.setPlacement(point, null);
+            const targetIndex = action.payload.targetIndex;
+            points.forEach((pt, idx) => {
+                if (idx === targetIndex) {
+                    CalibPt.setPlacementStatus(pt, true);
+                    CalibPt.setPlacement(pt, null);
+                } else {
+                    CalibPt.setPlacementStatus(pt, false);
+                }
+            });
         },
         placePoint: (state, action) => {
             const points = state.calibrationPoints.value;
@@ -134,8 +133,9 @@ export const {
     setCalibrationPoints,
 } = calibrationSlice.actions;
 
-export const selectCalibrationPoints = (state) =>
-    state.calibration.calibrationPoints.value;
+export const selectCalibrationPoints = (state) => {
+    return state.calibration.calibrationPoints.value;
+};
 
 export const selectTooltipLabel = (state) => {
     var pointBeingPlaced = null;
