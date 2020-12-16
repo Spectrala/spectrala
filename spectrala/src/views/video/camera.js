@@ -1,17 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-    Button,
-    Col,
-    Card,
-    Row,
-    Alert,
-    Overlay,
-    Popover,
-} from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import SourceSelect from './source_select';
-import LineSelector from './line_selector';
-import { CameraFill } from 'react-bootstrap-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLineCoords, updateFeed } from '../../reducers/video';
 
@@ -124,32 +112,13 @@ function extractPixelData(imageData, beginX, beginY, finalX, finalY) {
     result.push(getSinglePixel(imageData, pos1, current));
     return result;
 }
-
-const ChannelEnum = {
-    RED: 'CHANNEL_RED',
-    GREEN: 'CHANNEL_GREEN',
-    BLUE: 'CHANNEL_BLUE',
-};
-
-const ChannelToText = {
-    [ChannelEnum.RED]: 'Red',
-    [ChannelEnum.GREEN]: 'Green',
-    [ChannelEnum.BLUE]: 'Blue',
-};
-
-export default function CameraView({ height }) {
+export default function CameraView({ props }) {
     const calibCoords = useSelector(selectLineCoords);
     const dispatch = useDispatch();
 
     // TODO: detect saturated channels in the SetInterval call
-    /* eslint-disable no-unused-vars */
-    const [saturatedChannels, _setSaturatedChannels] = useState([]);
-    /* eslint-enable no-unused-vars */
     const canvas = useRef(null);
-    const [videoSrc, setVideoSrc] = useState(null);
-
-    const [inSaveMode, setInSaveMode] = useState(false);
-    const saveOverlayTarget = useRef(null);
+    const { styles, videoSrc, inSaveMode } = props;
 
     useEffect(() => {
         let frameCounter = 0;
@@ -249,65 +218,7 @@ export default function CameraView({ height }) {
         return () => clearInterval(videoInterval);
     }, [canvas, videoSrc, calibCoords, dispatch, inSaveMode]);
 
-    return (
-        <Card>
-            <Card.Header as="h5">
-                <SourceSelect
-                    onChange={setVideoSrc}
-                    calibCoords={calibCoords}
-                />
-            </Card.Header>
-            {saturatedChannels.length > 0 && (
-                <Alert variant={'warning'} style={{ marginBottom: '0px' }}>
-                    Oversaturation in channel(s)
-                    {saturatedChannels.map((e) => ChannelToText[e]).join(', ')}.
-                    <Alert.Link>Learn more</Alert.Link>.
-                </Alert>
-            )}
-            <canvas ref={canvas} style={{ width: '100%', height: height }} />
-            <Card.Footer>
-                <Row style={{ display: 'flex' }}>
-                    <LineSelector />
-                    <Col
-                        xl={2}
-                        lg={2}
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                        }}
-                    >
-                        <Button
-                            variant="outline-primary"
-                            style={{ alignItems: 'center' }}
-                            onClick={() => setInSaveMode(!inSaveMode)}
-                            ref={saveOverlayTarget}
-                            title="Snapshot Mode"
-                            aria-label="Snapshot Mode"
-                        >
-                            <CameraFill />
-                        </Button>
-                        <Overlay
-                            show={inSaveMode}
-                            target={saveOverlayTarget.current}
-                            placement="left-start"
-                        >
-                            <Popover id="snapshot-popover">
-                                <Popover.Title>Snapshot Mode</Popover.Title>
-                                <Popover.Content>
-                                    Right-click the preview and select "Save
-                                    image as..." Click again when you are done
-                                    to re-enable the overlay.
-                                </Popover.Content>
-                            </Popover>
-                        </Overlay>
-                    </Col>
-                </Row>
-            </Card.Footer>
-        </Card>
-    );
+    return <canvas ref={canvas} style={{ ...styles, width: '100%' }} />;
 }
 
 CameraView.propTypes = {

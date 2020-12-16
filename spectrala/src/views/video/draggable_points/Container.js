@@ -6,10 +6,13 @@ import update from 'immutability-helper';
 import { CustomDragLayer } from './CustomDragLayer';
 
 const styles = {
-    width: "100%",
-    height: "100%",
-    border: '1px solid black',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'transparent',
     position: 'relative',
+    zIndex: 100,
+    top: 0,
+    bottom: 0
 };
 function renderBox(item, key, radius) {
     return <DraggableBox key={key} id={key} radius={radius} {...item} />;
@@ -22,12 +25,13 @@ function renderLine(points) {
                 y1={points.y1}
                 x2={points.x2}
                 y2={points.y2}
-                stroke="black"
+                stroke="yellow"
+                strokeWidth={3}
             />
         </svg>
     );
 }
-const Container = () => {
+const Container = ({ children, height}) => {
     const radius = 10;
     const [boxes, setBoxes] = useState({
         highEnergyPointer: { top: 10, left: 10, energy: 'High energy (Blue)' },
@@ -96,7 +100,7 @@ const Container = () => {
         },
     });
     return (
-        <div>
+        <div style={{height, position: 'relative'}}>
             <div ref={drop} style={styles}>
                 {Object.keys(boxes).map((key) =>
                     renderBox(boxes[key], key, radius)
@@ -110,9 +114,10 @@ const Container = () => {
                     item,
                     initialOffset,
                     currentOffset,
-                    radius
+                    radius,
                 }}
             />
+            {children}
         </div>
     );
 };

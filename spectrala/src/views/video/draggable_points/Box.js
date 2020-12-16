@@ -9,13 +9,13 @@ const normalStyle = {
 
 export const Box = ({ title, radius }) => {
     return (
-        <div style={{ ...normalStyle }}>
+        <div style={{ ...normalStyle, color: 'yellow' }}>
             <svg
                 height={radius * 2}
                 width={radius * 2}
                 xmlns="http://www.w3.org/2000/svg"
             >
-                <ellipse cx={radius} cy={radius} rx={radius} ry={radius} />
+                <ellipse cx={radius} cy={radius} rx={radius} ry={radius} fill={"yellow"}/>
             </svg>
         </div>
     );
