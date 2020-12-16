@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDrag } from 'react-dnd';
-import { ItemTypes } from './ItemTypes';
+import { ItemTypes } from '../../draggable/item_types';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { Box } from './Box';
 function getStyles(left, top, isDragging) {
@@ -16,17 +16,19 @@ function getStyles(left, top, isDragging) {
     };
 }
 export const DraggableBox = (props) => {
-    const { id, title, left, top } = props;
+    const { id, energy, left, top, radius } = props;
     const [{ isDragging }, drag, preview] = useDrag({
-        item: { type: ItemTypes.BOX, id, left, top, title },
+        item: { type: ItemTypes.BOX, id, left, top, energy },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
     });
     useEffect(() => {
         preview(getEmptyImage(), { captureDraggingState: true });
-    }, []);
-    return (<div ref={drag} style={getStyles(left, top, isDragging)}>
-			<Box title={title}/>
-		</div>);
+    }, [preview]);
+    return (
+        <div ref={drag} style={getStyles(left, top, isDragging)}>
+            <Box energy={energy} radius={radius}/>
+        </div>
+    );
 };

@@ -14,6 +14,11 @@ const darkMode = {
     RIM: '#eaf2ef',
 };
 
-// TODO: Export whatever one is selected from a settings reducer.
+const universal = {
+    LOW_ENERGY: '#440099',
+    HIGH_ENERGY: '#BA0C2F',
+};
 
-export default theme = lightMode;
+// TODO: Export whatever one is selected from a settings reducer.
+const theme = {...lightMode, ...universal};
+export default theme;
