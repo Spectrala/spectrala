@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import Container from './draggable_points/Container';
+import { Container } from './draggable_points/Container';
 import Camera from './camera';
 
 import {
@@ -47,7 +47,7 @@ const CameraFrame = ({ height }) => {
                     <Alert.Link>Learn more</Alert.Link>.
                 </Alert>
             )}
-            <Container height={height}>
+            <Container expectedHeight={height}>
                 <Camera
                     props={{
                         styles: {

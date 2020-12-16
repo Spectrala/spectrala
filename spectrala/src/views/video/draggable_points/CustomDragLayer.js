@@ -13,14 +13,14 @@ const layerStyles = {
     height: '100%',
 };
 
-function getItemStyles(initialOffset, currentOffset, width, height) {
+function getItemStyles(initialOffset, currentOffset) {
     if (!initialOffset || !currentOffset) {
         return {
             display: 'none',
         };
     }
     let { x, y } = currentOffset;
-    const transform = `translate(${toPct(x/width)}, ${toPct(y/height)})`;
+    const transform = `translate3d(${x}px, ${y}px, 0)`;
     return {
         transform,
         WebkitTransform: transform,
@@ -36,16 +36,6 @@ export const CustomDragLayer = ({ props }) => {
         radius,
     } = props;
 
-    const [width, setWidth] = useState(0);
-    const [height, setHeight] = useState(0);
-    const cont = useRef(null);
-    useEffect(() => {
-        if (cont.current) {
-            setWidth(cont.current.clientWidth);
-            setHeight(cont.current.clientHeight);
-        }
-    });
-
     function renderItem() {
         switch (itemType) {
             case ItemTypes.BOX:
@@ -58,8 +48,8 @@ export const CustomDragLayer = ({ props }) => {
         return null;
     }
     return (
-        <div ref={cont} style={layerStyles}>
-            <div style={getItemStyles(initialOffset, currentOffset, width, height)}>
+        <div style={layerStyles}>
+            <div style={getItemStyles(initialOffset, currentOffset)}>
                 {renderItem()}
             </div>
         </div>

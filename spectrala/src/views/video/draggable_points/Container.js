@@ -4,6 +4,7 @@ import { ItemTypes } from '../../draggable/item_types';
 import { DraggableBox, toPct } from './DraggableBox';
 import update from 'immutability-helper';
 import { CustomDragLayer } from './CustomDragLayer';
+import { withResizeDetector } from 'react-resize-detector';
 
 const styles = {
     width: '100%',
@@ -15,7 +16,16 @@ const styles = {
     bottom: 0,
 };
 function renderBox(item, key, radius, containerWidth, containerHeight) {
-    return <DraggableBox key={key} id={key} radius={radius} containerWidth={containerWidth} containerHeight={containerHeight} {...item} />;
+    return (
+        <DraggableBox
+            key={key}
+            id={key}
+            radius={radius}
+            containerWidth={containerWidth}
+            containerHeight={containerHeight}
+            {...item}
+        />
+    );
 }
 function renderLine(points) {
     return (
@@ -31,7 +41,7 @@ function renderLine(points) {
         </svg>
     );
 }
-const Container = ({ children, height }) => {
+const ContainerWithoutResize = ({ children, expectedHeight }) => {
     const radius = 10;
     const [boxes, setBoxes] = useState({
         highEnergyPointer: {
@@ -42,11 +52,12 @@ const Container = ({ children, height }) => {
         lowEnergyPointer: { top: 0.5, left: 0.1, energy: 'Low energy (Red)' },
     });
     const [width, setWidth] = useState(0);
+    const [height, setHeight] = useState(0);
     const cont = useRef(null);
     useEffect(() => {
         setWidth(cont.current.clientWidth);
+        setHeight(cont.current.clientHeight);
     });
-
 
     const {
         itemType,
@@ -106,14 +117,17 @@ const Container = ({ children, height }) => {
         accept: ItemTypes.BOX,
         drop(item, monitor) {
             const delta = monitor.getDifferenceFromInitialOffset();
-            let left = item.left + (delta.x / width);
-            let top = item.top + (delta.y / height);
+            let left = item.left + delta.x / width;
+            let top = item.top + delta.y / height;
             moveBox(item.id, left, top);
             return undefined;
         },
     });
     return (
-        <div ref={cont} style={{ height, position: 'relative' }}>
+        <div
+            ref={cont}
+            style={{ height: expectedHeight, position: 'relative' }}
+        >
             <div ref={drop} style={styles}>
                 {Object.keys(boxes).map((key) =>
                     renderBox(boxes[key], key, radius, width, height)
@@ -135,4 +149,5 @@ const Container = ({ children, height }) => {
     );
 };
 
-export default Container;
+
+export const Container = withResizeDetector(ContainerWithoutResize);;

@@ -30,6 +30,9 @@ export const Box = ({ title, radius }) => {
 const dragStyle = {
     display: 'inline-block',
     alignItems: 'center',
+    cursor: 'move',
+    backgroundColor: 'white',
+    border: '3px dashed gray',
 };
 
 export const BoxDragPreview = memo(({ energy, radius }) => {
