@@ -1,10 +1,12 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useDrop, useDragLayer } from 'react-dnd';
 import { ItemTypes } from '../../draggable/item_types';
 import { DraggableBox, toPct } from './DraggableBox';
 import update from 'immutability-helper';
 import { CustomDragLayer } from './CustomDragLayer';
 import { withResizeDetector } from 'react-resize-detector';
+import {selectLineCoords, updateAllLineCoords} from '../../../reducers/video'
 
 const styles = {
     width: '100%',
@@ -41,16 +43,39 @@ function renderLine(points) {
         </svg>
     );
 }
-const ContainerWithoutResize = ({ children, expectedHeight }) => {
+const ContainerWithoutResize = ({ children, expectedHeight, targetRef }) => {
     const radius = 10;
-    const [boxes, setBoxes] = useState({
-        highEnergyPointer: {
-            top: 0.5,
-            left: 0.9,
-            energy: 'High energy (Blue)',
-        },
-        lowEnergyPointer: { top: 0.5, left: 0.1, energy: 'Low energy (Red)' },
-    });
+
+    const dispatch = useDispatch();
+    const calibCoords = useSelector(selectLineCoords);
+
+    const setBoxes = (res) => {
+        dispatch(
+            updateAllLineCoords({
+                value: {
+                    lowX: res.lowEnergyPointer.left,
+                    lowY: res.lowEnergyPointer.top,
+                    highX: res.highEnergyPointer.left,
+                    highY: res.highEnergyPointer.top,
+                },
+            })
+        );
+    };
+
+    const boxes = () => {
+        return {
+            highEnergyPointer: {
+                top: calibCoords.highY,
+                left: calibCoords.highX,
+                energy: 'High energy (Blue)',
+            },
+            lowEnergyPointer: {
+                top: calibCoords.lowY,
+                left: calibCoords.lowX,
+                energy: 'Low energy (Red)',
+            },
+        };
+    };
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
     const cont = useRef(null);
@@ -78,12 +103,12 @@ const ContainerWithoutResize = ({ children, expectedHeight }) => {
     const getLine = () => {
         let pts = {
             lowEnergyPointer: {
-                x: boxes.lowEnergyPointer.left,
-                y: boxes.lowEnergyPointer.top,
+                x: boxes().lowEnergyPointer.left,
+                y: boxes().lowEnergyPointer.top,
             },
             highEnergyPointer: {
-                x: boxes.highEnergyPointer.left,
-                y: boxes.highEnergyPointer.top,
+                x: boxes().highEnergyPointer.left,
+                y: boxes().highEnergyPointer.top,
             },
         };
 
@@ -104,7 +129,7 @@ const ContainerWithoutResize = ({ children, expectedHeight }) => {
     const moveBox = useCallback(
         (id, left, top) => {
             setBoxes(
-                update(boxes, {
+                update(boxes(), {
                     [id]: {
                         $merge: { left, top },
                     },
@@ -128,9 +153,10 @@ const ContainerWithoutResize = ({ children, expectedHeight }) => {
             ref={cont}
             style={{ height: expectedHeight, position: 'relative' }}
         >
+            <div ref={targetRef} />
             <div ref={drop} style={styles}>
-                {Object.keys(boxes).map((key) =>
-                    renderBox(boxes[key], key, radius, width, height)
+                {Object.keys(boxes()).map((key) =>
+                    renderBox(boxes()[key], key, radius, width, height)
                 )}
                 {getLine()}
             </div>
@@ -149,5 +175,4 @@ const ContainerWithoutResize = ({ children, expectedHeight }) => {
     );
 };
 
-
-export const Container = withResizeDetector(ContainerWithoutResize);;
+export const Container = withResizeDetector(ContainerWithoutResize);

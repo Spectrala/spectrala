@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Card, Row, Button, ButtonGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import SpectrumTools from './spectrum_tools';
-import SpectrumLine from './spectrum_line';
+import { SpectrumLine } from './spectrum_line';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     selectValidateLiveSpectrum,

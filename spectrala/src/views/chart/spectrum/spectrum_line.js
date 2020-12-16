@@ -15,10 +15,7 @@ const AREA_OPACITY = 'CC';
  */
 
 // TODO: Fix somewhat sketchy color settings.
-export default function SpectrumLine({
-    height,
-    spectrumData,
-}) {
+export const SpectrumLine = ({ height, spectrumData }) => {
     if (!spectrumData) {
         return getLoadingScreen();
     } else if (!spectrumData.isValid()) {
@@ -199,9 +196,13 @@ export default function SpectrumLine({
             </div>
         );
     }
-}
+};
+
+// export const SpectrumLine = withResizeDetector(SpectrumLineWithoutResize);
 
 SpectrumLine.propTypes = {
     height: PropTypes.number,
     spectrumData: PropTypes.any,
 };
+
+export default null;

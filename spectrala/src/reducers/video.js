@@ -61,10 +61,13 @@ export const videoSlice = createSlice({
         updateLineCoords: (state, action) => {
             state.lineCoords[action.payload.targetKey] = action.payload.value;
         },
+        updateAllLineCoords: (state, action) => {
+            state.lineCoords = action.payload.value;
+        }
     },
 });
 
-export const { updateFeed, updateLineCoords } = videoSlice.actions;
+export const { updateFeed, updateLineCoords, updateAllLineCoords } = videoSlice.actions;
 
 export const selectIntensities = (state) => {
     const pixels = state.video.pixelLineHistory;
