@@ -4,7 +4,10 @@ import {
     FormControl,
     ButtonGroup,
     Row,
+    Popover,
+    Overlay,
 } from 'react-bootstrap';
+import { CameraFill } from 'react-bootstrap-icons';
 import { FileEarmarkArrowUp, CameraVideo, Phone } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 
@@ -25,7 +28,14 @@ export default function SourceSelect(props) {
     const [streamUrl, setStreamUrl] = useState('');
     // const [mediaElement, setMediaElement] = useState(null);
 
-    const { selectedVariant, unselectedVariant, onChange } = props;
+    const {
+        selectedVariant,
+        unselectedVariant,
+        onChange,
+        inSaveMode,
+        setInSaveMode,
+        saveOverlayTarget,
+    } = props;
 
     const getBtnVariant = (isActive) =>
         isActive ? selectedVariant : unselectedVariant;
@@ -136,10 +146,11 @@ export default function SourceSelect(props) {
                         Source
                     </label>
                 </div>
+
                 <div>
                     {selectedSource === SourceEnum.WEBCAM &&
                         getWebcamDropdown()}
-                    <ButtonGroup style={{ height: '38px' }}>
+                    <ButtonGroup style={{ height: '38px', paddingRight: '10px'}}>
                         <Button
                             variant={getBtnVariant(
                                 selectedSource === SourceEnum.STREAM
@@ -171,6 +182,30 @@ export default function SourceSelect(props) {
                             <FileEarmarkArrowUp />
                         </Button>
                     </ButtonGroup>
+                    <Button
+                        variant="outline-primary"
+                        style={{ alignItems: 'center' }}
+                        onClick={() => setInSaveMode(!inSaveMode)}
+                        ref={saveOverlayTarget}
+                        title="Snapshot Mode"
+                        aria-label="Snapshot Mode"
+                    >
+                        <CameraFill />
+                    </Button>
+                    <Overlay
+                        show={inSaveMode}
+                        target={saveOverlayTarget.current}
+                        placement="left-start"
+                    >
+                        <Popover id="snapshot-popover">
+                            <Popover.Title>Snapshot Mode</Popover.Title>
+                            <Popover.Content>
+                                Right-click the preview and select "Save image
+                                as..." Click again when you are done to
+                                re-enable the overlay.
+                            </Popover.Content>
+                        </Popover>
+                    </Overlay>
                 </div>
             </Row>
             {selectedSource === SourceEnum.STREAM && (
@@ -187,7 +222,6 @@ export default function SourceSelect(props) {
     );
 }
 
-
 SourceSelect.propTypes = {
     onChange: PropTypes.func,
     selectedVariant: PropTypes.string,
@@ -201,4 +235,3 @@ SourceSelect.defaultProps = {
     selectedVariant: 'dark',
     unselectedVariant: 'outline-dark',
 };
-

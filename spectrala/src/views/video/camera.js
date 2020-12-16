@@ -200,6 +200,7 @@ export default function CameraView({ props }) {
                 return;
             }
 
+            /* Line drawing is now SVG, moved elsewhere
             if (inSaveMode) return; // don't render overlay if the user is saving
             ctx.strokeStyle = 'yellow';
             ctx.lineWidth = 3;
@@ -212,7 +213,7 @@ export default function CameraView({ props }) {
                 calibCoords.highX * canvasElem.width,
                 calibCoords.highY * canvasElem.height
             );
-            ctx.stroke();
+            ctx.stroke();*/
         }, FRAME_RENDER_INTERVAL_MS);
 
         return () => clearInterval(videoInterval);

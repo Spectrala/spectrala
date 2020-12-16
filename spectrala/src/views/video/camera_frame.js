@@ -38,7 +38,12 @@ const CameraFrame = ({ height }) => {
     return (
         <Card>
             <Card.Header as="h5">
-                <SourceSelect onChange={setVideoSrc} />
+                <SourceSelect
+                    onChange={setVideoSrc}
+                    setInSaveMode={setInSaveMode}
+                    inSaveMode={inSaveMode}
+                    saveOverlayTarget={saveOverlayTarget}
+                />
             </Card.Header>
             {saturatedChannels.length > 0 && (
                 <Alert variant={'warning'} style={{ marginBottom: '0px' }}>
@@ -47,7 +52,7 @@ const CameraFrame = ({ height }) => {
                     <Alert.Link>Learn more</Alert.Link>.
                 </Alert>
             )}
-            <Container expectedHeight={height}>
+            <Container expectedHeight={height} showLine={!inSaveMode}>
                 <Camera
                     props={{
                         styles: {
@@ -61,7 +66,7 @@ const CameraFrame = ({ height }) => {
                     }}
                 />
             </Container>
-
+            {/* 
             <Card.Footer>
                 <Row style={{ display: 'flex' }}>
                     <LineSelector />
@@ -76,33 +81,35 @@ const CameraFrame = ({ height }) => {
                             justifyContent: 'flex-end',
                         }}
                     >
-                        <Button
-                            variant="outline-primary"
-                            style={{ alignItems: 'center' }}
-                            onClick={() => setInSaveMode(!inSaveMode)}
-                            ref={saveOverlayTarget}
-                            title="Snapshot Mode"
-                            aria-label="Snapshot Mode"
-                        >
-                            <CameraFill />
-                        </Button>
-                        <Overlay
-                            show={inSaveMode}
-                            target={saveOverlayTarget.current}
-                            placement="left-start"
-                        >
-                            <Popover id="snapshot-popover">
-                                <Popover.Title>Snapshot Mode</Popover.Title>
-                                <Popover.Content>
-                                    Right-click the preview and select "Save
-                                    image as..." Click again when you are done
-                                    to re-enable the overlay.
-                                </Popover.Content>
-                            </Popover>
-                        </Overlay>
+                        <div>
+                            <Button
+                                variant="outline-primary"
+                                style={{ alignItems: 'center' }}
+                                onClick={() => setInSaveMode(!inSaveMode)}
+                                ref={saveOverlayTarget}
+                                title="Snapshot Mode"
+                                aria-label="Snapshot Mode"
+                            >
+                                <CameraFill />
+                            </Button>
+                            <Overlay
+                                show={inSaveMode}
+                                target={saveOverlayTarget.current}
+                                placement="left-start"
+                            >
+                                <Popover id="snapshot-popover">
+                                    <Popover.Title>Snapshot Mode</Popover.Title>
+                                    <Popover.Content>
+                                        Right-click the preview and select "Save
+                                        image as..." Click again when you are
+                                        done to re-enable the overlay.
+                                    </Popover.Content>
+                                </Popover>
+                            </Overlay>
+                        </div>
                     </Col>
                 </Row>
-            </Card.Footer>
+            </Card.Footer> */}
         </Card>
     );
 };

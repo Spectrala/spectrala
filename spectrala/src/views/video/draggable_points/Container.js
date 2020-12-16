@@ -43,7 +43,9 @@ function renderLine(points) {
         </svg>
     );
 }
-const ContainerWithoutResize = ({ children, expectedHeight, targetRef }) => {
+
+// TODO: Clean up code. boxes constant shouldn't exist. A lot of redundancies here.
+const ContainerWithoutResize = ({ children, expectedHeight, targetRef, showLine }) => {
     const radius = 10;
 
     const dispatch = useDispatch();
@@ -148,12 +150,11 @@ const ContainerWithoutResize = ({ children, expectedHeight, targetRef }) => {
             return undefined;
         },
     });
-    return (
-        <div
-            ref={cont}
-            style={{ height: expectedHeight, position: 'relative' }}
-        >
-            <div ref={targetRef} />
+
+    const getDraggableLine = () => {
+        if (!showLine) return;
+        return (
+            <><div ref={targetRef} />
             <div ref={drop} style={styles}>
                 {Object.keys(boxes()).map((key) =>
                     renderBox(boxes()[key], key, radius, width, height)
@@ -169,7 +170,16 @@ const ContainerWithoutResize = ({ children, expectedHeight, targetRef }) => {
                     currentOffset,
                     radius,
                 }}
-            />
+            /></>
+        )
+    }
+
+    return (
+        <div
+            ref={cont}
+            style={{ height: expectedHeight, position: 'relative' }}
+        >
+            {getDraggableLine()}
             {children}
         </div>
     );
