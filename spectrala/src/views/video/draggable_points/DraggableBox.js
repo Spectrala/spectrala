@@ -3,8 +3,15 @@ import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../../draggable/item_types';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { Box } from './Box';
-function getStyles(left, top, isDragging) {
-    const transform = `translate3d(${left}px, ${top}px, 0)`;
+
+export function toPct(decimal) {
+    return `${decimal * 100}%`;
+}
+
+function getStyles(left, top, isDragging, containerWidth, containerHeight, radius) {
+    const x = Math.round(left * containerWidth) - radius;
+    const y = Math.round(top * containerHeight) - radius;
+    const transform = `translate3d(${x}px, ${y}px, 0)`;
     return {
         position: 'absolute',
         transform,
@@ -16,19 +23,38 @@ function getStyles(left, top, isDragging) {
     };
 }
 export const DraggableBox = (props) => {
-    const { id, energy, left, top, radius } = props;
+    const {
+        id,
+        energy,
+        left,
+        top,
+        radius,
+        containerWidth,
+        containerHeight,
+    } = props;
     const [{ isDragging }, drag, preview] = useDrag({
         item: { type: ItemTypes.BOX, id, left, top, energy },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
     });
+
     useEffect(() => {
         preview(getEmptyImage(), { captureDraggingState: true });
     }, [preview]);
     return (
-        <div ref={drag} style={getStyles(left, top, isDragging)}>
-            <Box energy={energy} radius={radius}/>
+        <div
+            ref={drag}
+            style={getStyles(
+                left,
+                top,
+                isDragging,
+                containerWidth,
+                containerHeight,
+                radius
+            )}
+        >
+            <Box energy={energy} radius={radius} />
         </div>
     );
 };

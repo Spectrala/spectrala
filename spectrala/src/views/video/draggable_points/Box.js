@@ -15,7 +15,13 @@ export const Box = ({ title, radius }) => {
                 width={radius * 2}
                 xmlns="http://www.w3.org/2000/svg"
             >
-                <ellipse cx={radius} cy={radius} rx={radius} ry={radius} fill={"yellow"}/>
+                <ellipse
+                    cx={radius}
+                    cy={radius}
+                    rx={radius}
+                    ry={radius}
+                    fill={'yellow'}
+                />
             </svg>
         </div>
     );
@@ -29,8 +35,7 @@ const dragStyle = {
 export const BoxDragPreview = memo(({ energy, radius }) => {
     return (
         <div style={dragStyle}>
-            <Box radius={radius}/>
-            {/* <label >{energy}</label> */}
+            <label>{energy}</label>
         </div>
     );
 });

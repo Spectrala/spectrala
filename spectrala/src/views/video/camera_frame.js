@@ -27,10 +27,6 @@ const ChannelToText = {
     [ChannelEnum.BLUE]: 'Blue',
 };
 
-/**<div>
-            <Container />
-            <Camera height={height}/>
-        </div> */
 const CameraFrame = ({ height }) => {
     // TODO: detect saturated channels in the SetInterval call
     const [saturatedChannels, _setSaturatedChannels] = useState([]);
