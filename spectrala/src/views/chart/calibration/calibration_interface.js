@@ -14,12 +14,7 @@ export default function CalibrationSpectrumChart({ height }) {
         return (
             <Card.Header
                 as="h5"
-                style={{
-                    height: '64px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    ...cardHeaderStyle,
-                }}
+                style={cardHeaderStyle}
             >
                 Calibration
             </Card.Header>

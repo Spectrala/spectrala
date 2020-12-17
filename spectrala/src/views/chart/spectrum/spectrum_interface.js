@@ -46,16 +46,7 @@ export default function SpectrumChart({
 
     function getHeader() {
         return (
-            <Card.Header
-                as="h5"
-                style={{
-                    height: '64px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    ...cardHeaderStyle
-                }}
-            >
+            <Card.Header as="h5" style={cardHeaderStyle}>
                 Spectrum
                 <ButtonGroup style={{ height: '38px' }}>
                     {spectrumViewOptions.map((spectrumOption, idx) => (

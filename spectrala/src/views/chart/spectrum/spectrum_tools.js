@@ -25,16 +25,7 @@ export default function SpectrumTools({ height, isCollapsed }) {
 
     return (
         <Card style={{ width: '100%', ...cardStyle }}>
-            <Card.Header
-                as="h5"
-                style={{
-                    height: '64px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    ...cardHeaderStyle,
-                }}
-            >
+            <Card.Header as="h5" style={cardHeaderStyle}>
                 Saved Spectra
                 <Button
                     disabled={!valid.isValid()}

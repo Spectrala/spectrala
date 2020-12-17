@@ -13,10 +13,15 @@ export const cardHeaderStyle = {
     paddingLeft: theme.CARD_HEADER_PADDING,
     paddingRight: theme.CARD_HEADER_PADDING,
     justifyContent: 'space-between',
+    minHeight: '64px',
+    alignItems: 'center',
+    display: 'flex',
+    flexWrap: 'wrap',
 };
 
 export const cardStyle = {
     backgroundColor: theme.CARD_BODY,
     borderWidth: theme.BORDER_WIDTH,
     borderRadius: theme.BORDER_RADIUS,
+    display: 'flex',
 };

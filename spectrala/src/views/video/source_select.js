@@ -139,96 +139,74 @@ export default function SourceSelect(props) {
 
     return (
         <>
-            <Row
-                style={{
-                    width: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    display: 'flex',
-                }}
-            >
-                <div
-                    style={{
-                        height: '100%',
-                        alignSelf: 'center',
-                        background: theme.HIGH_ENERGY_THUMBNAIL,
-                    }}
-                >
-                    <label>Source</label>
-                </div>
-                <div style={{ background: theme.LOW_ENERGY_THUMBNAIL }}>
-                    {selectedSource === SourceEnum.WEBCAM &&
-                        getWebcamDropdown()}
-                    <ButtonGroup
-                        style={{ height: '38px', paddingRight: '10px' }}
-                    >
-                        <Button
-                            variant={getBtnVariant(
-                                selectedSource === SourceEnum.STREAM
-                            )}
-                            onClick={() => setSelectedSource(SourceEnum.STREAM)}
-                            aria-label={'Stream'}
-                            title={'Stream'}
-                        >
-                            <Phone />
-                        </Button>
-                        <Button
-                            variant={getBtnVariant(
-                                selectedSource === SourceEnum.WEBCAM
-                            )}
-                            aria-label={'Webcam'}
-                            title={'Webcam'}
-                            onClick={() => setSelectedSource(SourceEnum.WEBCAM)}
-                        >
-                            <CameraVideo />
-                        </Button>
-                        <Button
-                            variant={getBtnVariant(
-                                selectedSource === SourceEnum.IMAGE
-                            )}
-                            aria-label={'File Upload'}
-                            title={'File Upload'}
-                            onClick={() => setSelectedSource(SourceEnum.IMAGE)}
-                        >
-                            <FileEarmarkArrowUp />
-                        </Button>
-                    </ButtonGroup>
+            <div>Source</div>
+            <div>
+                {selectedSource === SourceEnum.WEBCAM && getWebcamDropdown()}
+                <ButtonGroup style={{ height: '38px', paddingRight: '10px' }}>
                     <Button
-                        variant="outline-primary"
-                        style={{ alignItems: 'center' }}
-                        onClick={() => setInSaveMode(!inSaveMode)}
-                        ref={saveOverlayTarget}
-                        title="Snapshot Mode"
-                        aria-label="Snapshot Mode"
+                        variant={getBtnVariant(
+                            selectedSource === SourceEnum.STREAM
+                        )}
+                        onClick={() => setSelectedSource(SourceEnum.STREAM)}
+                        aria-label={'Stream'}
+                        title={'Stream'}
                     >
-                        <CameraFill />
+                        <Phone />
                     </Button>
-                    <Overlay
-                        show={inSaveMode}
-                        target={saveOverlayTarget.current}
-                        placement="left-start"
+                    <Button
+                        variant={getBtnVariant(
+                            selectedSource === SourceEnum.WEBCAM
+                        )}
+                        aria-label={'Webcam'}
+                        title={'Webcam'}
+                        onClick={() => setSelectedSource(SourceEnum.WEBCAM)}
                     >
-                        <Popover id="snapshot-popover">
-                            <Popover.Title>Snapshot Mode</Popover.Title>
-                            <Popover.Content>
-                                Right-click the preview and select "Save image
-                                as..." Click again when you are done to
-                                re-enable the overlay.
-                            </Popover.Content>
-                        </Popover>
-                    </Overlay>
-                </div>
-            </Row>
+                        <CameraVideo />
+                    </Button>
+                    <Button
+                        variant={getBtnVariant(
+                            selectedSource === SourceEnum.IMAGE
+                        )}
+                        aria-label={'File Upload'}
+                        title={'File Upload'}
+                        onClick={() => setSelectedSource(SourceEnum.IMAGE)}
+                    >
+                        <FileEarmarkArrowUp />
+                    </Button>
+                </ButtonGroup>
+                <Button
+                    variant="outline-primary"
+                    style={{ alignItems: 'center' }}
+                    onClick={() => setInSaveMode(!inSaveMode)}
+                    ref={saveOverlayTarget}
+                    title="Snapshot Mode"
+                    aria-label="Snapshot Mode"
+                >
+                    <CameraFill />
+                </Button>
+                <Overlay
+                    show={inSaveMode}
+                    target={saveOverlayTarget.current}
+                    placement="left-start"
+                >
+                    <Popover id="snapshot-popover">
+                        <Popover.Title>Snapshot Mode</Popover.Title>
+                        <Popover.Content>
+                            Right-click the preview and select "Save image
+                            as..." Click again when you are done to re-enable
+                            the overlay.
+                        </Popover.Content>
+                    </Popover>
+                </Overlay>
+            </div>
 
             {selectedSource === SourceEnum.STREAM && (
-                <Row>
-                    <FormControl
-                        type="text"
-                        placeholder="Stream URL (e.g. http://192.0.2.1:8000/stream.mp4)"
-                        value={streamUrl}
-                        onChange={(e) => setStreamUrl(e.target.value)}
-                    />
-                </Row>
+                <FormControl
+                    type="text"
+                    placeholder="Stream URL (e.g. http://192.0.2.1:8000/stream.mp4)"
+                    value={streamUrl}
+                    onChange={(e) => setStreamUrl(e.target.value)}
+                />
             )}
         </>
     );
