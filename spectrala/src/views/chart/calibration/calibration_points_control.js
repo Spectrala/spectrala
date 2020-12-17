@@ -34,6 +34,9 @@ import {
 import { ItemTypes } from '../../draggable/item_types';
 import DraggableTable from '../../draggable/draggable_table';
 
+import { cardStyle, cardHeaderStyle } from '../../theme/styles';
+
+
 export default function CalibrationPointsControl({
     height,
     maximumPoints,
@@ -286,7 +289,7 @@ export default function CalibrationPointsControl({
     }
 
     return (
-        <Card style={{ width: '100%' }}>
+        <Card style={{ width: '100%', ...cardStyle}}>
             <Card.Header
                 as="h5"
                 style={{
@@ -294,8 +297,7 @@ export default function CalibrationPointsControl({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    paddingLeft: '15px',
-                    paddingRight: '15px',
+                    ...cardHeaderStyle
                 }}
             >
                 Set points

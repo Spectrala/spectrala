@@ -10,6 +10,8 @@ import {
     recordSpectrum,
 } from '../../../reducers/spectrum';
 import SpectrumControl from './spectrum_control';
+import { cardStyle, cardHeaderStyle } from '../../theme/styles';
+
 export default function SpectrumTools({ height, isCollapsed }) {
     const dispatch = useDispatch();
     const spectra = useSelector(selectRecordedSpectra);
@@ -22,7 +24,7 @@ export default function SpectrumTools({ height, isCollapsed }) {
     }
 
     return (
-        <Card style={{ width: '100%' }}>
+        <Card style={{ width: '100%', ...cardStyle }}>
             <Card.Header
                 as="h5"
                 style={{
@@ -30,17 +32,14 @@ export default function SpectrumTools({ height, isCollapsed }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    paddingLeft: '15px',
-                    paddingRight: '15px',
+                    ...cardHeaderStyle,
                 }}
             >
                 Saved Spectra
                 <Button
                     disabled={!valid.isValid()}
                     onClick={() => {
-                        dispatch(
-                            recordSpectrum({data: intensities})
-                        );
+                        dispatch(recordSpectrum({ data: intensities }));
                     }}
                 >
                     Capture

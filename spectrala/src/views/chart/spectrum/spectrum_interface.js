@@ -11,6 +11,7 @@ import {
     selectPreferredSpectrumOption,
     selectHasReference,
 } from '../../../reducers/spectrum';
+import { cardStyle, cardHeaderStyle } from '../../theme/styles';
 
 export default function SpectrumChart({
     height,
@@ -51,9 +52,8 @@ export default function SpectrumChart({
                     height: '64px',
                     display: 'flex',
                     alignItems: 'center',
-                    paddingLeft: '15px',
-                    paddingRight: '15px',
                     justifyContent: 'space-between',
+                    ...cardHeaderStyle
                 }}
             >
                 Spectrum
@@ -91,7 +91,7 @@ export default function SpectrumChart({
                 sm={12}
                 xs={12}
             >
-                <Card>
+                <Card style={cardStyle}>
                     {getHeader()}
                     {isCollapsed() ? null : (
                         <div style={{ height: height }}>

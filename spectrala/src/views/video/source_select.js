@@ -6,11 +6,12 @@ import {
     Row,
     Popover,
     Overlay,
+    Col,
 } from 'react-bootstrap';
 import { CameraFill } from 'react-bootstrap-icons';
 import { FileEarmarkArrowUp, CameraVideo, Phone } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
-
+import theme from '../theme/theme';
 const SourceEnum = {
     STREAM: 'SOURCE_STREAM',
     WEBCAM: 'SOURCE_WEBCAM',
@@ -111,7 +112,7 @@ export default function SourceSelect(props) {
                     staticImage.removeAttribute('src');
                     staticImage.removeAttribute('srcObject');
                 } else {
-                    console.warn("No static image");
+                    console.warn('No static image');
                 }
             };
         } else {
@@ -137,21 +138,25 @@ export default function SourceSelect(props) {
     }
 
     return (
-        <div style={{ paddingRight: '10px', paddingLeft: '10px' }}>
-            <Row style={{ justifyContent: 'space-between' }}>
-                <div>
-                    <label
-                        style={{
-                            height: '100%',
-                            alignItems: 'center',
-                            display: 'flex',
-                        }}
-                    >
-                        Source
-                    </label>
+        <>
+            <Row
+                style={{
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    display: 'flex',
+                }}
+            >
+                <div
+                    style={{
+                        height: '100%',
+                        alignSelf: 'center',
+                        background: theme.HIGH_ENERGY_THUMBNAIL,
+                    }}
+                >
+                    <label>Source</label>
                 </div>
-
-                <div>
+                <div style={{ background: theme.LOW_ENERGY_THUMBNAIL }}>
                     {selectedSource === SourceEnum.WEBCAM &&
                         getWebcamDropdown()}
                     <ButtonGroup
@@ -214,8 +219,9 @@ export default function SourceSelect(props) {
                     </Overlay>
                 </div>
             </Row>
+
             {selectedSource === SourceEnum.STREAM && (
-                <Row style={{ alignSelf: 'flex-end', paddingTop: '10px' }}>
+                <Row>
                     <FormControl
                         type="text"
                         placeholder="Stream URL (e.g. http://192.0.2.1:8000/stream.mp4)"
@@ -224,7 +230,7 @@ export default function SourceSelect(props) {
                     />
                 </Row>
             )}
-        </div>
+        </>
     );
 }
 

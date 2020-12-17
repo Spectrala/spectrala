@@ -13,8 +13,13 @@ const theme = {
 
     // Cards
     CARD_HEADER: colors.FOREGROUND_1,
+    CARD_HEADER_PADDING: '15px',
     CARD_BODY: colors.FOREGROUND_2,
     CARD_OUTLINE: colors.NONE,
+
+    // General borders
+    BORDER_RADIUS: 10,
+    BORDER_WIDTH: 0,
 
 };
 

@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { Alert, Card } from 'react-bootstrap';
 import Camera from './camera';
-import { PointContainer } from './draggable_points/point_ontainer';
+import { PointContainer } from './draggable_points/point_container';
 import SourceSelect from './source_select';
-
+import { cardStyle, cardHeaderStyle } from '../theme/styles';
 const ChannelEnum = {
     RED: 'CHANNEL_RED',
     GREEN: 'CHANNEL_GREEN',
@@ -25,8 +25,8 @@ const CameraFrame = ({ height }) => {
     const saveOverlayTarget = useRef(null);
 
     return (
-        <Card>
-            <Card.Header as="h5">
+        <Card style={cardStyle}>
+            <Card.Header style={cardHeaderStyle} as="h5">
                 <SourceSelect
                     onChange={setVideoSrc}
                     setInSaveMode={setInSaveMode}

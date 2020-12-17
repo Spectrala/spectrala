@@ -3,6 +3,7 @@ import { Col, Card, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import CalibrationPointsControl from './calibration_points_control';
 import CalibrationLine from './calibration_line';
+import { cardStyle, cardHeaderStyle } from '../../theme/styles';
 
 export default function CalibrationSpectrumChart({ height }) {
     function isCollapsed() {
@@ -17,8 +18,7 @@ export default function CalibrationSpectrumChart({ height }) {
                     height: '64px',
                     display: 'flex',
                     alignItems: 'center',
-                    paddingLeft: '15px',
-                    paddingRight: '15px',
+                    ...cardHeaderStyle,
                 }}
             >
                 Calibration
@@ -41,7 +41,7 @@ export default function CalibrationSpectrumChart({ height }) {
                 sm={12}
                 xs={12}
             >
-                <Card>
+                <Card style={cardStyle}>
                     {getHeader()}
                     {isCollapsed() ? null : (
                         <div style={{ height: height }}>
