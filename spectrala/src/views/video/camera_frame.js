@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Alert, Card } from 'react-bootstrap';
 import Camera from './camera';
-import { PointContainer } from './draggable_points/Container';
+import { PointContainer } from './draggable_points/point_ontainer';
 import SourceSelect from './source_select';
 
 const ChannelEnum = {

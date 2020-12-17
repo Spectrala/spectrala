@@ -106,9 +106,13 @@ export default function SourceSelect(props) {
             // Cleanup isn't a big deal here because it's a single image,
             // but we're good citizens here.
             return () => {
-                staticImage.src = '#';
-                staticImage.removeAttribute('src');
-                staticImage.removeAttribute('srcObject');
+                if (staticImage) {
+                    staticImage.src = '#';
+                    staticImage.removeAttribute('src');
+                    staticImage.removeAttribute('srcObject');
+                } else {
+                    console.warn("No static image");
+                }
             };
         } else {
             updateMediaElement(null);
@@ -150,7 +154,9 @@ export default function SourceSelect(props) {
                 <div>
                     {selectedSource === SourceEnum.WEBCAM &&
                         getWebcamDropdown()}
-                    <ButtonGroup style={{ height: '38px', paddingRight: '10px'}}>
+                    <ButtonGroup
+                        style={{ height: '38px', paddingRight: '10px' }}
+                    >
                         <Button
                             variant={getBtnVariant(
                                 selectedSource === SourceEnum.STREAM

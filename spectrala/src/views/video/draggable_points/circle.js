@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import theme from '../../theme/theme';
-import { energies } from './Container';
+import { energies } from './point_ontainer';
 const normalStyle = {
     cursor: 'move',
     display: 'flex',

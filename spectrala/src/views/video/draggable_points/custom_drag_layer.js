@@ -1,6 +1,6 @@
 import React from 'react';
 import { ItemTypes } from '../../draggable/item_types';
-import { CircleDragPreview } from './Box';
+import { CircleDragPreview } from './circle';
 const layerStyles = {
     position: 'fixed',
     pointerEvents: 'none',

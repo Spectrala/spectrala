@@ -8,7 +8,8 @@ const lightMode = {
     BRAND: '#ff6e1e',
     ACCENT: '#7f95d1',
     BACKGROUND: '#eaf2ef',
-    COMPLEMENT: '#FFFFFF',
+    FOREGROUND_1: '#fbf2ff',
+    FOREGROUND_2: '#ffebff',
     RIM: '#33312e',
 };
 
@@ -16,7 +17,8 @@ const darkMode = {
     BRAND: '#ff6e1e',
     ACCENT: '#7f95d1',
     BACKGROUND: '#33312e',
-    COMPLEMENT: '#232323',
+    FOREGROUND_1: '#fbf2ff',
+    FOREGROUND_2: '#ffebff',
     RIM: '#eaf2ef',
 };
 
@@ -24,6 +26,7 @@ const universal = {
     LOW_ENERGY: '#4758eb',
     HIGH_ENERGY: '#d75b5b',
     WHITE: '#ffffff',
+    NONE: '#00000000'
 };
 
 // TODO: Export whatever one is selected from a settings reducer.

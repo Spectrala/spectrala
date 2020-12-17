@@ -2,9 +2,9 @@ import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useDrop, useDragLayer } from 'react-dnd';
 import { ItemTypes } from '../../draggable/item_types';
-import { DraggableBox, toPct } from './DraggableBox';
+import { DraggableCircle, toPct } from './draggable_circle';
 import update from 'immutability-helper';
-import { CustomDragLayer } from './CustomDragLayer';
+import { CustomDragLayer } from './custom_drag_layer';
 import { withResizeDetector } from 'react-resize-detector';
 import { selectLineCoords, updateAllLineCoords } from '../../../reducers/video';
 import theme from '../../theme/theme';
@@ -20,7 +20,7 @@ const styles = {
 };
 function renderBox(item, key, radius, containerWidth, containerHeight) {
     return (
-        <DraggableBox
+        <DraggableCircle
             key={key}
             id={key}
             radius={radius}
@@ -63,18 +63,21 @@ const PointContainerWithoutResize = ({
     const dispatch = useDispatch();
     const calibCoords = useSelector(selectLineCoords);
 
-    const setBoxes = useCallback((res) => {
-        dispatch(
-            updateAllLineCoords({
-                value: {
-                    lowX: res.lowEnergyPointer.left,
-                    lowY: res.lowEnergyPointer.top,
-                    highX: res.highEnergyPointer.left,
-                    highY: res.highEnergyPointer.top,
-                },
-            })
-        );
-    }, [dispatch]);
+    const setBoxes = useCallback(
+        (res) => {
+            dispatch(
+                updateAllLineCoords({
+                    value: {
+                        lowX: res.lowEnergyPointer.left,
+                        lowY: res.lowEnergyPointer.top,
+                        highX: res.highEnergyPointer.left,
+                        highY: res.highEnergyPointer.top,
+                    },
+                })
+            );
+        },
+        [dispatch]
+    );
 
     const boxes = useCallback(() => {
         return {

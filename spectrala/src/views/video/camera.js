@@ -158,6 +158,7 @@ export default function CameraView({ props }) {
             if (++frameCounter >= DATA_PUSH_INTERVAL_LENGTH_FRAMES) {
                 frameCounter = 0;
 
+                // TODO: Why is this an error? it happens many times during normal behavior.
                 if (canvasElem.width * canvasElem.height === 0) {
                     console.error(
                         'Got to data reading step with zero-area canvas.'

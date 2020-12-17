@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col} from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import AdjustmentOptions from './adjustments';
 import CameraFrame from './camera_frame';
@@ -16,7 +16,7 @@ export default function Video({ height }) {
                     sm={12}
                     xs={12}
                 >
-                    <CameraFrame height={height}/>
+                    <CameraFrame height={height} />
                 </Col>
                 <Col
                     style={{ paddingBottom: '1vh' }}
