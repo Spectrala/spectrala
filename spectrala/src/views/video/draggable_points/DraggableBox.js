@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../../draggable/item_types';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { Box } from './Box';
+import { Circle } from './Box';
 
 export function toPct(decimal) {
     return `${decimal * 100}%`;
@@ -54,7 +54,7 @@ export const DraggableBox = (props) => {
                 radius
             )}
         >
-            <Box energy={energy} radius={radius} />
+            <Circle energy={energy} radius={radius} />
         </div>
     );
 };

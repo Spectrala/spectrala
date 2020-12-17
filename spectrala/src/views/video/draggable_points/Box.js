@@ -1,46 +1,43 @@
 import React, { memo } from 'react';
-
+import theme from '../../theme/theme';
+import { energies } from './Container';
 const normalStyle = {
     cursor: 'move',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
 };
 
-export const Box = ({ title, radius }) => {
+export const Circle = ({ energy, radius }) => {
+    let color = '#FFF';
+    if (energy === energies.HIGH) color = theme.HIGH_ENERGY_THUMBNAIL;
+    if (energy === energies.LOW) color = theme.LOW_ENERGY_THUMBNAIL;
+    const strokeWidth = 2;
+
     return (
-        <div style={{ ...normalStyle, color: 'yellow' }}>
-            <svg
-                height={radius * 2}
-                width={radius * 2}
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <ellipse
-                    cx={radius}
-                    cy={radius}
-                    rx={radius}
-                    ry={radius}
-                    fill={'yellow'}
-                />
-            </svg>
+        <div style={normalStyle}>
+            {
+                <svg
+                    height={(radius + strokeWidth) * 2}
+                    width={(radius + strokeWidth) * 2}
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <ellipse
+                        cx={radius + strokeWidth}
+                        cy={radius + strokeWidth}
+                        rx={radius}
+                        ry={radius}
+                        fill={color}
+                        stroke={theme.CAMERA_LINE_COLOR}
+                        strokeWidth={strokeWidth}
+                    />
+                </svg>
+            }
         </div>
     );
 };
 
-const dragStyle = {
-    display: 'inline-block',
-    alignItems: 'center',
-    cursor: 'move',
-    backgroundColor: 'white',
-    border: '3px dashed gray',
-};
-
-export const BoxDragPreview = memo(({ energy, radius }) => {
-    return (
-        <div style={dragStyle}>
-            <label>{energy}</label>
-        </div>
-    );
+export const CircleDragPreview = memo(({ energy, radius }) => {
+    return <Circle energy={energy} radius={radius} />;
 });
 
-export default Box;
+export default null;

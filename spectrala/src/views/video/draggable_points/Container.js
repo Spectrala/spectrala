@@ -6,7 +6,8 @@ import { DraggableBox, toPct } from './DraggableBox';
 import update from 'immutability-helper';
 import { CustomDragLayer } from './CustomDragLayer';
 import { withResizeDetector } from 'react-resize-detector';
-import {selectLineCoords, updateAllLineCoords} from '../../../reducers/video'
+import { selectLineCoords, updateAllLineCoords } from '../../../reducers/video';
+import theme from '../../theme/theme';
 
 const styles = {
     width: '100%',
@@ -29,7 +30,7 @@ function renderBox(item, key, radius, containerWidth, containerHeight) {
         />
     );
 }
-function renderLine(points) {
+function renderLine(points, isDragging) {
     return (
         <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
             <line
@@ -37,21 +38,32 @@ function renderLine(points) {
                 y1={toPct(points.y1)}
                 x2={toPct(points.x2)}
                 y2={toPct(points.y2)}
-                stroke="yellow"
+                stroke={theme.CAMERA_LINE_COLOR}
                 strokeWidth={3}
+                strokeDasharray={isDragging ? [5, 5] : null}
             />
         </svg>
     );
 }
 
+export const energies = {
+    HIGH: 'high',
+    LOW: 'low',
+};
+
 // TODO: Clean up code. boxes constant shouldn't exist. A lot of redundancies here.
-const ContainerWithoutResize = ({ children, expectedHeight, targetRef, showLine }) => {
+const PointContainerWithoutResize = ({
+    children,
+    expectedHeight,
+    targetRef,
+    showLine,
+}) => {
     const radius = 10;
 
     const dispatch = useDispatch();
     const calibCoords = useSelector(selectLineCoords);
 
-    const setBoxes = (res) => {
+    const setBoxes = useCallback((res) => {
         dispatch(
             updateAllLineCoords({
                 value: {
@@ -62,29 +74,29 @@ const ContainerWithoutResize = ({ children, expectedHeight, targetRef, showLine 
                 },
             })
         );
-    };
+    }, [dispatch]);
 
-    const boxes = () => {
+    const boxes = useCallback(() => {
         return {
             highEnergyPointer: {
                 top: calibCoords.highY,
                 left: calibCoords.highX,
-                energy: 'High energy (Blue)',
+                energy: energies.HIGH,
             },
             lowEnergyPointer: {
                 top: calibCoords.lowY,
                 left: calibCoords.lowX,
-                energy: 'Low energy (Red)',
+                energy: energies.LOW,
             },
         };
-    };
+    }, [calibCoords]);
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
-    const cont = useRef(null);
+    const cont = useRef({ current: { clientWidth: null, clientHeight: null } });
     useEffect(() => {
         setWidth(cont.current.clientWidth);
         setHeight(cont.current.clientHeight);
-    });
+    }, [cont.current.clientWidth, cont.current.clientHeight]);
 
     const {
         itemType,
@@ -120,12 +132,15 @@ const ContainerWithoutResize = ({ children, expectedHeight, targetRef, showLine 
             pts[item.id] = { x: pts[item.id].x + dx, y: pts[item.id].y + dy };
         }
         const ends = Object.values(pts);
-        return renderLine({
-            x1: ends[0].x,
-            y1: ends[0].y,
-            x2: ends[1].x,
-            y2: ends[1].y,
-        });
+        return renderLine(
+            {
+                x1: ends[0].x,
+                y1: ends[0].y,
+                x2: ends[1].x,
+                y2: ends[1].y,
+            },
+            isDragging
+        );
     };
 
     const moveBox = useCallback(
@@ -138,7 +153,7 @@ const ContainerWithoutResize = ({ children, expectedHeight, targetRef, showLine 
                 })
             );
         },
-        [boxes]
+        [boxes, setBoxes]
     );
     const [, drop] = useDrop({
         accept: ItemTypes.BOX,
@@ -154,25 +169,27 @@ const ContainerWithoutResize = ({ children, expectedHeight, targetRef, showLine 
     const getDraggableLine = () => {
         if (!showLine) return;
         return (
-            <><div ref={targetRef} />
-            <div ref={drop} style={styles}>
-                {Object.keys(boxes()).map((key) =>
-                    renderBox(boxes()[key], key, radius, width, height)
-                )}
-                {getLine()}
-            </div>
-            <CustomDragLayer
-                props={{
-                    itemType,
-                    isDragging,
-                    item,
-                    initialOffset,
-                    currentOffset,
-                    radius,
-                }}
-            /></>
-        )
-    }
+            <>
+                <div ref={targetRef} />
+                <div ref={drop} style={styles}>
+                    {Object.keys(boxes()).map((key) =>
+                        renderBox(boxes()[key], key, radius, width, height)
+                    )}
+                    {getLine()}
+                </div>
+                <CustomDragLayer
+                    props={{
+                        itemType,
+                        isDragging,
+                        item,
+                        initialOffset,
+                        currentOffset,
+                        radius,
+                    }}
+                />
+            </>
+        );
+    };
 
     return (
         <div
@@ -185,4 +202,4 @@ const ContainerWithoutResize = ({ children, expectedHeight, targetRef, showLine 
     );
 };
 
-export const Container = withResizeDetector(ContainerWithoutResize);
+export const PointContainer = withResizeDetector(PointContainerWithoutResize);

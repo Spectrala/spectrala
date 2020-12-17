@@ -1,19 +1,8 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { Container } from './draggable_points/Container';
+import React, { useRef, useState } from 'react';
+import { Alert, Card } from 'react-bootstrap';
 import Camera from './camera';
-
-import {
-    Button,
-    Col,
-    Card,
-    Row,
-    Alert,
-    Overlay,
-    Popover,
-} from 'react-bootstrap';
+import { PointContainer } from './draggable_points/Container';
 import SourceSelect from './source_select';
-import LineSelector from './line_selector';
-import { CameraFill } from 'react-bootstrap-icons';
 
 const ChannelEnum = {
     RED: 'CHANNEL_RED',
@@ -52,7 +41,7 @@ const CameraFrame = ({ height }) => {
                     <Alert.Link>Learn more</Alert.Link>.
                 </Alert>
             )}
-            <Container expectedHeight={height} showLine={!inSaveMode}>
+            <PointContainer expectedHeight={height} showLine={!inSaveMode}>
                 <Camera
                     props={{
                         styles: {
@@ -65,51 +54,7 @@ const CameraFrame = ({ height }) => {
                         inSaveMode,
                     }}
                 />
-            </Container>
-            {/* 
-            <Card.Footer>
-                <Row style={{ display: 'flex' }}>
-                    <LineSelector />
-                    <Col
-                        xl={2}
-                        lg={2}
-                        md={12}
-                        sm={12}
-                        xs={12}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                        }}
-                    >
-                        <div>
-                            <Button
-                                variant="outline-primary"
-                                style={{ alignItems: 'center' }}
-                                onClick={() => setInSaveMode(!inSaveMode)}
-                                ref={saveOverlayTarget}
-                                title="Snapshot Mode"
-                                aria-label="Snapshot Mode"
-                            >
-                                <CameraFill />
-                            </Button>
-                            <Overlay
-                                show={inSaveMode}
-                                target={saveOverlayTarget.current}
-                                placement="left-start"
-                            >
-                                <Popover id="snapshot-popover">
-                                    <Popover.Title>Snapshot Mode</Popover.Title>
-                                    <Popover.Content>
-                                        Right-click the preview and select "Save
-                                        image as..." Click again when you are
-                                        done to re-enable the overlay.
-                                    </Popover.Content>
-                                </Popover>
-                            </Overlay>
-                        </div>
-                    </Col>
-                </Row>
-            </Card.Footer> */}
+            </PointContainer>
         </Card>
     );
 };

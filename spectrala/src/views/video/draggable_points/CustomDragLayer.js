@@ -1,8 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useDragLayer } from 'react-dnd';
+import React from 'react';
 import { ItemTypes } from '../../draggable/item_types';
-import { BoxDragPreview } from './Box';
-import { toPct } from './DraggableBox';
+import { CircleDragPreview } from './Box';
 const layerStyles = {
     position: 'fixed',
     pointerEvents: 'none',
@@ -39,7 +37,9 @@ export const CustomDragLayer = ({ props }) => {
     function renderItem() {
         switch (itemType) {
             case ItemTypes.BOX:
-                return <BoxDragPreview energy={item.energy} radius={radius} />;
+                return (
+                    <CircleDragPreview energy={item.energy} radius={radius} />
+                );
             default:
                 return null;
         }
