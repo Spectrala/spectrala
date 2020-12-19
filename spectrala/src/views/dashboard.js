@@ -1,11 +1,31 @@
 import React from 'react';
-import { Container, Col, Navbar, Nav, Row } from 'react-bootstrap';
+import {
+    Container,
+    Col,
+    Navbar,
+    Nav,
+    Row,
+    NavDropdown,
+    Form,
+    FormControl,
+    Button,
+} from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
+import {
+    Moon,
+    Download,
+    Sun,
+    JournalArrowUp,
+    Question,
+    InfoCircleFill,
+    InfoCircle,
+} from 'react-bootstrap-icons';
 import Video from './video/video';
 import CalibrationSpectrumChart from './chart/calibration/calibration_interface';
 import SpectrumChart from './chart/spectrum/spectrum_interface';
 import SaveButton from './persistence/save_btn';
 import LoadButton from './persistence/load_btn';
+import { navBody, containerStyle, activeNavItem } from './theme/styles';
 
 export default class Dashboard extends React.Component {
     // TODO: make the help menu do something before you show it to the user
@@ -28,51 +48,199 @@ export default class Dashboard extends React.Component {
         return null;
     };
 
+    getLogoImg = () => {
+        return <img style={{ height: '40px' }} src={logo} alt="logo" />;
+    };
+    getSaveLoad = () => {
+        return (
+            <div style={{ marginLeft: 'auto' }}>
+                {this.getHelpMenu()}
+                <SaveButton />
+                <LoadButton />
+            </div>
+        );
+    };
+
     getNavbar = () => {
         return (
-            <Navbar bg="light" variant="light" fixed="top">
+            <Navbar style={navBody} fixed="top">
                 <Navbar.Brand>
                     <img style={{ height: '40px' }} src={logo} alt="logo" />
                 </Navbar.Brand>
-                <Nav className="mr-auto">
-                    {this.getHelpMenu()}
-                    <SaveButton />
-                    <LoadButton />
+                <Nav
+                    activeKey={'asdf'}
+                    style={{
+                        width: '100%',
+                        display: 'flex',
+                    }}
+                >
+                    <Nav.Item key={'asdf'}>
+                        <Nav.Link href="asdf">Calibrate</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item style={activeNavItem}>
+                        <Nav.Link>Record</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link>View</Nav.Link>
+                    </Nav.Item>
+                    <div style={{ marginLeft: 'auto' }}>
+                        {this.getHelpMenu()}
+                        <SaveButton />
+                        <LoadButton />
+                    </div>
                 </Nav>
             </Navbar>
         );
     };
 
+    getDarkLight = () => {
+        const isDark = true;
+        return isDark ? <Moon /> : <Sun />;
+    };
+
+    getHintsIcon = () => {
+        const isDark = true;
+        return isDark ? <Moon /> : <Sun />;
+    };
+
+    iconButtons = {
+        THEME: 'theme',
+        DOWNLOAD: 'download',
+        RESTORE: 'restore',
+        HINTS: 'hints',
+    };
+
+    handleClick = (iconButton) => {
+        console.log(iconButton);
+    };
+
     render() {
         return (
-            <>
-                {this.getNavbar()}
-                <br />
-                <br />
-                <br />
-                <Container fluid>
-                    <Row
+            <Container fluid style={containerStyle}>
+                <Navbar
+                    bg="light"
+                    expand="sm"
+                    fixed="top"
+                    style={{ height: '64px', left: 0, padding: 0 }}
+                >
+                    <Col
+                        xs={1}
                         style={{
+                            display: 'flex',
                             justifyContent: 'center',
                         }}
                     >
-                        <Col
-                            xl={10}
+                        <img
                             style={{
-                                flexFlow: 'column nowrap',
-                                display: 'flex',
-                                flex: 1,
-                                width: '100vw',
-                                justifyContent: 'center',
+                                height: '28px',
+                                alignSelf: 'center',
+                                justifySelf: 'center',
+                            }}
+                            src={logo}
+                            alt="logo"
+                        />
+                    </Col>
+                    <Col xl={3}>
+                        <Row>
+                            <Form style={{ width: '100%' }}>
+                                <FormControl
+                                    type="text"
+                                    placeholder="Project name"
+                                    style={{ height: '28px' }}
+                                />
+                            </Form>
+                        </Row>
+                    </Col>
+                    <Col xl={5}>
+                        <Nav variant="pills" defaultActiveKey="calibrate">
+                            <Nav.Item>
+                                <Nav.Link eventKey="calibrate">
+                                    Calibrate
+                                </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link eventKey="record">Record</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link eventKey="report" disabled={false}>
+                                    Report
+                                </Nav.Link>
+                            </Nav.Item>
+                        </Nav>
+                    </Col>
+                    <Col xl={3}>
+                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                        <Navbar.Collapse
+                            id="basic-navbar-nav"
+                            className="justify-content-end"
+                        >
+                            <Nav className="justify-content-end">
+                                <Nav.Link eventKey={this.iconButtons.THEME}>
+                                    {this.getDarkLight()}
+                                </Nav.Link>
+                                <Nav.Link eventKey={this.iconButtons.DOWNLOAD}>
+                                    <Download />
+                                </Nav.Link>
+                                <Nav.Link eventKey={this.iconButtons.RESTORE}>
+                                    <JournalArrowUp />
+                                </Nav.Link>
+                                <Nav.Link eventKey={this.iconButtons.HINTS}>
+                                    <InfoCircle />
+                                </Nav.Link>
+                                <NavDropdown
+                                    title="Help"
+                                    id="basic-nav-dropdown"
+                                >
+                                    <NavDropdown.Item href="#action/3.1">
+                                        Action
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="#action/3.2">
+                                        Another action
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item href="#action/3.3">
+                                        Something
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Divider />
+                                    <NavDropdown.Item href="#action/3.4">
+                                        Separated link
+                                    </NavDropdown.Item>
+                                </NavDropdown>
+                            </Nav>
+                        </Navbar.Collapse>
+                    </Col>
+                </Navbar>
+
+                <Row
+                    style={{
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Col
+                        xl={10}
+                        style={{
+                            flexFlow: 'column nowrap',
+                            display: 'flex',
+                            flex: 1,
+                            width: '100vw',
+                            justifyContent: 'center',
+                            paddingLeft: 0,
+                            paddingRight: 0,
+                        }}
+                    >
+                        <div
+                            style={{
+                                marginTop: 64,
+                                paddingLeft: 16,
+                                paddingRight: 16,
                             }}
                         >
                             <Video height={250} />
                             <CalibrationSpectrumChart height={350} />
                             <SpectrumChart height={350} />
-                        </Col>
-                    </Row>
-                </Container>
-            </>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }

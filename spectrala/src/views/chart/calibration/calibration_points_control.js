@@ -35,8 +35,9 @@ import {
 import { ItemTypes } from '../../draggable/item_types';
 import DraggableTable from '../../draggable/draggable_table';
 
-import { cardStyle, cardHeaderStyle } from '../../theme/styles';
+import { cardStyle, cardHeaderStyle, secondaryButton } from '../../theme/styles';
 import theme from '../../theme/theme';
+
 export default function CalibrationPointsControl({
     height,
     maximumPoints,
@@ -86,6 +87,7 @@ export default function CalibrationPointsControl({
                 return (
                     <Button
                         variant="outline-secondary"
+                        style={secondaryButton}
                         onClick={() =>
                             dispatch(cancelPlace({ targetIndex: idx }))
                         }
@@ -99,6 +101,7 @@ export default function CalibrationPointsControl({
             return (
                 <Button
                     variant="outline-secondary"
+                    style={secondaryButton}
                     disabled={!CalibPt.wavelengthIsValid(point)}
                     onClick={() => dispatch(beginPlace({ targetIndex: idx }))}
                 >
@@ -118,6 +121,7 @@ export default function CalibrationPointsControl({
                 return (
                     <Button
                         variant="outline-secondary"
+                        style={secondaryButton}
                         onClick={() => {
                             dispatch(
                                 editPlacement({
@@ -175,6 +179,7 @@ export default function CalibrationPointsControl({
                             {getEditButton(point, idx)}
                             <Button
                                 variant="outline-secondary"
+                                style={secondaryButton}
                                 onClick={() => {
                                     dispatch(
                                         removePoint({

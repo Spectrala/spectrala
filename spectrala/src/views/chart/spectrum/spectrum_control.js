@@ -16,6 +16,8 @@ import {
 import { ItemTypes } from '../../draggable/item_types';
 import { EditableCell } from './editable_cell';
 import DraggableTable from '../../draggable/draggable_table';
+import { dropdown } from '../../theme/styles';
+
 
 export default function SpectrumControl({ height }) {
     const dispatch = useDispatch();
@@ -27,6 +29,7 @@ export default function SpectrumControl({ height }) {
                 <DropdownButton
                     title=""
                     as={InputGroup.Append}
+                    style={dropdown}
                     variant="outline-secondary"
                     id="collasible-nav-dropdown"
                 >
