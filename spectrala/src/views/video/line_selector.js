@@ -31,6 +31,9 @@ export default function LineSelector() {
                         );
                     }
                 }}
+                onKeyDown={(e) => {
+                    if (e.keyCode === 13) e.preventDefault();
+                }}
             />
         );
     };
@@ -38,7 +41,7 @@ export default function LineSelector() {
     return (
         <>
             <Col xl={5} lg xs={12}>
-                <InputGroup style={{display: 'flex'}}>
+                <InputGroup style={{ display: 'flex' }}>
                     <InputGroup.Prepend>
                         <InputGroup.Text>Low Energy</InputGroup.Text>
                     </InputGroup.Prepend>

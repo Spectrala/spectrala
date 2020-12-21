@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-    InputGroup,
-    Form,
-} from 'react-bootstrap';
+import { InputGroup, Form } from 'react-bootstrap';
 
 const style = {
     paddingLeft: '15px',
@@ -28,6 +25,9 @@ export const EditableCell = ({
                     aria-label={aria}
                     aria-describedby="basic-addon2"
                     onChange={(event) => onTextEdit(event.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.keyCode === 13) e.preventDefault();
+                    }}
                 />
 
                 <InputGroup.Append>{append}</InputGroup.Append>

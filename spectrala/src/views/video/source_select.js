@@ -206,6 +206,9 @@ export default function SourceSelect(props) {
                     placeholder="Stream URL (e.g. http://192.0.2.1:8000/stream.mp4)"
                     value={streamUrl}
                     onChange={(e) => setStreamUrl(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.keyCode === 13) e.preventDefault();
+                    }}
                 />
             )}
         </>

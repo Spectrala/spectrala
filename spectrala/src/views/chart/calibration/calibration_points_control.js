@@ -7,6 +7,7 @@ import {
     Form,
     Row,
     DropdownButton,
+    FormControl,
 } from 'react-bootstrap';
 import { XCircle, Pencil, PlusCircle } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
@@ -35,7 +36,11 @@ import {
 import { ItemTypes } from '../../draggable/item_types';
 import DraggableTable from '../../draggable/draggable_table';
 
-import { cardStyle, cardHeaderStyle, secondaryButton } from '../../theme/styles';
+import {
+    cardStyle,
+    cardHeaderStyle,
+    secondaryButton,
+} from '../../theme/styles';
 import theme from '../../theme/theme';
 
 export default function CalibrationPointsControl({
@@ -156,11 +161,11 @@ export default function CalibrationPointsControl({
                         display: 'flex',
                     }}
                 >
-                    <InputGroup>
+                    <InputGroup >
                         <InputGroup.Prepend>
                             {getPrependedGroup(point, idx)}
                         </InputGroup.Prepend>
-                        <Form.Control
+                        <FormControl
                             value={point.wavelength ? point.wavelength : ''}
                             aria-label={`Calibration point ${idx + 1}`}
                             aria-describedby="basic-addon2"
@@ -171,6 +176,9 @@ export default function CalibrationPointsControl({
                                         value: parseInt(event.target.value),
                                     })
                                 );
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.keyCode === 13) e.preventDefault();
                             }}
                             isInvalid={pointIsInvalid(point)}
                         />
