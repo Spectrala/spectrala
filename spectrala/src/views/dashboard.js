@@ -9,6 +9,7 @@ import {
     Form,
     FormControl,
     Button,
+    Card,
 } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import {
@@ -118,9 +119,9 @@ export default class Dashboard extends React.Component {
         return (
             <Container fluid style={containerStyle}>
                 <Navbar
-                    bg="light"
                     expand="sm"
                     fixed="top"
+                    bg="light"
                     style={{ height: '64px', left: 0, padding: 0 }}
                 >
                     <Col
@@ -140,41 +141,31 @@ export default class Dashboard extends React.Component {
                             alt="logo"
                         />
                     </Col>
-                    <Col xl={3}>
+                    <Col xl={2}>
                         <Row>
                             <Form style={{ width: '100%' }}>
                                 <FormControl
                                     type="text"
                                     placeholder="Project name"
+                                    value="Beta gal lab Jan 15"
                                     style={{ height: '28px' }}
                                 />
                             </Form>
                         </Row>
                     </Col>
-                    <Col xl={5}>
-                        <Nav variant="pills" defaultActiveKey="calibrate">
-                            <Nav.Item>
-                                <Nav.Link eventKey="calibrate">
-                                    Calibrate
-                                </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="record">Record</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="report" disabled={false}>
-                                    Report
-                                </Nav.Link>
-                            </Nav.Item>
-                        </Nav>
-                    </Col>
-                    <Col xl={3}>
+                    <Col
+                        xl={9}
+                        style={{ display: 'flex', justifyContent: 'flex-end' }}
+                    >
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse
                             id="basic-navbar-nav"
                             className="justify-content-end"
                         >
-                            <Nav className="justify-content-end">
+                            <Nav
+                                onSelect={(key) => this.handleClick(key)}
+                                className="justify-content-end"
+                            >
                                 <Nav.Link eventKey={this.iconButtons.THEME}>
                                     {this.getDarkLight()}
                                 </Nav.Link>
@@ -187,24 +178,6 @@ export default class Dashboard extends React.Component {
                                 <Nav.Link eventKey={this.iconButtons.HINTS}>
                                     <InfoCircle />
                                 </Nav.Link>
-                                <NavDropdown
-                                    title="Help"
-                                    id="basic-nav-dropdown"
-                                >
-                                    <NavDropdown.Item href="#action/3.1">
-                                        Action
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Item href="#action/3.2">
-                                        Another action
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Item href="#action/3.3">
-                                        Something
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item href="#action/3.4">
-                                        Separated link
-                                    </NavDropdown.Item>
-                                </NavDropdown>
                             </Nav>
                         </Navbar.Collapse>
                     </Col>
@@ -216,7 +189,7 @@ export default class Dashboard extends React.Component {
                     }}
                 >
                     <Col
-                        xl={10}
+                        xl={8}
                         style={{
                             flexFlow: 'column nowrap',
                             display: 'flex',
@@ -239,6 +212,7 @@ export default class Dashboard extends React.Component {
                             <SpectrumChart height={350} />
                         </div>
                     </Col>
+
                 </Row>
             </Container>
         );
