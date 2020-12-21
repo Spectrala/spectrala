@@ -122,41 +122,19 @@ export default class Dashboard extends React.Component {
                     expand="sm"
                     fixed="top"
                     bg="light"
-                    style={{ height: '64px', left: 0, padding: 0 }}
+                    style={{ height: '64px' }}
                 >
-                    <Col
-                        xs={1}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                        }}
-                    >
+                    <Row>
                         <img
                             style={{
                                 height: '28px',
                                 alignSelf: 'center',
-                                justifySelf: 'center',
+                                paddingLeft: '16px',
+                                paddingRight: '16px',
                             }}
                             src={logo}
                             alt="logo"
                         />
-                    </Col>
-                    <Col xl={2}>
-                        <Row>
-                            <Form style={{ width: '100%' }}>
-                                <FormControl
-                                    type="text"
-                                    placeholder="Project name"
-                                    value="Beta gal lab Jan 15"
-                                    style={{ height: '28px' }}
-                                />
-                            </Form>
-                        </Row>
-                    </Col>
-                    <Col
-                        xl={9}
-                        style={{ display: 'flex', justifyContent: 'flex-end' }}
-                    >
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse
                             id="basic-navbar-nav"
@@ -166,21 +144,15 @@ export default class Dashboard extends React.Component {
                                 onSelect={(key) => this.handleClick(key)}
                                 className="justify-content-end"
                             >
-                                <Nav.Link eventKey={this.iconButtons.THEME}>
-                                    {this.getDarkLight()}
-                                </Nav.Link>
                                 <Nav.Link eventKey={this.iconButtons.DOWNLOAD}>
-                                    <Download />
+                                    <SaveButton />
                                 </Nav.Link>
                                 <Nav.Link eventKey={this.iconButtons.RESTORE}>
-                                    <JournalArrowUp />
-                                </Nav.Link>
-                                <Nav.Link eventKey={this.iconButtons.HINTS}>
-                                    <InfoCircle />
+                                    <LoadButton />
                                 </Nav.Link>
                             </Nav>
                         </Navbar.Collapse>
-                    </Col>
+                    </Row>
                 </Navbar>
 
                 <Row
@@ -212,7 +184,6 @@ export default class Dashboard extends React.Component {
                             <SpectrumChart height={350} />
                         </div>
                     </Col>
-
                 </Row>
             </Container>
         );
