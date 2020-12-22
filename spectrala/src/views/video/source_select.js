@@ -9,13 +9,19 @@ import {
     Col,
 } from 'react-bootstrap';
 import { CameraFill } from 'react-bootstrap-icons';
-import { FileEarmarkArrowUp, CameraVideo, Phone } from 'react-bootstrap-icons';
+import {
+    FileEarmarkArrowUp,
+    CameraVideo,
+    Phone,
+    BroadcastPin,
+} from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 import theme from '../theme/theme';
 const SourceEnum = {
     STREAM: 'SOURCE_STREAM',
     WEBCAM: 'SOURCE_WEBCAM',
     IMAGE: 'SOURCE_IMAGE',
+    MOBILE_STREAM: 'SOURCE_MOBILE_STREAM',
 };
 
 // Will be used for checking permissions when listing cameras
@@ -25,8 +31,12 @@ const SourceEnum = {
 // }
 
 export default function SourceSelect(props) {
-    const [selectedSource, setSelectedSource] = useState(SourceEnum.WEBCAM);
+    const [selectedSource, setSelectedSource] = useState(
+        SourceEnum.MOBILE_STREAM
+    );
     const [streamUrl, setStreamUrl] = useState('');
+    const [streamIP, setStreamIP] = useState('');
+    const [streamPort, setStreamPort] = useState('');
     // const [mediaElement, setMediaElement] = useState(null);
 
     const {
@@ -74,10 +84,10 @@ export default function SourceSelect(props) {
                 if (!mediaStream) return; // exit early if creation failed.
                 mediaStream.getTracks().forEach((track) => track.stop());
             };
-        } else if (selectedSource === SourceEnum.STREAM) {
+        } else if (selectedSource === SourceEnum.STREAM || selectedSource === SourceEnum.MOBILE_STREAM) {
             let imageElement = document.createElement('img');
-            imageElement.crossOrigin = 'anonymous';
-            imageElement.src = streamUrl;
+            imageElement.crossOrigin = 'anonymous';    
+            imageElement.src = selectedSource === SourceEnum.STREAM  ? streamUrl : "http://"+streamIP+":"+streamPort+"/video";
             updateMediaElement(imageElement);
             return () => {
                 // cleanup video
@@ -118,7 +128,7 @@ export default function SourceSelect(props) {
         } else {
             updateMediaElement(null);
         }
-    }, [selectedSource, streamUrl, updateMediaElement]);
+    }, [selectedSource, streamUrl, updateMediaElement, streamIP, streamPort]);
 
     function getWebcamDropdown() {
         // TODO: Retrieve the webcams availible and allow the user to toggle between them.
@@ -145,13 +155,25 @@ export default function SourceSelect(props) {
                 <ButtonGroup style={{ height: '38px', paddingRight: '10px' }}>
                     <Button
                         variant={getBtnVariant(
+                            selectedSource === SourceEnum.MOBILE_STREAM
+                        )}
+                        onClick={() =>
+                            setSelectedSource(SourceEnum.MOBILE_STREAM)
+                        }
+                        aria-label={'Mobile'}
+                        title={'Mobile'}
+                    >
+                        <Phone />
+                    </Button>
+                    <Button
+                        variant={getBtnVariant(
                             selectedSource === SourceEnum.STREAM
                         )}
                         onClick={() => setSelectedSource(SourceEnum.STREAM)}
                         aria-label={'Stream'}
                         title={'Stream'}
                     >
-                        <Phone />
+                        <BroadcastPin />
                     </Button>
                     <Button
                         variant={getBtnVariant(
@@ -201,15 +223,59 @@ export default function SourceSelect(props) {
             </div>
 
             {selectedSource === SourceEnum.STREAM && (
-                <FormControl
-                    type="text"
-                    placeholder="Stream URL (e.g. http://192.0.2.1:8000/stream.mp4)"
-                    value={streamUrl}
-                    onChange={(e) => setStreamUrl(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.keyCode === 13) e.preventDefault();
+                <Row
+                    style={{
+                        width: '100%',
+                        paddingTop: 10,
+                        marginLeft: 0,
+                        marginRight: 0,
                     }}
-                />
+                >
+                    <FormControl
+                        style={{ width: '100%' }}
+                        type="text"
+                        placeholder="Stream URL (e.g. http://192.0.2.1:8000/stream.mp4)"
+                        value={streamUrl}
+                        onChange={(e) => setStreamUrl(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.keyCode === 13) e.preventDefault();
+                        }}
+                    />
+                </Row>
+            )}
+
+            {selectedSource === SourceEnum.MOBILE_STREAM && (
+                <Row
+                    style={{
+                        width: '100%',
+                        paddingTop: 10,
+                        marginLeft: 0,
+                        marginRight: 0,
+                    }}
+                >
+                    <Col style={{ paddingLeft: 0 }}>
+                        <FormControl
+                            type="text"
+                            placeholder="IP (e.g. 192.146.4.184)"
+                            value={streamIP}
+                            onChange={(e) => setStreamIP(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.keyCode === 13) e.preventDefault();
+                            }}
+                        />
+                    </Col>
+                    <Col style={{ paddingRight: 0, paddingLeft: 0}}>
+                        <FormControl
+                            type="text"
+                            placeholder="Port (e.g. 4747)"
+                            value={streamPort}
+                            onChange={(e) => setStreamPort(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.keyCode === 13) e.preventDefault();
+                            }}
+                        />
+                    </Col>
+                </Row>
             )}
         </>
     );

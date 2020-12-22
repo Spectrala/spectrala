@@ -5,21 +5,11 @@ import {
     Navbar,
     Nav,
     Row,
-    NavDropdown,
-    Form,
-    FormControl,
-    Button,
-    Card,
 } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import {
     Moon,
-    Download,
     Sun,
-    JournalArrowUp,
-    Question,
-    InfoCircleFill,
-    InfoCircle,
 } from 'react-bootstrap-icons';
 import Video from './video/video';
 import CalibrationSpectrumChart from './chart/calibration/calibration_interface';
@@ -29,25 +19,6 @@ import LoadButton from './persistence/load_btn';
 import { navBody, containerStyle, activeNavItem } from './theme/styles';
 
 export default class Dashboard extends React.Component {
-    // TODO: make the help menu do something before you show it to the user
-    getHelpMenu = () => {
-        // const helpMenu = (
-        //     <NavDropdown title="Help" id="collasible-nav-dropdown">
-        //         <NavDropdown.Item href="#action/3.1">
-        //             Connecting a camera
-        //         </NavDropdown.Item>
-        //         <NavDropdown.Item href="#action/3.2">
-        //             Calibration
-        //         </NavDropdown.Item>
-        //         <NavDropdown.Item href="#action/3.3">
-        //             Data collection
-        //         </NavDropdown.Item>
-        //         <NavDropdown.Divider />
-        //         <NavDropdown.Item href="#action/3.4">About</NavDropdown.Item>
-        //     </NavDropdown>
-        // );
-        return null;
-    };
 
     getLogoImg = () => {
         return <img style={{ height: '40px' }} src={logo} alt="logo" />;

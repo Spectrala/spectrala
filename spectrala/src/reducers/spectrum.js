@@ -205,7 +205,7 @@ export const selectValidateCalibratedPixelLine = (state) => {
     if (!intensities) {
         return new SpectralDataResponse({
             valid: false,
-            message: 'Loading...',
+            message: 'Waiting...',
         });
     }
 
