@@ -106,7 +106,7 @@ export const walkthroughSlice = createSlice({
     },
     reducers: {
         gotoNextAction: (state) => {
-            if (isLastActionIndex(currentActionItem)) {
+            if (isLastActionIndex(state.currentActionItem)) {
                 console.error(
                     'Cannot go to next action, this is last in sequence'
                 );
@@ -127,7 +127,7 @@ export const walkthroughSlice = createSlice({
     },
 });
 
-export const { setValue, setDefault } = adjustmentsSlice.actions;
+export const { gotoNextAction, rewindToAction } = walkthroughSlice.actions;
 
 export const selectCurrentActionIndex = (state) =>
     state.walkthrough.currentActionItem;

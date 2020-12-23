@@ -1,14 +1,14 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Video from './video/video';
-import CalibrationSpectrumChart from './chart/calibration/calibration_interface';
-import SpectrumChart from './chart/spectrum/spectrum_interface';
+import Video from '../video/video';
+import CalibrationSpectrumChart from '../chart/calibration/calibration_interface';
+import SpectrumChart from '../chart/spectrum/spectrum_interface';
 import {
     widgets,
     selectCurrentWalkthroughItem,
 } from '../../reducers/walkthrough';
 
-const Camera = ({ props }) => {
+const getCamera = (props) => {
     return (
         <Video
             height={250}
@@ -18,25 +18,25 @@ const Camera = ({ props }) => {
     );
 };
 
-const CalibPointsTool = (widget) => {
+const getCalibPointsTool = (widget) => {
     const canPlace = widget === widgets.CALIB_PTS_PLACE;
     const canConfig = widget === widgets.CALIB_PTS_CONFIG;
     return null;
 };
 
-const CalibChart = () => {
+const getCalibChart = () => {
     return <CalibrationSpectrumChart height={350} />;
 };
 
-const SpectraTool = () => {
+const getSpectraTool = () => {
     return null;
 };
 
-const SpectrumChart = () => {
+const getSpectrumChart = () => {
     return <SpectrumChart height={350} />;
 };
 
-const DataExport = () => {
+const getDataExport = () => {
     return <label>This is the data export you've all been waiting for</label>;
 };
 
@@ -49,7 +49,7 @@ const GetWidget = (currentWidget, allWidgets) => {
     if (currentWidget === widgets.LINE || currentWidget === widgets.POINTS)
         return null;
     if (currentWidget === widgets.CAMERA) {
-        return Camera({
+        return getCamera({
             showsLine: allWidgets.includes(widgets.LINE),
             showsPoints: allWidgets.includes(widgets.POINTS),
         });
@@ -60,13 +60,13 @@ const GetWidget = (currentWidget, allWidgets) => {
         currentWidget === widgets.CALIB_PTS_CONFIG ||
         currentWidget === widgets.CALIB_PTS_PLACE
     )
-        return CalibPointsTool(currentWidget);
+        return getCalibPointsTool(currentWidget);
 
     // Calibration spectrum chart, spectra tool, spectrum chart, data export
-    if (currentWidget === widgets.CALIB_CHART) return CalibChart();
-    if (currentWidget === widgets.SPECTRA_TOOL) return SpectraTool();
-    if (currentWidget === widgets.SPECTRUM_CHART) return SpectrumChart();
-    if (currentWidget === widgets.DATA_EXPORT) return DataExport();
+    if (currentWidget === widgets.CALIB_CHART) return getCalibChart();
+    if (currentWidget === widgets.SPECTRA_TOOL) return getSpectraTool();
+    if (currentWidget === widgets.SPECTRUM_CHART) return getSpectrumChart();
+    if (currentWidget === widgets.DATA_EXPORT) return getDataExport();
 };
 
 export const WidgetsView = () => {
@@ -74,9 +74,10 @@ export const WidgetsView = () => {
     const displayWidgets = walkthroughItem.shows;
     return (
         <>
-            {displayWidgets.map((widget, idx) =>
-                GetWidget(widget, displayWidgets)
-            )}
+        
+            {displayWidgets.map((widget, idx) => (
+                <div key={idx}>{GetWidget(widget, displayWidgets)}</div>
+            ))}
         </>
     );
 };

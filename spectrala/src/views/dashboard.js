@@ -5,18 +5,14 @@ import {
     Navbar,
     Nav,
     Row,
-    Card,
-    Button,
 } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import { Moon, Sun } from 'react-bootstrap-icons';
 import SaveButton from './persistence/save_btn';
 import LoadButton from './persistence/load_btn';
-import Video from './video/video';
-import CalibrationSpectrumChart from './chart/calibration/calibration_interface';
-import SpectrumChart from './chart/spectrum/spectrum_interface';
 import { navBody, containerStyle, activeNavItem } from './theme/styles';
 import { Walkthrough } from './walkthrough/walkthrough';
+import { WidgetsView } from './walkthrough/widgets';
 
 export default class Dashboard extends React.Component {
     getLogoImg = () => {
@@ -146,9 +142,7 @@ export default class Dashboard extends React.Component {
                                 paddingRight: 16,
                             }}
                         >
-                            <Video height={250} />
-                            <CalibrationSpectrumChart height={350} />
-                            <SpectrumChart height={350} />
+                            <WidgetsView/>
                         </div>
                     </Col>
                     <Col xs={3} style={{ paddingTop: 11 }}>
