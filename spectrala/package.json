@@ -2,6 +2,7 @@
   "name": "spectrala",
   "version": "0.1.0",
   "private": true,
+  "license": "UNLICENSED",
   "dependencies": {
     "@jimp/plugin-color": "^0.16.1",
     "@jimp/utils": "^0.16.1",

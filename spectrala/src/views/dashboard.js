@@ -5,21 +5,20 @@ import {
     Navbar,
     Nav,
     Row,
+    Card,
+    Button,
 } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
-import {
-    Moon,
-    Sun,
-} from 'react-bootstrap-icons';
+import { Moon, Sun } from 'react-bootstrap-icons';
 import Video from './video/video';
 import CalibrationSpectrumChart from './chart/calibration/calibration_interface';
 import SpectrumChart from './chart/spectrum/spectrum_interface';
 import SaveButton from './persistence/save_btn';
 import LoadButton from './persistence/load_btn';
 import { navBody, containerStyle, activeNavItem } from './theme/styles';
+import { Walkthrough } from './walkthrough/walkthrough';
 
 export default class Dashboard extends React.Component {
-
     getLogoImg = () => {
         return <img style={{ height: '40px' }} src={logo} alt="logo" />;
     };
@@ -128,16 +127,14 @@ export default class Dashboard extends React.Component {
 
                 <Row
                     style={{
+                        display: 'flex',
                         justifyContent: 'center',
+                        marginTop: 64,
                     }}
                 >
                     <Col
                         xl={8}
                         style={{
-                            flexFlow: 'column nowrap',
-                            display: 'flex',
-                            flex: 1,
-                            width: '100vw',
                             justifyContent: 'center',
                             paddingLeft: 0,
                             paddingRight: 0,
@@ -145,7 +142,6 @@ export default class Dashboard extends React.Component {
                     >
                         <div
                             style={{
-                                marginTop: 64,
                                 paddingLeft: 16,
                                 paddingRight: 16,
                             }}
@@ -154,6 +150,9 @@ export default class Dashboard extends React.Component {
                             <CalibrationSpectrumChart height={350} />
                             <SpectrumChart height={350} />
                         </div>
+                    </Col>
+                    <Col xs={3} style={{ paddingTop: 11 }}>
+                        <Walkthrough />
                     </Col>
                 </Row>
             </Container>

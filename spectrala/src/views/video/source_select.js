@@ -189,8 +189,8 @@ export default function SourceSelect(props) {
                         variant={getBtnVariant(
                             selectedSource === SourceEnum.IMAGE
                         )}
-                        aria-label={'File Upload'}
-                        title={'File Upload'}
+                        aria-label={'Image Upload'}
+                        title={'Image Upload'}
                         onClick={() => setSelectedSource(SourceEnum.IMAGE)}
                     >
                         <FileEarmarkArrowUp />
