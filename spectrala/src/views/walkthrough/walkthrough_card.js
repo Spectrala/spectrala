@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 
+
+// TODO: Implement markdown capability rather than plain text https://github.com/remarkjs/react-markdown
 const ExpandedWalkthroughCard = ({ title, text }) => {
     return (
         <Card.Body>
