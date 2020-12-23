@@ -87,7 +87,7 @@ const WalkthroughCard = ({ title, text, expanded }) => {
 };
 
 export const WalkthroughItem = ({ title, text, expanded, isHeading }) => {
-    if (isHeading) return WalkthroughHeading({ title });
+    if (!!isHeading) return WalkthroughHeading({ title });
     return WalkthroughCard({ title, text, expanded });
 };
 

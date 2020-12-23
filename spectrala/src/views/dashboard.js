@@ -10,11 +10,11 @@ import {
 } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import { Moon, Sun } from 'react-bootstrap-icons';
+import SaveButton from './persistence/save_btn';
+import LoadButton from './persistence/load_btn';
 import Video from './video/video';
 import CalibrationSpectrumChart from './chart/calibration/calibration_interface';
 import SpectrumChart from './chart/spectrum/spectrum_interface';
-import SaveButton from './persistence/save_btn';
-import LoadButton from './persistence/load_btn';
 import { navBody, containerStyle, activeNavItem } from './theme/styles';
 import { Walkthrough } from './walkthrough/walkthrough';
 
