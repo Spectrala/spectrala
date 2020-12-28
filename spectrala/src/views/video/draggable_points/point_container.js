@@ -56,7 +56,8 @@ const PointContainerWithoutResize = ({
     children,
     expectedHeight,
     targetRef,
-    showLine,
+    showsLine,
+    showsPoints,
 }) => {
     const radius = 10;
 
@@ -170,15 +171,22 @@ const PointContainerWithoutResize = ({
     });
 
     const getDraggableLine = () => {
-        if (!showLine) return;
         return (
             <>
                 <div ref={targetRef} />
                 <div ref={drop} style={styles}>
-                    {Object.keys(boxes()).map((key) =>
-                        renderBox(boxes()[key], key, radius, width, height)
-                    )}
-                    {getLine()}
+                    {showsPoints
+                        ? Object.keys(boxes()).map((key) =>
+                              renderBox(
+                                  boxes()[key],
+                                  key,
+                                  radius,
+                                  width,
+                                  height
+                              )
+                          )
+                        : null}
+                    {showsLine ? getLine() : null}
                 </div>
                 <CustomDragLayer
                     props={{

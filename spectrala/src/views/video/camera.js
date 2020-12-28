@@ -220,7 +220,7 @@ export default function CameraView({ props }) {
         return () => clearInterval(videoInterval);
     }, [canvas, videoSrc, calibCoords, dispatch, inSaveMode]);
 
-    return <canvas ref={canvas} style={{ ...styles, width: '100%' }} />;
+    return <canvas ref={canvas} style={styles} />;
 }
 
 CameraView.propTypes = {

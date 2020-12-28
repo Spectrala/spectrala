@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
-
+import { useSelector } from 'react-redux';
+import { selectCurrentActionIndex } from '../../reducers/walkthrough';
 
 // TODO: Implement markdown capability rather than plain text https://github.com/remarkjs/react-markdown
 const ExpandedWalkthroughCard = ({ title, text }) => {
@@ -86,9 +87,15 @@ const WalkthroughCard = ({ title, text, expanded }) => {
     );
 };
 
-export const WalkthroughItem = ({ title, text, expanded, isHeading }) => {
+export const WalkthroughItem = ({ title, text, actionIndex, isHeading }) => {
+    let activeIndex = useSelector(selectCurrentActionIndex);
+
     if (!!isHeading) return WalkthroughHeading({ title });
-    return WalkthroughCard({ title, text, expanded });
+    return WalkthroughCard({
+        title,
+        text,
+        expanded: activeIndex === actionIndex,
+    });
 };
 
 export default null;

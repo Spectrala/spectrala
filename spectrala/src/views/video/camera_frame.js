@@ -4,6 +4,7 @@ import Camera from './camera';
 import { PointContainer } from './draggable_points/point_container';
 import SourceSelect from './source_select';
 import { cardStyle, cardHeaderStyle } from '../theme/styles';
+import PropTypes from 'prop-types';
 const ChannelEnum = {
     RED: 'CHANNEL_RED',
     GREEN: 'CHANNEL_GREEN',
@@ -16,7 +17,7 @@ const ChannelToText = {
     [ChannelEnum.BLUE]: 'Blue',
 };
 
-const CameraFrame = ({ height }) => {
+const CameraFrame = ({ showsLine, showsPoints }) => {
     // TODO: detect saturated channels in the SetInterval call
     const [saturatedChannels, _setSaturatedChannels] = useState([]);
 
@@ -41,11 +42,12 @@ const CameraFrame = ({ height }) => {
                     <Alert.Link>Learn more</Alert.Link>.
                 </Alert>
             )}
-            <PointContainer expectedHeight={height} showLine={!inSaveMode}>
+            <PointContainer expectedHeight={'500px'} showsLine={showsLine} showsPoints={showsPoints}>
                 <Camera
                     props={{
                         styles: {
-                            height,
+                            height: '100%',
+                            width: '100%',
                             position: 'absolute',
                             top: 0,
                             bottom: 0,
@@ -57,6 +59,11 @@ const CameraFrame = ({ height }) => {
             </PointContainer>
         </Card>
     );
+};
+
+CameraFrame.propTypes = {
+    showsLine: PropTypes.bool,
+    showsPoints: PropTypes.bool,
 };
 
 export default CameraFrame;

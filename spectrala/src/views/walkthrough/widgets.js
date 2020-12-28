@@ -11,7 +11,6 @@ import {
 const getCamera = (props) => {
     return (
         <Video
-            height={250}
             showsLine={props.showsLine}
             showsPoints={props.showsPoints}
         />

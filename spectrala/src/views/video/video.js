@@ -1,10 +1,9 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import AdjustmentOptions from './adjustments';
 import CameraFrame from './camera_frame';
 
-export default function Video({ height }) {
+export default function Video({showsLine, showsPoints}) {
     return (
         <>
             <Row style={{ justifyContent: 'center', display: 'flex' }}>
@@ -16,17 +15,7 @@ export default function Video({ height }) {
                     sm={12}
                     xs={12}
                 >
-                    <CameraFrame height={height} />
-                </Col>
-                <Col
-                    style={{ paddingBottom: '1vh' }}
-                    xl={4}
-                    lg={4}
-                    md={6}
-                    sm={12}
-                    xs={12}
-                >
-                    <AdjustmentOptions />
+                    <CameraFrame showsLine={showsLine} showsPoints={showsPoints}/>
                 </Col>
             </Row>
         </>
@@ -34,5 +23,6 @@ export default function Video({ height }) {
 }
 
 Video.propTypes = {
-    height: PropTypes.number,
+    showsLine: PropTypes.bool,
+    showsPoints: PropTypes.bool,
 };

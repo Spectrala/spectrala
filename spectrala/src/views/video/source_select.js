@@ -32,7 +32,7 @@ const SourceEnum = {
 
 export default function SourceSelect(props) {
     const [selectedSource, setSelectedSource] = useState(
-        SourceEnum.MOBILE_STREAM
+        SourceEnum.WEBCAM
     );
     const [streamUrl, setStreamUrl] = useState('');
     const [streamIP, setStreamIP] = useState('');
