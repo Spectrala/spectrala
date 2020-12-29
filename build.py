@@ -21,7 +21,7 @@ if "clean" in sys.argv[1:]:
     sys.exit(0)
 
 # build production webapp
-run(["yarn", "build"], cwd=spectrala).check_returncode()
+run(["yarn", "build"], cwd=spectrala, shell=True).check_returncode()
 
 # copy production assets to build location
 if (localserver / "static").exists():
@@ -31,8 +31,10 @@ shutil.copytree(spectrala / "build", localserver / "static")
 # build app
 if platform.system() == "Windows":
     icon_ext = "ico"
+    add_data_separator = ":"
 else:
     icon_ext = "icns"  # only MacOS uses, other platforms will ignore
+    add_data_separator = ";"
 
 run(
     [
@@ -41,7 +43,7 @@ run(
         "--onefile",
         "--windowed",
         "--name=spectrala",
-        "--add-data=static:static",
+        "--add-data=static" + add_data_separator + "static",
         "--icon=static/favicon." + icon_ext,
         "--osx-bundle-identifier=com.joshhejna.spectrala",
         "main.py",

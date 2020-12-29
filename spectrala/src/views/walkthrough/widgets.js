@@ -52,9 +52,12 @@ const GetWidget = (currentWidget, allWidgets) => {
         currentWidget === widgets.CALIB_PTS_CONFIG ||
         currentWidget === widgets.CALIB_PTS_PLACE
     )
-        return getCalibrationTools({
-            widget: currentWidget,
+        return CalibrationSpectrumChart({
+            height: 350,
             showsChart: allWidgets.includes(widgets.CALIB_CHART),
+            canPlace: currentWidget === widgets.CALIB_PTS_PLACE,
+            canConfig: currentWidget === widgets.CALIB_PTS_CONFIG
+
         });
     if (currentWidget === widgets.CALIB_CHART) return null;
 

@@ -9,7 +9,7 @@ import {
     DropdownButton,
     FormControl,
 } from 'react-bootstrap';
-import { XCircle, Pencil, PlusCircle } from 'react-bootstrap-icons';
+import { XCircle, Pencil, PlusCircle, ThreeDots} from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 
 import {
@@ -47,6 +47,8 @@ export default function CalibrationPointsControl({
     height,
     maximumPoints,
     isCollapsed,
+    canPlace,
+    canConfig,
 }) {
     // TODO: Don't simply return false, bro
     const calibrationPoints = useSelector(
@@ -87,6 +89,7 @@ export default function CalibrationPointsControl({
 
     const getPrependedGroup = useCallback(
         (point, idx) => {
+            if (!canPlace) return <InputGroup.Text><ThreeDots/></InputGroup.Text>;
             var description = CalibPt.getPlacementStatusDescription(point);
             if (description['isBeingPlaced']) {
                 return (
@@ -325,6 +328,8 @@ CalibrationPointsControl.propTypes = {
     height: PropTypes.number,
     maximumPoints: PropTypes.number,
     isCollapsed: PropTypes.bool,
+    canPlace: PropTypes.bool,
+    canConfig: PropTypes.bool,
 };
 
 CalibrationPointsControl.defaultProps = {

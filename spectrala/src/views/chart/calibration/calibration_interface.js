@@ -5,7 +5,7 @@ import CalibrationPointsControl from './calibration_points_control';
 import CalibrationLine from './calibration_line';
 import { cardStyle, cardHeaderStyle } from '../../theme/styles';
 
-export default function CalibrationSpectrumChart({ height, showsChart, showsTool }) {
+export default function CalibrationSpectrumChart({ height, showsChart, showsTool, canPlace, canConfig }) {
     function isCollapsed() {
         return false;
     }
@@ -55,6 +55,8 @@ export default function CalibrationSpectrumChart({ height, showsChart, showsTool
                 <CalibrationPointsControl
                     height={height}
                     isCollapsed={isCollapsed()}
+                    canPlace={canPlace}
+                    canConfig={canConfig}
                 />
             </Col>
         );
