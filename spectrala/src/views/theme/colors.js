@@ -13,14 +13,14 @@ const lightMode = {
     RIM: '#33312e',
 };
 
-const darkMode = {
-    BRAND: '#ff6e1e',
-    ACCENT: '#7f95d1',
-    BACKGROUND: '#2B2927',
-    FOREGROUND_1: '#605C57',
-    FOREGROUND_2: '#33312e',
-    RIM: '#eaf2ef',
-};
+// const darkMode = {
+//     BRAND: '#ff6e1e',
+//     ACCENT: '#7f95d1',
+//     BACKGROUND: '#2B2927',
+//     FOREGROUND_1: '#605C57',
+//     FOREGROUND_2: '#33312e',
+//     RIM: '#eaf2ef',
+// };
 
 const universal = {
     LOW_ENERGY: '#4758eb',

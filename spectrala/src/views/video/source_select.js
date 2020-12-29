@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSelectedSource, selectSource, selectWebcam } from '../../reducers/video';
 import {
     Button,
     FormControl,
@@ -11,13 +13,13 @@ import {
 import { CameraFill } from 'react-bootstrap-icons';
 import {
     FileEarmarkArrowUp,
-    CameraVideo,
     Phone,
     BroadcastPin,
 } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
-import theme from '../theme/theme';
-const SourceEnum = {
+import WebcamDropdown from './webcam_dropdown';
+
+export const SourceEnum = {
     STREAM: 'SOURCE_STREAM',
     WEBCAM: 'SOURCE_WEBCAM',
     IMAGE: 'SOURCE_IMAGE',
@@ -31,9 +33,19 @@ const SourceEnum = {
 // }
 
 export default function SourceSelect(props) {
-    const [selectedSource, setSelectedSource] = useState(
-        SourceEnum.WEBCAM
-    );
+    const selectedSource = useSelector(selectSource);
+    const selectedWebcam = useSelector(selectWebcam);
+
+    const dispatch = useDispatch();
+
+    const dispatchSelectedSource = (src) => {
+        dispatch(
+            setSelectedSource({
+                value: src,
+            })
+        );
+    };
+
     const [streamUrl, setStreamUrl] = useState('');
     const [streamIP, setStreamIP] = useState('');
     const [streamPort, setStreamPort] = useState('');
@@ -68,7 +80,9 @@ export default function SourceSelect(props) {
             async function createVideoElem() {
                 videoElement = document.createElement('video');
                 mediaStream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
+                    video: {
+                        deviceId: selectedWebcam,
+                    },
                 });
                 videoElement.srcObject = mediaStream;
                 videoElement.play();
@@ -84,10 +98,16 @@ export default function SourceSelect(props) {
                 if (!mediaStream) return; // exit early if creation failed.
                 mediaStream.getTracks().forEach((track) => track.stop());
             };
-        } else if (selectedSource === SourceEnum.STREAM || selectedSource === SourceEnum.MOBILE_STREAM) {
+        } else if (
+            selectedSource === SourceEnum.STREAM ||
+            selectedSource === SourceEnum.MOBILE_STREAM
+        ) {
             let imageElement = document.createElement('img');
-            imageElement.crossOrigin = 'anonymous';    
-            imageElement.src = selectedSource === SourceEnum.STREAM  ? streamUrl : "http://"+streamIP+":"+streamPort+"/video";
+            imageElement.crossOrigin = 'anonymous';
+            imageElement.src =
+                selectedSource === SourceEnum.STREAM
+                    ? streamUrl
+                    : 'http://' + streamIP + ':' + streamPort + '/video';
             updateMediaElement(imageElement);
             return () => {
                 // cleanup video
@@ -128,37 +148,19 @@ export default function SourceSelect(props) {
         } else {
             updateMediaElement(null);
         }
-    }, [selectedSource, streamUrl, updateMediaElement, streamIP, streamPort]);
-
-    function getWebcamDropdown() {
-        // TODO: Retrieve the webcams availible and allow the user to toggle between them.
-        // let dropdown = (
-        //     <Dropdown>
-        //         <Dropdown.Toggle variant="dark" id="dropdown-basic">
-        //             Browser Default Webcam
-        //         </Dropdown.Toggle>
-        //         <Dropdown.Menu>
-        //             <Dropdown.Item>
-        //                 Macintosh HD Webcam
-        //             </Dropdown.Item>
-        //         </Dropdown.Menu>
-        //     </Dropdown>
-        // );
-        return null;
-    }
+    }, [selectedSource, streamUrl, updateMediaElement, streamIP, streamPort, selectedWebcam]);
 
     return (
         <>
             <div>Source</div>
             <div>
-                {selectedSource === SourceEnum.WEBCAM && getWebcamDropdown()}
                 <ButtonGroup style={{ height: '38px', paddingRight: '10px' }}>
                     <Button
                         variant={getBtnVariant(
                             selectedSource === SourceEnum.MOBILE_STREAM
                         )}
                         onClick={() =>
-                            setSelectedSource(SourceEnum.MOBILE_STREAM)
+                            dispatchSelectedSource(SourceEnum.MOBILE_STREAM)
                         }
                         aria-label={'Mobile'}
                         title={'Mobile'}
@@ -169,35 +171,33 @@ export default function SourceSelect(props) {
                         variant={getBtnVariant(
                             selectedSource === SourceEnum.STREAM
                         )}
-                        onClick={() => setSelectedSource(SourceEnum.STREAM)}
+                        onClick={() =>
+                            dispatchSelectedSource(SourceEnum.STREAM)
+                        }
                         aria-label={'Stream'}
                         title={'Stream'}
                     >
                         <BroadcastPin />
                     </Button>
-                    <Button
+                    <WebcamDropdown
                         variant={getBtnVariant(
                             selectedSource === SourceEnum.WEBCAM
                         )}
-                        aria-label={'Webcam'}
-                        title={'Webcam'}
-                        onClick={() => setSelectedSource(SourceEnum.WEBCAM)}
-                    >
-                        <CameraVideo />
-                    </Button>
+                    />
+
                     <Button
                         variant={getBtnVariant(
                             selectedSource === SourceEnum.IMAGE
                         )}
                         aria-label={'Image Upload'}
                         title={'Image Upload'}
-                        onClick={() => setSelectedSource(SourceEnum.IMAGE)}
+                        onClick={() => dispatchSelectedSource(SourceEnum.IMAGE)}
                     >
                         <FileEarmarkArrowUp />
                     </Button>
                 </ButtonGroup>
                 <Button
-                    variant="outline-primary"
+                    variant="outline-dark"
                     style={{ alignItems: 'center' }}
                     onClick={() => setInSaveMode(!inSaveMode)}
                     ref={saveOverlayTarget}
@@ -264,7 +264,7 @@ export default function SourceSelect(props) {
                             }}
                         />
                     </Col>
-                    <Col style={{ paddingRight: 0, paddingLeft: 0}}>
+                    <Col style={{ paddingRight: 0, paddingLeft: 0 }}>
                         <FormControl
                             type="text"
                             placeholder="Port (e.g. 4747)"

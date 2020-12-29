@@ -17,13 +17,9 @@ const getCamera = (props) => {
 const getCalibrationTools = ({ widget, showsChart }) => {
     const canPlace = widget === widgets.CALIB_PTS_PLACE;
     const canConfig = widget === widgets.CALIB_PTS_CONFIG;
-    return CalibrationSpectrumChart({height: 350, showsChart, showsTool: true})
+    return CalibrationSpectrumChart({height: 350, showsChart, showsTool: true, canPlace, canConfig})
 };
 
-
-const getSpectraTool = () => {
-    return null;
-};
 
 const getSpectrumChart = () => {
     return <SpectrumChart height={350} />;
@@ -63,9 +59,7 @@ const GetWidget = (currentWidget, allWidgets) => {
     if (currentWidget === widgets.CALIB_CHART) return null;
 
 
-
-    if (currentWidget === widgets.SPECTRA_TOOL) return getSpectraTool();
-    if (currentWidget === widgets.SPECTRUM_CHART) return getSpectrumChart();
+    if (currentWidget === widgets.SPECTRA) return getSpectrumChart();
     if (currentWidget === widgets.DATA_EXPORT) return getDataExport();
 };
 

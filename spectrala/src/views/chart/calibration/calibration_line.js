@@ -7,9 +7,6 @@ import {
     placePoint,
 } from '../../../reducers/calibration/calibration';
 import * as CalibPt from '../../../reducers/calibration/calibration_point';
-import { cardStyle, cardHeaderStyle } from '../../theme/styles';
-
-// import { calibrationPresets } from '../../../reducers/calibration/calibration_constants';
 
 export default function CalibrationLine() {
     const data = useSelector(selectChartData);

@@ -8,25 +8,19 @@ export const widgets = {
     CALIB_PTS_CONFIG: 'calib-pts-config', // The "set points" menu without capability to place, but with capability to edit points
     CALIB_PTS_PLACE: 'calib-pts-place', // The "set points" menu stripped of everyhing except ability to place
     CALIB_CHART: 'calib-chart', // The chart to drag the points on
-    SPECTRUM_CHART: 'spectrum-chart ', // Chart for viewing spectra with the x values on it
-    SPECTRA_TOOL: 'spectra-tool', // The helper menu for creating spectra
+    SPECTRA: 'spectra-chart-tool', // The chart for viewing spectra with the x values on it and the helper menu for creating spectra
     DATA_EXPORT: 'data-export', // The currently non-existent widget for exporting data
 };
-
-
-const fillerText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean interdum, tellus sed imperdiet ullamcorper, nulla felis dapibus urna, eget egestas purus purus tincidunt nunc. Nunc vel egestas purus. Proin venenatis ullamcorper mi, nec laoreet risus aliquam vitae. Nam tincidunt sodales dignissim. Nunc augue quam, sodales a nunc at, vehicula facilisis mi. Phasellus cursus blandit risus in tincidunt. Vivamus vitae pulvinar nunc, in pharetra quam. Pellentesque ac justo sed tortor luctus rhoncus elementum sit amet augue. Curabitur semper maximus sapien sit amet tempor. Donec malesuada volutpat mi, ut porttitor risus euismod nec. Sed velit velit, luctus sit amet magna nec, bibendum placerat massa. Maecenas sit amet nibh eros. Nulla sit amet tellus non nisl finibus facilisis. Phasellus mollis elit in sapien tempus pharetra. Praesent condimentum ut tellus eu varius."
-
-
 
 /**
  * walkthroughConfig:
  *      Defines what is viewed in the bar on the right. Could be a card or a heading.
  *      The card is the one with the shadow, the heading is just the title without the shadow.
- * 
+ *
  *      title: (string) the title of each card (or text of the heading)
  *      text: (string) the text to display in the body of an expanded card
  *      isHeading: (bool) if true, this is a heading and not a card
- *      actionIndex: (int) this is the order functioning cards go in. 
+ *      actionIndex: (int) this is the order functioning cards go in.
  *                         Headings do not have this value.
  *      shows: (string[]) the widgets to render. See the constant 'widgets' for description
  */
@@ -72,24 +66,14 @@ export const walkthroughConfig = [
         title: 'Create a reference spectrum',
         text: walkthroughSteps.CREATE_REFERENCE,
         actionIndex: 4,
-        shows: [
-            widgets.CAMERA,
-            widgets.LINE,
-            widgets.SPECTRUM_CHART,
-            widgets.SPECTRA_TOOL,
-        ],
+        shows: [widgets.CAMERA, widgets.LINE, widgets.SPECTRA],
     },
 
     {
         title: 'Record test spectra',
         text: walkthroughSteps.RECORD_TEST,
         actionIndex: 5,
-        shows: [
-            widgets.CAMERA,
-            widgets.LINE,
-            widgets.SPECTRUM_CHART,
-            widgets.SPECTRA_TOOL,
-        ],
+        shows: [widgets.CAMERA, widgets.LINE, widgets.SPECTRA],
     },
 
     {
@@ -135,8 +119,7 @@ export const walkthroughSlice = createSlice({
 
 export const { gotoNextAction, rewindToAction } = walkthroughSlice.actions;
 
-export const selectActiveIndex = (state) =>
-    state.walkthrough.activeIndex;
+export const selectActiveIndex = (state) => state.walkthrough.activeIndex;
 
 export const selectCanGotoNextAction = (state) =>
     !isLastActionIndex(selectActiveIndex(state));
@@ -144,6 +127,6 @@ export const selectCanGotoNextAction = (state) =>
 export const selectCurrentWalkthroughItem = (state) => {
     const idx = selectActiveIndex(state);
     return walkthroughConfig.find((w) => w.actionIndex === idx);
-} 
+};
 
 export default walkthroughSlice.reducer;

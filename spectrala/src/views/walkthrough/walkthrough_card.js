@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     selectActiveIndex,
@@ -31,9 +31,6 @@ const ActionButton = (actionIndex, activeIndex) => {
         );
 };
 
-const markdown = 'The quadratic formula is $int_0^{\infty} x^2 dx$';
-
-// TODO: Implement markdown capability rather than plain text https://github.com/remarkjs/react-markdown
 const ExpandedWalkthroughCard = ({ title, text, actionIndex, activeIndex }) => {
     return (
         <Card.Body>
@@ -49,9 +46,7 @@ const ExpandedWalkthroughCard = ({ title, text, actionIndex, activeIndex }) => {
                 <Card.Subtitle>{title}</Card.Subtitle>
                 {ActionButton(actionIndex, activeIndex)}
             </div>
-            {
-                <Markdown step={text}/>
-            }
+            {<Markdown step={text} />}
         </Card.Body>
     );
 };

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { SourceEnum } from '../views/video/source_select';
 
 // Samples included in the moving average
 const PIXEL_LINE_HISTORY_DEPTH = 5;
@@ -27,13 +28,15 @@ export const videoSlice = createSlice({
             highX: 0.9,
             highY: 0.5,
         },
+        selectedSource: SourceEnum.WEBCAM,
+        selectedWebcam: undefined,
     },
     reducers: {
         updateFeed: (state, action) => {
             const newline = action.payload.value;
             let lineHist = state.pixelLineHistory;
             /**
-             * Sort of stupid coding but this maintains a history of a certain length
+             * This maintains a history of a certain length
              * of pixel values in order to create a moving average of intensities.
              * There's obvious uncertainty when looking at the static bounce around.
              * Smoothing this out is better for UX and scientific accuracy.
@@ -63,11 +66,20 @@ export const videoSlice = createSlice({
         },
         updateAllLineCoords: (state, action) => {
             state.lineCoords = action.payload.value;
-        }
+        },
+        setSelectedSource: (state, action) => {
+            state.selectedSource = action.payload.value;
+            state.selectedWebcam = action.payload.webcam;
+        },
     },
 });
 
-export const { updateFeed, updateLineCoords, updateAllLineCoords } = videoSlice.actions;
+export const {
+    updateFeed,
+    updateLineCoords,
+    updateAllLineCoords,
+    setSelectedSource,
+} = videoSlice.actions;
 
 export const selectIntensities = (state) => {
     const pixels = state.video.pixelLineHistory;
@@ -85,14 +97,17 @@ export const selectIntensities = (state) => {
             }
 
             averagedLine.push(
-                column.reduce((a, b) => a + b, 0) /
-                    pixelLines.length
+                column.reduce((a, b) => a + b, 0) / pixelLines.length
             );
         }
         return averagedLine;
     }
     return null;
 };
+
+export const selectSource = (state) => state.video.selectedSource;
+
+export const selectWebcam = (state) => state.video.selectedWebcam;
 
 export const selectOversaturation = (state) => state.video.isOversaturated;
 
