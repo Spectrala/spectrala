@@ -74,14 +74,7 @@ export default function SpectrumChart({
 
     return (
         <Row style={{ justifyContent: 'center', display: 'flex' }}>
-            <Col
-                style={{ paddingBottom: '1vh' }}
-                xl={8}
-                lg={8}
-                md={6}
-                sm={12}
-                xs={12}
-            >
+            <Col style={{ paddingBottom: '1vh' }} lg={8} md={6} xs={12}>
                 <Card style={cardStyle}>
                     {getHeader()}
                     {isCollapsed() ? null : (

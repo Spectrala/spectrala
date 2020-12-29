@@ -1,6 +1,6 @@
 import React from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-import { Col, Card, Row,Button } from 'react-bootstrap';
+import { useSelector, useDispatch } from 'react-redux';
+import { Col, Card, Row, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { cardStyle, cardHeaderStyle } from '../theme/styles';
 
@@ -16,14 +16,7 @@ export default function DataExport({ height }) {
 
     function getDataExport() {
         return (
-            <Col
-                style={{ paddingBottom: '1vh' }}
-                xl={8}
-                lg={8}
-                md={6}
-                sm={12}
-                xs={12}
-            >
+            <Col style={{ paddingBottom: '1vh' }} lg={8} md={6} xs={12}>
                 <Card style={cardStyle}>
                     {getHeader()}
                     <div style={{ height: height }}>Hello, world</div>

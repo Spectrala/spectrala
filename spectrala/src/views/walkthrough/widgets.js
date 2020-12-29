@@ -43,7 +43,6 @@ const GetWidget = (currentWidget, allWidgets) => {
      * when tools are chosen
      **/
 
-     console.log(allWidgets)
     if (
         currentWidget === widgets.CALIB_PTS_CONFIG ||
         currentWidget === widgets.CALIB_PTS_PLACE

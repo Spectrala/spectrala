@@ -9,7 +9,7 @@ import {
     DropdownButton,
     FormControl,
 } from 'react-bootstrap';
-import { XCircle, Pencil, PlusCircle, ThreeDots} from 'react-bootstrap-icons';
+import { XCircle, Pencil, PlusCircle, ThreeDots } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 
 import {
@@ -89,7 +89,12 @@ export default function CalibrationPointsControl({
 
     const getPrependedGroup = useCallback(
         (point, idx) => {
-            if (!canPlace) return <InputGroup.Text><ThreeDots/></InputGroup.Text>;
+            if (!canPlace)
+                return (
+                    <InputGroup.Text>
+                        <ThreeDots />
+                    </InputGroup.Text>
+                );
             var description = CalibPt.getPlacementStatusDescription(point);
             if (description['isBeingPlaced']) {
                 return (
@@ -152,6 +157,33 @@ export default function CalibrationPointsControl({
         [dispatch]
     );
 
+    const getDeleteButton = useCallback(
+        (point, idx) => {
+            if (canConfig)
+                return (
+                    <Button
+                        variant="outline-secondary"
+                        style={secondaryButton}
+                        onClick={() => {
+                            dispatch(
+                                removePoint({
+                                    targetIndex: idx,
+                                })
+                            );
+                        }}
+                    >
+                        <XCircle
+                            style={{
+                                display: 'flex',
+                                alignSelf: 'flex-center',
+                            }}
+                        />
+                    </Button>
+                );
+        },
+        [dispatch, canConfig]
+    );
+
     const getCell = useCallback(
         (point, idx) => {
             return (
@@ -164,7 +196,7 @@ export default function CalibrationPointsControl({
                         display: 'flex',
                     }}
                 >
-                    <InputGroup >
+                    <InputGroup>
                         <InputGroup.Prepend>
                             {getPrependedGroup(point, idx)}
                         </InputGroup.Prepend>
@@ -172,6 +204,7 @@ export default function CalibrationPointsControl({
                             value={point.wavelength ? point.wavelength : ''}
                             aria-label={`Calibration point ${idx + 1}`}
                             aria-describedby="basic-addon2"
+                            readOnly={!canConfig}
                             onChange={(event) => {
                                 dispatch(
                                     modifyWavelength({
@@ -188,24 +221,7 @@ export default function CalibrationPointsControl({
 
                         <InputGroup.Append>
                             {getEditButton(point, idx)}
-                            <Button
-                                variant="outline-secondary"
-                                style={secondaryButton}
-                                onClick={() => {
-                                    dispatch(
-                                        removePoint({
-                                            targetIndex: idx,
-                                        })
-                                    );
-                                }}
-                            >
-                                <XCircle
-                                    style={{
-                                        display: 'flex',
-                                        alignSelf: 'flex-center',
-                                    }}
-                                />
-                            </Button>
+                            {getDeleteButton(point, idx)}
                         </InputGroup.Append>
 
                         <Form.Control.Feedback type="invalid">
@@ -221,6 +237,8 @@ export default function CalibrationPointsControl({
             pointIsInvalid,
             getValidationFeedback,
             getEditButton,
+            canConfig,
+            getDeleteButton,
         ]
     );
 
@@ -252,9 +270,8 @@ export default function CalibrationPointsControl({
     }, [calibrationPoints, getCell, getKey, onReorder]);
 
     function getAddButton() {
-        if (!(calibrationPoints.length < maximumPoints)) {
-            return;
-        }
+        if (calibrationPoints.length >= maximumPoints) return;
+        if (!canConfig) return;
         return (
             <Button variant="outline" onClick={() => dispatch(addOption())}>
                 <PlusCircle
@@ -266,6 +283,8 @@ export default function CalibrationPointsControl({
 
     function getDropdown() {
         const presets = currentAndOtherCalibrationPresets(calibrationPoints);
+        if (!canConfig) return;
+
         return (
             <DropdownButton
                 title={presets.current.title}
@@ -304,10 +323,15 @@ export default function CalibrationPointsControl({
         );
     }
 
+    const getTitle = useCallback(() => {
+        if (canConfig) return 'Select points';
+        if (canPlace) return 'Set points';
+    }, [canConfig, canPlace]);
+
     return (
         <Card style={cardStyle}>
             <Card.Header style={cardHeaderStyle} as="h5">
-                <div>Set points</div>
+                <div>{getTitle()}</div>
                 <div>
                     <Row style={{ paddingRight: theme.CARD_HEADER_PADDING }}>
                         {getAddButton()}

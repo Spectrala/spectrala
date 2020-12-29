@@ -23,14 +23,7 @@ export default function CalibrationSpectrumChart({
     function getCalibChart() {
         if (showsChart)
             return (
-                <Col
-                    style={{ paddingBottom: '1vh' }}
-                    xl={8}
-                    lg={8}
-                    md={6}
-                    sm={12}
-                    xs={12}
-                >
+                <Col style={{ paddingBottom: '1vh' }} lg={8} md={6} xs={12}>
                     <Card style={cardStyle}>
                         {getHeader()}
                         <div style={{ height: height }}>
@@ -42,14 +35,13 @@ export default function CalibrationSpectrumChart({
     }
 
     function getCalibPointsTool() {
-        console.log(showsTool);
         if (!showsTool) return null;
         return (
             <Col
                 style={{ paddingBottom: '1vh' }}
-                xl={4}
-                lg={4}
-                md={6}
+                xl={canConfig ? 8 : 4}
+                lg={canConfig ? 8 : 4}
+                md={canConfig ? 8 : 6}
                 sm={12}
                 xs={12}
             >

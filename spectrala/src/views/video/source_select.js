@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSelectedSource, selectSource, selectWebcam } from '../../reducers/video';
+import {
+    setSelectedSource,
+    selectSource,
+    selectWebcam,
+} from '../../reducers/video';
 import {
     Button,
     FormControl,
@@ -11,11 +15,7 @@ import {
     Col,
 } from 'react-bootstrap';
 import { CameraFill } from 'react-bootstrap-icons';
-import {
-    FileEarmarkArrowUp,
-    Phone,
-    BroadcastPin,
-} from 'react-bootstrap-icons';
+import { FileEarmarkArrowUp, Phone, BroadcastPin } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 import WebcamDropdown from './webcam_dropdown';
 
@@ -148,7 +148,14 @@ export default function SourceSelect(props) {
         } else {
             updateMediaElement(null);
         }
-    }, [selectedSource, streamUrl, updateMediaElement, streamIP, streamPort, selectedWebcam]);
+    }, [
+        selectedSource,
+        streamUrl,
+        updateMediaElement,
+        streamIP,
+        streamPort,
+        selectedWebcam,
+    ]);
 
     return (
         <>

@@ -78,7 +78,7 @@ export default class Dashboard extends React.Component {
     };
 
     handleClick = (iconButton) => {
-        console.log(iconButton);
+        console.warn(`Do something with handleClick: ${iconButton}`);
     };
 
     render() {
