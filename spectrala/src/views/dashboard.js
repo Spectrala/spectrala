@@ -145,7 +145,7 @@ export default class Dashboard extends React.Component {
                             <WidgetsView/>
                         </div>
                     </Col>
-                    <Col xs={3} style={{ paddingTop: 11 }}>
+                    <Col xs={4} style={{ paddingTop: 11 }}>
                         <Walkthrough />
                     </Col>
                 </Row>

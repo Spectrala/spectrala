@@ -5,29 +5,22 @@ import CalibrationPointsControl from './calibration_points_control';
 import CalibrationLine from './calibration_line';
 import { cardStyle, cardHeaderStyle } from '../../theme/styles';
 
-export default function CalibrationSpectrumChart({ height }) {
+export default function CalibrationSpectrumChart({ height, showsChart, showsTool }) {
     function isCollapsed() {
         return false;
     }
 
     function getHeader() {
         return (
-            <Card.Header
-                as="h5"
-                style={cardHeaderStyle}
-            >
+            <Card.Header as="h5" style={cardHeaderStyle}>
                 Calibration
             </Card.Header>
         );
     }
 
-    return (
-        <Row
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-            }}
-        >
+    function getCalibChart() {
+        if (!showsChart) return null;
+        return (
             <Col
                 style={{ paddingBottom: '1vh' }}
                 xl={8}
@@ -45,6 +38,12 @@ export default function CalibrationSpectrumChart({ height }) {
                     )}
                 </Card>
             </Col>
+        );
+    }
+
+    function getCalibPointsTool() {
+        if (!showsTool) return null;
+        return (
             <Col
                 style={{ paddingBottom: '1vh' }}
                 xl={4}
@@ -58,10 +57,24 @@ export default function CalibrationSpectrumChart({ height }) {
                     isCollapsed={isCollapsed()}
                 />
             </Col>
+        );
+    }
+
+    return (
+        <Row
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+            }}
+        >
+            {getCalibChart()}
+            {getCalibPointsTool()}
         </Row>
     );
 }
 
 CalibrationSpectrumChart.propTypes = {
     height: PropTypes.number,
+    showsChart: PropTypes.bool,
+    showsTool: PropTypes.bool,
 };

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { walkthroughSteps } from '../views/walkthrough/markdown';
 
 export const widgets = {
     CAMERA: 'camera', // The live image view and the source select above it
@@ -11,6 +12,11 @@ export const widgets = {
     SPECTRA_TOOL: 'spectra-tool', // The helper menu for creating spectra
     DATA_EXPORT: 'data-export', // The currently non-existent widget for exporting data
 };
+
+
+const fillerText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean interdum, tellus sed imperdiet ullamcorper, nulla felis dapibus urna, eget egestas purus purus tincidunt nunc. Nunc vel egestas purus. Proin venenatis ullamcorper mi, nec laoreet risus aliquam vitae. Nam tincidunt sodales dignissim. Nunc augue quam, sodales a nunc at, vehicula facilisis mi. Phasellus cursus blandit risus in tincidunt. Vivamus vitae pulvinar nunc, in pharetra quam. Pellentesque ac justo sed tortor luctus rhoncus elementum sit amet augue. Curabitur semper maximus sapien sit amet tempor. Donec malesuada volutpat mi, ut porttitor risus euismod nec. Sed velit velit, luctus sit amet magna nec, bibendum placerat massa. Maecenas sit amet nibh eros. Nulla sit amet tellus non nisl finibus facilisis. Phasellus mollis elit in sapien tempus pharetra. Praesent condimentum ut tellus eu varius."
+
+
 
 /**
  * walkthroughConfig:
@@ -29,28 +35,28 @@ export const walkthroughConfig = [
 
     {
         title: 'Set camera source',
-        text: 'Lorem ipsum.',
+        text: walkthroughSteps.CAMERA_SOURCE,
         actionIndex: 0,
         shows: [widgets.CAMERA],
     },
 
     {
         title: 'Move reader line',
-        text: 'Lorem ipsum.',
+        text: walkthroughSteps.READER_LINE,
         actionIndex: 1,
         shows: [widgets.CAMERA, widgets.LINE, widgets.POINTS],
     },
 
     {
         title: 'Choose calibration type',
-        text: 'Lorem ipsum.',
+        text: walkthroughSteps.CALIBRATION_TYPE,
         actionIndex: 2,
         shows: [widgets.CAMERA, widgets.LINE, widgets.CALIB_PTS_CONFIG],
     },
 
     {
         title: 'Identify known peaks',
-        text: 'Lorem ipsum.',
+        text: walkthroughSteps.IDENTIFY_PEAKS,
         actionIndex: 3,
         shows: [
             widgets.CAMERA,
@@ -64,7 +70,7 @@ export const walkthroughConfig = [
 
     {
         title: 'Create a reference spectrum',
-        text: 'Lorem ipsum.',
+        text: walkthroughSteps.CREATE_REFERENCE,
         actionIndex: 4,
         shows: [
             widgets.CAMERA,
@@ -76,7 +82,7 @@ export const walkthroughConfig = [
 
     {
         title: 'Record test spectra',
-        text: 'Lorem ipsum.',
+        text: walkthroughSteps.RECORD_TEST,
         actionIndex: 5,
         shows: [
             widgets.CAMERA,
@@ -88,40 +94,40 @@ export const walkthroughConfig = [
 
     {
         title: 'Export data',
-        text: 'Lorem ipsum.',
+        text: walkthroughSteps.EXPORT,
         actionIndex: 6,
         shows: [widgets.DATA_EXPORT],
     },
 ];
 
 const lastActionIndex = () =>
-    Math.max(...walkthroughConfig.map((c) => c.actionIndex));
+    Math.max(...walkthroughConfig.map((c) => c.actionIndex).filter((x) => x));
 
 export const isLastActionIndex = (index) => index === lastActionIndex();
 
 export const walkthroughSlice = createSlice({
     name: 'walkthrough',
     initialState: {
-        currentActionItem: 3,
+        activeIndex: 0,
     },
     reducers: {
         gotoNextAction: (state) => {
-            if (isLastActionIndex(state.currentActionItem)) {
+            if (isLastActionIndex(state.activeIndex)) {
                 console.error(
                     'Cannot go to next action, this is last in sequence'
                 );
             } else {
-                state.currentActionItem += 1;
+                state.activeIndex += 1;
             }
         },
         rewindToAction: (state, action) => {
             const idx = action.payload.targetIndex;
-            if (idx < 0 || idx > state.currentActionItem) {
+            if (idx < 0 || idx > state.activeIndex) {
                 console.error(
-                    `Cannot jump to action ${idx}, currently on ${state.currentActionItem}`
+                    `Cannot jump to action ${idx}, currently on ${state.activeIndex}`
                 );
             } else {
-                state.currentActionItem = idx;
+                state.activeIndex = idx;
             }
         },
     },
@@ -129,14 +135,14 @@ export const walkthroughSlice = createSlice({
 
 export const { gotoNextAction, rewindToAction } = walkthroughSlice.actions;
 
-export const selectCurrentActionIndex = (state) =>
-    state.walkthrough.currentActionItem;
+export const selectActiveIndex = (state) =>
+    state.walkthrough.activeIndex;
 
 export const selectCanGotoNextAction = (state) =>
-    !isLastActionIndex(selectCurrentActionIndex(state));
+    !isLastActionIndex(selectActiveIndex(state));
 
 export const selectCurrentWalkthroughItem = (state) => {
-    const idx = selectCurrentActionIndex(state);
+    const idx = selectActiveIndex(state);
     return walkthroughConfig.find((w) => w.actionIndex === idx);
 } 
 

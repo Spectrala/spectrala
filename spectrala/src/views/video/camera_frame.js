@@ -42,7 +42,7 @@ const CameraFrame = ({ showsLine, showsPoints }) => {
                     <Alert.Link>Learn more</Alert.Link>.
                 </Alert>
             )}
-            <PointContainer expectedHeight={'500px'} showsLine={showsLine} showsPoints={showsPoints}>
+            <PointContainer expectedHeight={'450px'} showsLine={showsLine} showsPoints={showsPoints}>
                 <Camera
                     props={{
                         styles: {

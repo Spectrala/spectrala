@@ -10,22 +10,16 @@ import {
 
 const getCamera = (props) => {
     return (
-        <Video
-            showsLine={props.showsLine}
-            showsPoints={props.showsPoints}
-        />
+        <Video showsLine={props.showsLine} showsPoints={props.showsPoints} />
     );
 };
 
-const getCalibPointsTool = (widget) => {
+const getCalibrationTools = ({ widget, showsChart }) => {
     const canPlace = widget === widgets.CALIB_PTS_PLACE;
     const canConfig = widget === widgets.CALIB_PTS_CONFIG;
-    return null;
+    return CalibrationSpectrumChart({height: 350, showsChart, showsTool: true})
 };
 
-const getCalibChart = () => {
-    return <CalibrationSpectrumChart height={350} />;
-};
 
 const getSpectraTool = () => {
     return null;
@@ -54,15 +48,22 @@ const GetWidget = (currentWidget, allWidgets) => {
         });
     }
 
-    // Calibration points tool
+    /**
+     * There will not be the chart without the tools, so only return something here
+     * when tools are chosen
+     **/
     if (
         currentWidget === widgets.CALIB_PTS_CONFIG ||
         currentWidget === widgets.CALIB_PTS_PLACE
     )
-        return getCalibPointsTool(currentWidget);
+        return getCalibrationTools({
+            widget: currentWidget,
+            showsChart: allWidgets.includes(widgets.CALIB_CHART),
+        });
+    if (currentWidget === widgets.CALIB_CHART) return null;
 
-    // Calibration spectrum chart, spectra tool, spectrum chart, data export
-    if (currentWidget === widgets.CALIB_CHART) return getCalibChart();
+
+
     if (currentWidget === widgets.SPECTRA_TOOL) return getSpectraTool();
     if (currentWidget === widgets.SPECTRUM_CHART) return getSpectrumChart();
     if (currentWidget === widgets.DATA_EXPORT) return getDataExport();
@@ -73,7 +74,6 @@ export const WidgetsView = () => {
     const displayWidgets = walkthroughItem.shows;
     return (
         <>
-        
             {displayWidgets.map((widget, idx) => (
                 <div key={idx}>{GetWidget(widget, displayWidgets)}</div>
             ))}

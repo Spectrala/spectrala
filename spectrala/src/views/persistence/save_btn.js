@@ -16,11 +16,11 @@ export default function SaveButton() {
 
     return (
         <Button
-            variant="primary"
-            style={{ marginLeft: '0.5em', marginRight: '0.5em' }}
+            variant="link"
+            style={{ marginLeft: '0.5em' }}
             onClick={saveAction}
         >
-            Save Calibration
+            Save
         </Button>
     );
 }

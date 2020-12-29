@@ -1,0 +1,1 @@
+Begin by setting up a visual of the spectrum. 

@@ -1,10 +1,40 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-import { selectCurrentActionIndex } from '../../reducers/walkthrough';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+    selectActiveIndex,
+    gotoNextAction,
+    rewindToAction,
+} from '../../reducers/walkthrough';
+import Markdown from './markdown';
+
+const ActionButton = (actionIndex, activeIndex) => {
+    const dispatch = useDispatch();
+    const style = { padding: '0px' };
+
+    if (actionIndex < activeIndex)
+        return (
+            <label
+                style={style}
+                onClick={() =>
+                    dispatch(rewindToAction({ targetIndex: actionIndex }))
+                }
+            >
+                Redo
+            </label>
+        );
+    if (actionIndex === activeIndex)
+        return (
+            <label style={style} onClick={() => dispatch(gotoNextAction())}>
+                Done
+            </label>
+        );
+};
+
+const markdown = 'The quadratic formula is $int_0^{\infty} x^2 dx$';
 
 // TODO: Implement markdown capability rather than plain text https://github.com/remarkjs/react-markdown
-const ExpandedWalkthroughCard = ({ title, text }) => {
+const ExpandedWalkthroughCard = ({ title, text, actionIndex, activeIndex }) => {
     return (
         <Card.Body>
             <div
@@ -17,21 +47,16 @@ const ExpandedWalkthroughCard = ({ title, text }) => {
                 }}
             >
                 <Card.Subtitle>{title}</Card.Subtitle>
-                <label
-                    variant="link"
-                    disabled={false}
-                    style={{ padding: '0px' }}
-                    onClick={() => console.log('Pressed the card link')}
-                >
-                    Done
-                </label>
+                {ActionButton(actionIndex, activeIndex)}
             </div>
-            <Card.Text>{text}</Card.Text>
+            {
+                <Markdown step={text}/>
+            }
         </Card.Body>
     );
 };
 
-const CollapsedWalkthroughCard = ({ title }) => {
+const CollapsedWalkthroughCard = ({ title, actionIndex, activeIndex }) => {
     return (
         <Card.Body>
             <div
@@ -40,19 +65,12 @@ const CollapsedWalkthroughCard = ({ title }) => {
                     justifyContent: 'space-between',
                     width: '100%',
                     alignItems: 'center',
-                    height: '40px',
+                    height: '20px',
+                    paddingTop: '4px',
                 }}
             >
-                <Card.Subtitle style={{ fontWeight: 'black' }}>
-                    {title}
-                </Card.Subtitle>
-                <label
-                    variant="link"
-                    disabled={false}
-                    onClick={() => console.log('Pressed the card link')}
-                >
-                    Done
-                </label>
+                <Card.Subtitle>{title}</Card.Subtitle>
+                {ActionButton(actionIndex, activeIndex)}
             </div>
         </Card.Body>
     );
@@ -60,17 +78,23 @@ const CollapsedWalkthroughCard = ({ title }) => {
 
 const WalkthroughHeading = ({ title }) => {
     return (
-        <Card.Title style={{ paddingTop: '16px', paddingBottom: '16px' }}>
+        <Card.Title style={{ paddingTop: '10px', paddingBottom: '10px' }}>
             {title}
         </Card.Title>
     );
 };
 
-const WalkthroughCard = ({ title, text, expanded }) => {
+const WalkthroughCard = ({
+    title,
+    text,
+    expanded,
+    actionIndex,
+    activeIndex,
+}) => {
     function getBody() {
         return expanded
-            ? ExpandedWalkthroughCard({ title, text })
-            : CollapsedWalkthroughCard({ title });
+            ? ExpandedWalkthroughCard({ title, text, actionIndex, activeIndex })
+            : CollapsedWalkthroughCard({ title, actionIndex, activeIndex });
     }
 
     return (
@@ -88,13 +112,15 @@ const WalkthroughCard = ({ title, text, expanded }) => {
 };
 
 export const WalkthroughItem = ({ title, text, actionIndex, isHeading }) => {
-    let activeIndex = useSelector(selectCurrentActionIndex);
+    let activeIndex = useSelector(selectActiveIndex);
 
     if (!!isHeading) return WalkthroughHeading({ title });
     return WalkthroughCard({
         title,
         text,
         expanded: activeIndex === actionIndex,
+        actionIndex,
+        activeIndex,
     });
 };
 

@@ -1,0 +1,1 @@
+Move the red dot to the lower energy side of the spectrum and the blue dot to the higher energy side of the spectrum. Make sure you use a spectrum that has distinct lines rather than a blob of color. You may have to adjust the size of the slit or the distance between the slit and the camera. 

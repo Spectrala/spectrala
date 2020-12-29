@@ -1,0 +1,1 @@
+Use the "Place" button to the left of each of the points you configured in the *Choose Calibration Type* step and click on the corresponding point on the graph. 

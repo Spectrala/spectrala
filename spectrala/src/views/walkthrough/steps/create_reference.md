@@ -1,0 +1,1 @@
+Place a cuvette with only water in it into the spectrometer and select ***Capture***. 

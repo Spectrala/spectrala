@@ -32,11 +32,11 @@ export default function LoadButton() {
 
     return (
         <Button
-            variant="outline-primary"
-            style={{ marginLeft: '0.5em', marginRight: '0.5em' }}
+            variant="link"
+            style={{ }}
             onClick={loadAction}
         >
-            Load Calibration
+            Restore
         </Button>
     );
 }
