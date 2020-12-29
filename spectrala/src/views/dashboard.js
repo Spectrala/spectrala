@@ -129,7 +129,7 @@ export default class Dashboard extends React.Component {
                     }}
                 >
                     <Col
-                        xl={8}
+                        xs={8}
                         style={{
                             justifyContent: 'center',
                             paddingLeft: 0,

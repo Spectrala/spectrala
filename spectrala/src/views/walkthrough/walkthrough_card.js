@@ -109,7 +109,7 @@ const WalkthroughCard = ({
 export const WalkthroughItem = ({ title, text, actionIndex, isHeading }) => {
     let activeIndex = useSelector(selectActiveIndex);
 
-    if (!!isHeading) return WalkthroughHeading({ title });
+    if (isHeading) return WalkthroughHeading({ title });
     return WalkthroughCard({
         title,
         text,

@@ -5,11 +5,13 @@ import CalibrationPointsControl from './calibration_points_control';
 import CalibrationLine from './calibration_line';
 import { cardStyle, cardHeaderStyle } from '../../theme/styles';
 
-export default function CalibrationSpectrumChart({ height, showsChart, showsTool, canPlace, canConfig }) {
-    function isCollapsed() {
-        return false;
-    }
-
+export default function CalibrationSpectrumChart({
+    height,
+    showsChart,
+    showsTool,
+    canPlace,
+    canConfig,
+}) {
     function getHeader() {
         return (
             <Card.Header as="h5" style={cardHeaderStyle}>
@@ -19,29 +21,28 @@ export default function CalibrationSpectrumChart({ height, showsChart, showsTool
     }
 
     function getCalibChart() {
-        if (!showsChart) return null;
-        return (
-            <Col
-                style={{ paddingBottom: '1vh' }}
-                xl={8}
-                lg={8}
-                md={6}
-                sm={12}
-                xs={12}
-            >
-                <Card style={cardStyle}>
-                    {getHeader()}
-                    {isCollapsed() ? null : (
+        if (showsChart)
+            return (
+                <Col
+                    style={{ paddingBottom: '1vh' }}
+                    xl={8}
+                    lg={8}
+                    md={6}
+                    sm={12}
+                    xs={12}
+                >
+                    <Card style={cardStyle}>
+                        {getHeader()}
                         <div style={{ height: height }}>
                             <CalibrationLine />
                         </div>
-                    )}
-                </Card>
-            </Col>
-        );
+                    </Card>
+                </Col>
+            );
     }
 
     function getCalibPointsTool() {
+        console.log(showsTool);
         if (!showsTool) return null;
         return (
             <Col
@@ -54,7 +55,6 @@ export default function CalibrationSpectrumChart({ height, showsChart, showsTool
             >
                 <CalibrationPointsControl
                     height={height}
-                    isCollapsed={isCollapsed()}
                     canPlace={canPlace}
                     canConfig={canConfig}
                 />

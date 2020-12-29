@@ -117,7 +117,7 @@ export default function CalibrationPointsControl({
                 </Button>
             );
         },
-        [dispatch]
+        [dispatch, canPlace]
     );
 
     const getEditButton = useCallback(

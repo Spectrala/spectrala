@@ -99,7 +99,7 @@ export default function SpectrumChart({
                 sm={12}
                 xs={12}
             >
-                <SpectrumTools height={height} isCollapsed={isCollapsed()} />
+                <SpectrumTools height={height} />
             </Col>
         </Row>
     );

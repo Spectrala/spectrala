@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import Video from '../video/video';
 import CalibrationSpectrumChart from '../chart/calibration/calibration_interface';
 import SpectrumChart from '../chart/spectrum/spectrum_interface';
+import Export from '../export/export';
 import {
     widgets,
     selectCurrentWalkthroughItem,
@@ -14,19 +15,12 @@ const getCamera = (props) => {
     );
 };
 
-const getCalibrationTools = ({ widget, showsChart }) => {
-    const canPlace = widget === widgets.CALIB_PTS_PLACE;
-    const canConfig = widget === widgets.CALIB_PTS_CONFIG;
-    return CalibrationSpectrumChart({height: 350, showsChart, showsTool: true, canPlace, canConfig})
-};
-
-
 const getSpectrumChart = () => {
     return <SpectrumChart height={350} />;
 };
 
 const getDataExport = () => {
-    return <label>This is the data export you've all been waiting for</label>;
+    return <Export height={500}/>;
 };
 
 const GetWidget = (currentWidget, allWidgets) => {
@@ -48,6 +42,8 @@ const GetWidget = (currentWidget, allWidgets) => {
      * There will not be the chart without the tools, so only return something here
      * when tools are chosen
      **/
+
+     console.log(allWidgets)
     if (
         currentWidget === widgets.CALIB_PTS_CONFIG ||
         currentWidget === widgets.CALIB_PTS_PLACE
@@ -55,6 +51,7 @@ const GetWidget = (currentWidget, allWidgets) => {
         return CalibrationSpectrumChart({
             height: 350,
             showsChart: allWidgets.includes(widgets.CALIB_CHART),
+            showsTool: true,
             canPlace: currentWidget === widgets.CALIB_PTS_PLACE,
             canConfig: currentWidget === widgets.CALIB_PTS_CONFIG
 
