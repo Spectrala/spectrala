@@ -37,10 +37,13 @@ export const walkthroughSteps = {
     EXPORT: export_data,
 };
 
-// Allows the math plugin to work 
+// Allows the math plugin to work
 const renderers = {
     inlineMath: ({ value }) => <Tex math={value} />,
     math: ({ value }) => <Tex block math={value} />,
+    image: ({ alt, src }) => {
+        return <img alt={alt} src={src} style={{ width: '100%' }} />;
+    },
 };
 
 class Markdown extends React.Component {
