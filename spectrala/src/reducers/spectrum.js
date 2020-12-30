@@ -117,48 +117,6 @@ export const spectrumSlice = createSlice({
             const recorded = action.payload.value;
             state.recorded_spectra = recorded;
         },
-        downloadSpectrum: (state, action) => {
-            // TODO: this doesn't mutate state. Does it belong in a reducer?
-            const idx = action.payload.targetIndex;
-            const this_spectra = state.recorded_spectra[idx];
-            const reference_spectrum = state.recorded_spectra.find(
-                (s) => s.isReference
-            );
-            const wavelength = ['wavelength_nm'].concat(
-                this_spectra.data.map((pt) => pt.x)
-            );
-            const intensity = ['intensity_pct'].concat(
-                this_spectra.data.map((pt) => pt.y)
-            );
-            let csv_columns = [wavelength, intensity];
-            // TODO: Only include transmittance/absorbance for spectra that aren't the reference spectrum.
-            if (reference_spectrum) {
-                // TODO: computeAbsorbence/transmittance use nearest-neighbor;
-                // if calibration is way different, this will be way off. We should warn the user.
-                csv_columns.push(
-                    ['transmittance_pct'].concat(
-                        computeTransmittance(
-                            this_spectra.data,
-                            reference_spectrum.data
-                        ).map((pt) => pt.y)
-                    )
-                );
-                csv_columns.push(
-                    ['absorbance'].concat(
-                        computeAbsorbance(
-                            this_spectra.data,
-                            reference_spectrum.data
-                        ).map((pt) => pt.y)
-                    )
-                );
-            }
-
-            downloadToFile(
-                arrayOfColumnsToCSV(csv_columns),
-                this_spectra.name + '.csv',
-                'text/csv'
-            );
-        },
         setPreferredSpectrum: (state, action) => {
             state.preferredSpectrum = action.payload.preferredSpectrum;
         },
@@ -171,7 +129,6 @@ export const {
     renameSpectrum,
     removeReference,
     setReference,
-    downloadSpectrum,
     setPreferredSpectrum,
     setRecordedSpectra,
 } = spectrumSlice.actions;

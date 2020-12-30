@@ -20,7 +20,7 @@ const getSpectrumChart = () => {
 };
 
 const getDataExport = () => {
-    return <Export height={500}/>;
+    return <Export />;
 };
 
 const GetWidget = (currentWidget, allWidgets) => {
@@ -52,11 +52,9 @@ const GetWidget = (currentWidget, allWidgets) => {
             showsChart: allWidgets.includes(widgets.CALIB_CHART),
             showsTool: true,
             canPlace: currentWidget === widgets.CALIB_PTS_PLACE,
-            canConfig: currentWidget === widgets.CALIB_PTS_CONFIG
-
+            canConfig: currentWidget === widgets.CALIB_PTS_CONFIG,
         });
     if (currentWidget === widgets.CALIB_CHART) return null;
-
 
     if (currentWidget === widgets.SPECTRA) return getSpectrumChart();
     if (currentWidget === widgets.DATA_EXPORT) return getDataExport();

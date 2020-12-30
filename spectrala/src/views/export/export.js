@@ -1,16 +1,32 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Col, Card, Row, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { cardStyle, cardHeaderStyle } from '../theme/styles';
+import { selectRecordedSpectra } from '../../reducers/spectrum';
+import ExportCell from './export_cell';
+import { downloadAllSpectra } from '../../util/download';
 
-export default function DataExport({ height }) {
+export default function DataExport() {
+    const recordedSpectra = useSelector(selectRecordedSpectra);
+
     function getHeader() {
         return (
             <Card.Header as="h5" style={cardHeaderStyle}>
                 Export
-                <Button variant="outline-dark">Export all as CSV</Button>
+                <Button
+                    variant="outline-dark"
+                    onClick={() => downloadAllSpectra(recordedSpectra)}
+                >
+                    Download all as CSV
+                </Button>
             </Card.Header>
+        );
+    }
+
+    function getCells() {
+        return recordedSpectra.map((spectrum, idx) =>
+            ExportCell({ key: idx, name: spectrum.name })
         );
     }
 
@@ -19,7 +35,7 @@ export default function DataExport({ height }) {
             <Col style={{ paddingBottom: '1vh' }} lg={8} md={6} xs={12}>
                 <Card style={cardStyle}>
                     {getHeader()}
-                    <div style={{ height: height }}>Hello, world</div>
+                    {getCells()}
                 </Card>
             </Col>
         );
@@ -36,7 +52,3 @@ export default function DataExport({ height }) {
         </Row>
     );
 }
-
-DataExport.propTypes = {
-    height: PropTypes.number,
-};

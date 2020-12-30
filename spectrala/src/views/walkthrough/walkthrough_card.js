@@ -3,27 +3,28 @@ import { Card } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     selectActiveIndex,
+    lastActionIndex,
     gotoNextAction,
     rewindToAction,
 } from '../../reducers/walkthrough';
 import Markdown from './markdown';
 
-const ActionButton = (actionIndex, activeIndex) => {
+const ActionButton = (cardIndex, activeIndex, lastIndex) => {
     const dispatch = useDispatch();
     const style = { padding: '0px' };
 
-    if (actionIndex < activeIndex)
+    if (cardIndex < activeIndex)
         return (
             <label
                 style={style}
                 onClick={() =>
-                    dispatch(rewindToAction({ targetIndex: actionIndex }))
+                    dispatch(rewindToAction({ targetIndex: cardIndex }))
                 }
             >
                 Redo
             </label>
         );
-    if (actionIndex === activeIndex)
+    if (cardIndex === activeIndex && cardIndex < lastIndex)
         return (
             <label style={style} onClick={() => dispatch(gotoNextAction())}>
                 Done
@@ -31,7 +32,7 @@ const ActionButton = (actionIndex, activeIndex) => {
         );
 };
 
-const ExpandedWalkthroughCard = ({ title, text, actionIndex, activeIndex }) => {
+const ExpandedWalkthroughCard = ({ title, text, actionIndex, activeIndex, lastIndex }) => {
     return (
         <Card.Body>
             <div
@@ -44,14 +45,14 @@ const ExpandedWalkthroughCard = ({ title, text, actionIndex, activeIndex }) => {
                 }}
             >
                 <Card.Subtitle>{title}</Card.Subtitle>
-                {ActionButton(actionIndex, activeIndex)}
+                {ActionButton(actionIndex, activeIndex, lastIndex)}
             </div>
             {<Markdown step={text} />}
         </Card.Body>
     );
 };
 
-const CollapsedWalkthroughCard = ({ title, actionIndex, activeIndex }) => {
+const CollapsedWalkthroughCard = ({ title, actionIndex, activeIndex, lastIndex }) => {
     return (
         <Card.Body>
             <div
@@ -65,7 +66,7 @@ const CollapsedWalkthroughCard = ({ title, actionIndex, activeIndex }) => {
                 }}
             >
                 <Card.Subtitle>{title}</Card.Subtitle>
-                {ActionButton(actionIndex, activeIndex)}
+                {ActionButton(actionIndex, activeIndex, lastIndex)}
             </div>
         </Card.Body>
     );
@@ -85,11 +86,12 @@ const WalkthroughCard = ({
     expanded,
     actionIndex,
     activeIndex,
+    lastIndex,
 }) => {
     function getBody() {
         return expanded
-            ? ExpandedWalkthroughCard({ title, text, actionIndex, activeIndex })
-            : CollapsedWalkthroughCard({ title, actionIndex, activeIndex });
+            ? ExpandedWalkthroughCard({ title, text, actionIndex, activeIndex, lastIndex })
+            : CollapsedWalkthroughCard({ title, actionIndex, activeIndex, lastIndex });
     }
 
     return (
@@ -108,6 +110,7 @@ const WalkthroughCard = ({
 
 export const WalkthroughItem = ({ title, text, actionIndex, isHeading }) => {
     let activeIndex = useSelector(selectActiveIndex);
+    let lastIndex = lastActionIndex();
 
     if (isHeading) return WalkthroughHeading({ title });
     return WalkthroughCard({
@@ -116,6 +119,7 @@ export const WalkthroughItem = ({ title, text, actionIndex, isHeading }) => {
         expanded: activeIndex === actionIndex,
         actionIndex,
         activeIndex,
+        lastIndex,
     });
 };
 

@@ -84,7 +84,7 @@ export const walkthroughConfig = [
     },
 ];
 
-const lastActionIndex = () =>
+export const lastActionIndex = () =>
     Math.max(...walkthroughConfig.map((c) => c.actionIndex).filter((x) => x));
 
 export const isLastActionIndex = (index) => index === lastActionIndex();
@@ -120,6 +120,7 @@ export const walkthroughSlice = createSlice({
 export const { gotoNextAction, rewindToAction } = walkthroughSlice.actions;
 
 export const selectActiveIndex = (state) => state.walkthrough.activeIndex;
+
 
 export const selectCanGotoNextAction = (state) =>
     !isLastActionIndex(selectActiveIndex(state));

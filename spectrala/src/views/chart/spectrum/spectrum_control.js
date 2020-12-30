@@ -9,7 +9,6 @@ import {
     removeSpectrum,
     removeReference,
     setReference,
-    downloadSpectrum,
     setRecordedSpectra,
 } from '../../../reducers/spectrum';
 
@@ -17,7 +16,7 @@ import { ItemTypes } from '../../draggable/item_types';
 import { EditableCell } from './editable_cell';
 import DraggableTable from '../../draggable/draggable_table';
 import { dropdown } from '../../theme/styles';
-
+import { downloadSpectrum } from '../../../util/download';
 
 export default function SpectrumControl({ height }) {
     const dispatch = useDispatch();
@@ -49,7 +48,7 @@ export default function SpectrumControl({ height }) {
                     <Dropdown.Item
                         key={'download'}
                         onClick={() => {
-                            dispatch(downloadSpectrum({ targetIndex: idx }));
+                            downloadSpectrum(recordedSpectra, idx);
                         }}
                     >
                         Download as CSV
@@ -71,7 +70,7 @@ export default function SpectrumControl({ height }) {
                 </DropdownButton>
             );
         },
-        [dispatch]
+        [dispatch, recordedSpectra]
     );
 
     const prepend = useCallback((spectrum) => {
