@@ -1,13 +1,41 @@
-Begin by setting up a visual of the spectrum. 
+Establish a visual of the spectrum inside the spectrometer.
+<details><summary>Stream from an iPhone or Android using the app DroidCam</summary>
+<p>
+<ol type="1">
+  <li>Install DroidCam on your device (<a href="https://apps.apple.com/us/app/droidcam/id1510258102" target="_blank">iOS</a>) (<a href="https://play.google.com/store/apps/details?id=com.dev47apps.droidcam&hl=en_US&gl=US" target="_blank">Android</a>).</li>
+  <li>In the source selection menu on the left side of the screen, select the leftmost icon that looks like a smartphone.</li>
+  <li>Ensure your smartphone and computer are connected to the same local network (Both are using Wi-Fi with the same name).</li>
+  <li>Input the IP and Port displayed on the screen in the DroidCam app into Spectrala under the source select buttons.</li>
+</ol>
+</p>
+</details>
 
-![SPEC](https://i.postimg.cc/g2m6ZHK1/continuous.jpg)
+<details><summary>Any other stream on your local network</summary>
+<p>
+<ol type="1">
+  <li>In the source selection menu on the left side of the screen, select the icon second to the left that looks like a broadcast pin.</li>
+  <li>Ensure your camera stream and computer are connected to the same local network.</li>
+  <li>Input the stream URL into Spectrala under the source select buttons.</li>
+</ol>
+</p>
+</details>
 
 
-<a href="https://postimg.cc/fJqL4Xpv" target="_blank"><img src="https://i.postimg.cc/fJqL4Xpv/continuous.jpg" alt="continuous"/></a><br/><br/>
-<a href="https://postimg.cc/bZGvqrjf" target="_blank"><img src="https://i.postimg.cc/bZGvqrjf/correct.jpg" alt="correct"/></a><br/><br/>
-<a href="https://postimg.cc/NymfrnMN" target="_blank"><img src="https://i.postimg.cc/NymfrnMN/glare.jpg" alt="glare"/></a><br/><br/>
-<a href="https://postimg.cc/LYS4kVgm" target="_blank"><img src="https://i.postimg.cc/LYS4kVgm/oversaturated.jpg" alt="oversaturated"/></a><br/><br/>
-<a href="https://postimg.cc/PCB5JHtp" target="_blank"><img src="https://i.postimg.cc/PCB5JHtp/undersaturated.jpg" alt="undersaturated"/></a><br/><br/>
+<details><summary>Stream from a webcam</summary>
+<p>
+<ol type="1">
+  <li>In the source selection menu on the left side of the screen, select the icon second to the right that looks like a video camera.</li>
+  <li>Choose the desired webcam from the dropdown menu.</li>
+</ol>
+</p>
+</details>
 
-
-
+<details><summary>Upload previously captured images</summary>
+<p>
+<ol type="1">
+  <li>In the source selection menu on the left side of the screen, select the rightmost icon that looks like a piece of paper.</li>
+  <li>Select an image to upload from your computer.</li>
+</ol>
+Note that you'll be able to repeat this process to upload additional images going forward. 
+</p>
+</details>

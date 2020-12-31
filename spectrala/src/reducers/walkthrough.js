@@ -25,7 +25,7 @@ export const widgets = {
  *      shows: (string[]) the widgets to render. See the constant 'widgets' for description
  */
 export const walkthroughConfig = [
-    { title: 'Calibrate Spectrometer', isHeading: true },
+    { title: 'Set Camera Source', isHeading: true },
 
     {
         title: 'Set camera source',
@@ -35,23 +35,32 @@ export const walkthroughConfig = [
     },
 
     {
-        title: 'Move reader line',
-        text: walkthroughSteps.READER_LINE,
+        title: 'Optimize the spectrum',
+        text: walkthroughSteps.GOOD_SPECTRUM,
         actionIndex: 1,
-        shows: [widgets.CAMERA, widgets.LINE, widgets.POINTS],
+        shows: [widgets.CAMERA],
     },
 
     {
+        title: 'Move reader line',
+        text: walkthroughSteps.READER_LINE,
+        actionIndex: 2,
+        shows: [widgets.CAMERA, widgets.LINE, widgets.POINTS],
+    },
+
+
+    { title: 'Calibrate Spectrometer', isHeading: true },
+    {
         title: 'Choose calibration type',
         text: walkthroughSteps.CALIBRATION_TYPE,
-        actionIndex: 2,
+        actionIndex: 3,
         shows: [widgets.CAMERA, widgets.LINE, widgets.CALIB_PTS_CONFIG],
     },
 
     {
         title: 'Identify known peaks',
         text: walkthroughSteps.IDENTIFY_PEAKS,
-        actionIndex: 3,
+        actionIndex: 4,
         shows: [
             widgets.CAMERA,
             widgets.LINE,
@@ -65,21 +74,21 @@ export const walkthroughConfig = [
     {
         title: 'Create a reference spectrum',
         text: walkthroughSteps.CREATE_REFERENCE,
-        actionIndex: 4,
+        actionIndex: 5,
         shows: [widgets.CAMERA, widgets.LINE, widgets.SPECTRA],
     },
 
     {
         title: 'Record test spectra',
         text: walkthroughSteps.RECORD_TEST,
-        actionIndex: 5,
+        actionIndex: 6,
         shows: [widgets.CAMERA, widgets.LINE, widgets.SPECTRA],
     },
 
     {
         title: 'Export data',
         text: walkthroughSteps.EXPORT,
-        actionIndex: 6,
+        actionIndex: 7,
         shows: [widgets.DATA_EXPORT],
     },
 ];
