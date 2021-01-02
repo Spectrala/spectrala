@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Col, Card, Row, Button } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import { cardStyle, cardHeaderStyle } from '../theme/styles';
 import { selectRecordedSpectra } from '../../reducers/spectrum';
 import ExportCell from './export_cell';

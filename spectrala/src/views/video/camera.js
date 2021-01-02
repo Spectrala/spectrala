@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLineCoords, updateFeed } from '../../reducers/video';
@@ -117,13 +117,13 @@ export default function CameraView({ props }) {
     const dispatch = useDispatch();
 
     // TODO: detect saturated channels in the SetInterval call
-    const canvas = useRef(null);
-    const { styles, videoSrc, inSaveMode } = props;
+    // const canvas = useRef(null);
+    const { styles, videoSrc, inSaveMode, videoRef } = props;
 
     useEffect(() => {
         let frameCounter = 0;
         const videoInterval = setInterval(() => {
-            const canvasElem = canvas.current;
+            const canvasElem = videoRef.current;
             if (!canvasElem) return;
             const ctx = canvasElem.getContext('2d');
             if (
@@ -218,9 +218,9 @@ export default function CameraView({ props }) {
         }, FRAME_RENDER_INTERVAL_MS);
 
         return () => clearInterval(videoInterval);
-    }, [canvas, videoSrc, calibCoords, dispatch, inSaveMode]);
+    }, [videoRef, videoSrc, calibCoords, dispatch, inSaveMode]);
 
-    return <canvas ref={canvas} style={styles} />;
+    return <canvas id="canvasasdf" ref={videoRef} style={styles} />;
 }
 
 CameraView.propTypes = {

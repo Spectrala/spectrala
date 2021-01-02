@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     setSelectedSource,
@@ -10,14 +10,13 @@ import {
     FormControl,
     ButtonGroup,
     Row,
-    Popover,
-    Overlay,
     Col,
 } from 'react-bootstrap';
 import { CameraFill } from 'react-bootstrap-icons';
 import { FileEarmarkArrowUp, Phone, BroadcastPin } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 import WebcamDropdown from './webcam_dropdown';
+import { downloadImage } from '../../util/persistence';
 
 export const SourceEnum = {
     STREAM: 'SOURCE_STREAM',
@@ -35,6 +34,7 @@ export const SourceEnum = {
 export default function SourceSelect(props) {
     const selectedSource = useSelector(selectSource);
     const selectedWebcam = useSelector(selectWebcam);
+    const saveOverlayTarget = useRef(null);
 
     const dispatch = useDispatch();
 
@@ -51,14 +51,7 @@ export default function SourceSelect(props) {
     const [streamPort, setStreamPort] = useState('');
     // const [mediaElement, setMediaElement] = useState(null);
 
-    const {
-        selectedVariant,
-        unselectedVariant,
-        onChange,
-        inSaveMode,
-        setInSaveMode,
-        saveOverlayTarget,
-    } = props;
+    const { selectedVariant, unselectedVariant, onChange, videoRef } = props;
 
     const getBtnVariant = (isActive) =>
         isActive ? selectedVariant : unselectedVariant;
@@ -157,6 +150,43 @@ export default function SourceSelect(props) {
         selectedWebcam,
     ]);
 
+    // Button that looks like a camera for downloading the image on screen
+    const snapshotButton = (
+        <Button
+            variant="outline-dark"
+            style={{ alignItems: 'center' }}
+            onClick={() => downloadImage(videoRef, 'spectrala_snapshot.png')}
+            ref={saveOverlayTarget}
+            title="Take Snapshot"
+            aria-label="Take Snapshot"
+        >
+            <CameraFill />
+        </Button>
+    );
+
+    // Forms for inputting source stream, ip
+    const createFormControl = ({ placeholder, value, changeValue }) => {
+        return (
+            <FormControl
+                type="text"
+                placeholder={placeholder}
+                value={value}
+                onChange={(e) => changeValue(e.target.value)}
+                onKeyDown={(e) => {
+                    if (e.keyCode === 13) e.preventDefault();
+                }}
+            />
+        );
+    };
+
+    // Styling for rows to contain forms from createFormControl
+    const secondaryRowStyle = {
+        width: '100%',
+        paddingTop: 10,
+        marginLeft: 0,
+        marginRight: 0,
+    };
+
     return (
         <>
             <div>Source</div>
@@ -203,84 +233,36 @@ export default function SourceSelect(props) {
                         <FileEarmarkArrowUp />
                     </Button>
                 </ButtonGroup>
-                <Button
-                    variant="outline-dark"
-                    style={{ alignItems: 'center' }}
-                    onClick={() => setInSaveMode(!inSaveMode)}
-                    ref={saveOverlayTarget}
-                    title="Snapshot Mode"
-                    aria-label="Snapshot Mode"
-                >
-                    <CameraFill />
-                </Button>
-                <Overlay
-                    show={inSaveMode}
-                    target={saveOverlayTarget.current}
-                    placement="left-start"
-                >
-                    <Popover id="snapshot-popover">
-                        <Popover.Title>Snapshot Mode</Popover.Title>
-                        <Popover.Content>
-                            Right-click the preview and select "Save image
-                            as..." Click again when you are done to re-enable
-                            the overlay.
-                        </Popover.Content>
-                    </Popover>
-                </Overlay>
+                {snapshotButton}
             </div>
 
             {selectedSource === SourceEnum.STREAM && (
-                <Row
-                    style={{
-                        width: '100%',
-                        paddingTop: 10,
-                        marginLeft: 0,
-                        marginRight: 0,
-                    }}
-                >
-                    <FormControl
-                        style={{ width: '100%' }}
-                        type="text"
-                        placeholder="Stream URL (e.g. http://192.0.2.1:8000/stream.mp4)"
-                        value={streamUrl}
-                        onChange={(e) => setStreamUrl(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.keyCode === 13) e.preventDefault();
-                        }}
-                    />
+                <Row style={secondaryRowStyle}>
+                    {createFormControl({
+                        placeholder:
+                            'Stream URL (e.g. http://192.0.2.1:8000/stream.mp4)',
+                        value: streamUrl,
+                        changeValue: setStreamUrl,
+                    })}
                 </Row>
             )}
 
+            
             {selectedSource === SourceEnum.MOBILE_STREAM && (
-                <Row
-                    style={{
-                        width: '100%',
-                        paddingTop: 10,
-                        marginLeft: 0,
-                        marginRight: 0,
-                    }}
-                >
+                <Row style={secondaryRowStyle}>
                     <Col style={{ paddingLeft: 0 }}>
-                        <FormControl
-                            type="text"
-                            placeholder="IP (e.g. 192.146.4.184)"
-                            value={streamIP}
-                            onChange={(e) => setStreamIP(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.keyCode === 13) e.preventDefault();
-                            }}
-                        />
+                        {createFormControl({
+                            placeholder: 'IP (e.g. 192.146.4.184)',
+                            value: streamIP,
+                            changeValue: setStreamIP,
+                        })}
                     </Col>
                     <Col style={{ paddingRight: 0, paddingLeft: 0 }}>
-                        <FormControl
-                            type="text"
-                            placeholder="Port (e.g. 4747)"
-                            value={streamPort}
-                            onChange={(e) => setStreamPort(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.keyCode === 13) e.preventDefault();
-                            }}
-                        />
+                        {createFormControl({
+                            placeholder: 'Port (e.g. 4747)',
+                            value: streamPort,
+                            changeValue: setStreamPort,
+                        })}
                     </Col>
                 </Row>
             )}

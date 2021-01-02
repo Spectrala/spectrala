@@ -25,7 +25,7 @@ export const widgets = {
  *      shows: (string[]) the widgets to render. See the constant 'widgets' for description
  */
 export const walkthroughConfig = [
-    { title: 'Set Camera Source', isHeading: true },
+    { title: 'Set Camera', isHeading: true },
 
     {
         title: 'Set camera source',
@@ -101,7 +101,7 @@ export const isLastActionIndex = (index) => index === lastActionIndex();
 export const walkthroughSlice = createSlice({
     name: 'walkthrough',
     initialState: {
-        activeIndex: 0,
+        activeIndex: 5,
     },
     reducers: {
         gotoNextAction: (state) => {

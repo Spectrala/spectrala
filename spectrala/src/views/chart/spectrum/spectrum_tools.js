@@ -12,29 +12,38 @@ import {
 import SpectrumControl from './spectrum_control';
 import { cardStyle, cardHeaderStyle } from '../../theme/styles';
 
+
 export default function SpectrumTools({ height, isCollapsed }) {
     const dispatch = useDispatch();
     const spectra = useSelector(selectRecordedSpectra);
     const intensities = useSelector(selectIntensity);
     const valid = useSelector(selectValidateCalibrationPoints);
-
     function getSpectraNames() {
         if (!spectra) return <label>No saved spectra.</label>;
         return SpectrumControl(height);
     }
 
+    /**
+     * Button to allow the user to record a spectrum.
+     * Will be embedded in an overlay so something pops
+     * on the screen when the button is clicked.
+     */
+    const capture = (
+        <Button
+            disabled={false && !valid.isValid()} // Change it back
+            onClick={() => {
+                dispatch(recordSpectrum({ data: intensities }));
+            }}
+        >
+            Capture
+        </Button>
+    );
+
     return (
         <Card style={{ width: '100%', ...cardStyle }}>
             <Card.Header as="h5" style={cardHeaderStyle}>
-                Saved Spectra
-                <Button
-                    disabled={!valid.isValid()}
-                    onClick={() => {
-                        dispatch(recordSpectrum({ data: intensities }));
-                    }}
-                >
-                    Capture
-                </Button>
+                Saved spectra
+                {capture}
             </Card.Header>
             {isCollapsed ? null : (
                 <div

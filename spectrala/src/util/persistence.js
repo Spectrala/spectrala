@@ -35,3 +35,14 @@ export const downloadToFile = (content, filename, contentType) => {
 
     URL.revokeObjectURL(a.href);
 };
+
+export const downloadImage = async (ref, filename) => {
+    var link = document.createElement('a');
+    link.download = filename;
+    const url = await ref.current.toDataURL('image/png');
+    link.href = url;
+
+    // Don't download an empty image
+    if (url === "data:,") return;
+    link.click();
+};

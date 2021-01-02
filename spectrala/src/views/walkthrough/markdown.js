@@ -38,7 +38,6 @@ export const walkthroughSteps = {
     EXPORT: export_data,
 };
 
-
 /**
  * 
  * The object-fit property can have the following values:
@@ -56,12 +55,23 @@ const renderers = {
     math: ({ value }) => <Tex block math={value} />,
     image: ({ alt, src }) => {
         // Size to fit the parent view
-        return <img alt={alt} src={src} style={{ width: '100%', maxHeight: '300px', objectFit: 'contain' ,marginTop: '16px'}} />;
+        return (
+            <img
+                alt={alt}
+                src={src}
+                style={{
+                    width: '100%',
+                    maxHeight: '300px',
+                    objectFit: 'contain',
+                    marginTop: '16px',
+                }}
+            />
+        );
     },
     link: ({ href, children }) => {
         // Open link in a new tab
         return (
-            <a href={href} target="_blank">
+            <a href={href} target="_blank" rel="noopener noreferrer">
                 {children[0].props.children}
             </a>
         );

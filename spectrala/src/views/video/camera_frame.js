@@ -5,6 +5,7 @@ import { PointContainer } from './draggable_points/point_container';
 import SourceSelect from './source_select';
 import { cardStyle, cardHeaderStyle } from '../theme/styles';
 import PropTypes from 'prop-types';
+
 const ChannelEnum = {
     RED: 'CHANNEL_RED',
     GREEN: 'CHANNEL_GREEN',
@@ -22,8 +23,8 @@ const CameraFrame = ({ showsLine, showsPoints }) => {
     const [saturatedChannels, _setSaturatedChannels] = useState([]);
 
     const [videoSrc, setVideoSrc] = useState(null);
+    const videoRef = useRef(null);
     const [inSaveMode, setInSaveMode] = useState(false);
-    const saveOverlayTarget = useRef(null);
 
     return (
         <Card style={cardStyle}>
@@ -31,13 +32,14 @@ const CameraFrame = ({ showsLine, showsPoints }) => {
                 <SourceSelect
                     onChange={setVideoSrc}
                     setInSaveMode={setInSaveMode}
+                    videoSrc={videoSrc}
+                    videoRef={videoRef}
                     inSaveMode={inSaveMode}
-                    saveOverlayTarget={saveOverlayTarget}
                 />
             </Card.Header>
             {saturatedChannels.length > 0 && (
                 <Alert variant={'warning'} style={{ marginBottom: '0px' }}>
-                    Oversaturation in channel(s)
+                    {'Oversaturation in channel(s) '}
                     {saturatedChannels.map((e) => ChannelToText[e]).join(', ')}.
                     <Alert.Link>Learn more</Alert.Link>.
                 </Alert>
@@ -53,6 +55,7 @@ const CameraFrame = ({ showsLine, showsPoints }) => {
                             bottom: 0,
                         },
                         videoSrc,
+                        videoRef,
                         inSaveMode,
                     }}
                 />

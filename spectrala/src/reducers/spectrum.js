@@ -7,7 +7,6 @@ import {
     getCalibratedSpectrum,
 } from './calibration/calibration_math';
 import SpectralDataResponse from './spectral_data_response';
-import { arrayOfColumnsToCSV, downloadToFile } from '../util/persistence';
 
 // Default name prefix for saving a spectrum. Will start naming as DEFAULT_NAME 1.
 const DEFAULT_NAME = 'New Spectrum ';
