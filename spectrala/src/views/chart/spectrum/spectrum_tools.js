@@ -30,10 +30,11 @@ export default function SpectrumTools({ height, isCollapsed }) {
      */
     const capture = (
         <Button
-            disabled={false && !valid.isValid()} // Change it back
+            disabled={!valid.isValid()} 
             onClick={() => {
                 dispatch(recordSpectrum({ data: intensities }));
             }}
+            variant="outline-dark"
         >
             Capture
         </Button>

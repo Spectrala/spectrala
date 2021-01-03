@@ -24,6 +24,7 @@ const CustomToggle = forwardRef(({ children, onClick, variant }, ref) => (
     </Button>
 ));
 
+
 function WebcamDropdown({ variant }) {
     const [devices, setDevices] = useState([]);
     const dispatch = useDispatch();
@@ -37,10 +38,7 @@ function WebcamDropdown({ variant }) {
                     devices
                         .filter((device) => device.kind === 'videoinput')
                         .map((device) => ({
-                            name: device.label.slice(
-                                0,
-                                device.label.length - 12
-                            ),
+                            name: device.label,
                             id: device.deviceId,
                         }))
                 );
@@ -56,7 +54,6 @@ function WebcamDropdown({ variant }) {
             updateDeviceList();
         };
     }, [updateDeviceList]);
-
 
     return (
         <Dropdown>

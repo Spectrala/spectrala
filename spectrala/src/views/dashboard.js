@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-    Container,
-    Col,
-    Navbar,
-    Nav,
-    Row,
-} from 'react-bootstrap';
+import { Container, Col, Navbar, Nav, Row } from 'react-bootstrap';
 import logo from '../spectrala_logo.svg';
 import { Moon, Sun } from 'react-bootstrap-icons';
 import SaveButton from './persistence/save_btn';
@@ -13,6 +7,15 @@ import LoadButton from './persistence/load_btn';
 import { navBody, containerStyle, activeNavItem } from './theme/styles';
 import { Walkthrough } from './walkthrough/walkthrough';
 import { WidgetsView } from './walkthrough/widgets';
+
+const feedbackEmail =
+`mailto:spectrala.feedback@gmail.com?subject=Spectrala Feedback&body=
+Hi, I found something in Spectrala that you should look into: %0A%0A
+When I try to use [specific function of the app that isn't working or could be improved upon],%0A%0A
+I expected [what the correct behavior of an app would be, or what something would ideally look like].%0A%0A
+Instead, [the incorrect behavior of the app that happened or unideal appearance of something in the app].%0A%0A
+Here's a screenshot of what I'm talking about: [insert screenshot]%0A%0A
+[Or, tell us something else!]`;
 
 export default class Dashboard extends React.Component {
     getLogoImg = () => {
@@ -81,6 +84,22 @@ export default class Dashboard extends React.Component {
         console.warn(`Do something with handleClick: ${iconButton}`);
     };
 
+    saveLoad = (
+        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+            <Nav
+                onSelect={(key) => this.handleClick(key)}
+                className="justify-content-end"
+            >
+                <Nav.Link eventKey={this.iconButtons.DOWNLOAD}>
+                    <SaveButton />
+                </Nav.Link>
+                <Nav.Link eventKey={this.iconButtons.RESTORE}>
+                    <LoadButton />
+                </Nav.Link>
+            </Nav>
+        </Navbar.Collapse>
+    );
+
     render() {
         return (
             <Container fluid style={containerStyle}>
@@ -88,9 +107,15 @@ export default class Dashboard extends React.Component {
                     expand="sm"
                     fixed="top"
                     bg="light"
-                    style={{ height: '64px' }}
+                    style={{ height: '64px', width: '100%' }}
                 >
-                    <Row>
+                    <Row
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            width: '100%',
+                        }}
+                    >
                         <img
                             style={{
                                 height: '28px',
@@ -101,23 +126,12 @@ export default class Dashboard extends React.Component {
                             src={logo}
                             alt="logo"
                         />
-                        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                        <Navbar.Collapse
-                            id="basic-navbar-nav"
-                            className="justify-content-end"
+                        <a
+                            style={{ color: '#555' }}
+                            href={feedbackEmail}
                         >
-                            <Nav
-                                onSelect={(key) => this.handleClick(key)}
-                                className="justify-content-end"
-                            >
-                                <Nav.Link eventKey={this.iconButtons.DOWNLOAD}>
-                                    <SaveButton />
-                                </Nav.Link>
-                                <Nav.Link eventKey={this.iconButtons.RESTORE}>
-                                    <LoadButton />
-                                </Nav.Link>
-                            </Nav>
-                        </Navbar.Collapse>
+                            Submit feedback
+                        </a>
                     </Row>
                 </Navbar>
 
@@ -142,7 +156,7 @@ export default class Dashboard extends React.Component {
                                 paddingRight: 16,
                             }}
                         >
-                            <WidgetsView/>
+                            <WidgetsView />
                         </div>
                     </Col>
                     <Col xs={4} style={{ paddingTop: 11 }}>

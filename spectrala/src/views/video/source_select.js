@@ -5,13 +5,7 @@ import {
     selectSource,
     selectWebcam,
 } from '../../reducers/video';
-import {
-    Button,
-    FormControl,
-    ButtonGroup,
-    Row,
-    Col,
-} from 'react-bootstrap';
+import { Button, FormControl, ButtonGroup, Row, Col } from 'react-bootstrap';
 import { CameraFill } from 'react-bootstrap-icons';
 import { FileEarmarkArrowUp, Phone, BroadcastPin } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
@@ -65,6 +59,38 @@ export default function SourceSelect(props) {
         [onChange /*, setMediaElement*/]
     );
 
+    const promptImageUpload = () => {
+        let staticImage;
+        async function loadStaticImage() {
+            const picker = document.createElement('input');
+            picker.type = 'file';
+            picker.accept = 'image/*';
+            picker.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.onload = () => {
+                    URL.revokeObjectURL(img.src);
+                };
+                staticImage = img;
+                updateMediaElement(staticImage);
+            });
+            picker.click();
+        }
+        loadStaticImage();
+        // Cleanup isn't a big deal here because it's a single image,
+        // but we're good citizens here.
+        return () => {
+            if (staticImage) {
+                staticImage.src = '#';
+                staticImage.removeAttribute('src');
+                staticImage.removeAttribute('srcObject');
+            } else {
+                console.warn('No static image');
+            }
+        };
+    };
+
     // Handle stream creation
     useEffect(() => {
         if (selectedSource === SourceEnum.WEBCAM) {
@@ -103,40 +129,9 @@ export default function SourceSelect(props) {
                     : 'http://' + streamIP + ':' + streamPort + '/video';
             updateMediaElement(imageElement);
             return () => {
-                // cleanup video
                 imageElement.src = '#';
                 imageElement.removeAttribute('src');
                 imageElement.removeAttribute('srcObject');
-            };
-        } else if (selectedSource === SourceEnum.IMAGE) {
-            let staticImage;
-            async function loadStaticImage() {
-                const picker = document.createElement('input');
-                picker.type = 'file';
-                picker.accept = 'image/*';
-                picker.addEventListener('change', (e) => {
-                    const file = e.target.files[0];
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(file);
-                    img.onload = () => {
-                        URL.revokeObjectURL(img.src);
-                    };
-                    staticImage = img;
-                    updateMediaElement(staticImage);
-                });
-                picker.click();
-            }
-            loadStaticImage();
-            // Cleanup isn't a big deal here because it's a single image,
-            // but we're good citizens here.
-            return () => {
-                if (staticImage) {
-                    staticImage.src = '#';
-                    staticImage.removeAttribute('src');
-                    staticImage.removeAttribute('srcObject');
-                } else {
-                    console.warn('No static image');
-                }
             };
         } else {
             updateMediaElement(null);
@@ -179,6 +174,48 @@ export default function SourceSelect(props) {
         );
     };
 
+    // Button formula for source select
+    const createSourceButton = ({ source, label, icon, additionalOnClick }) => {
+        return (
+            <Button
+                variant={getBtnVariant(selectedSource === source)}
+                onClick={() => {
+                    dispatchSelectedSource(source);
+                    if (additionalOnClick) additionalOnClick();
+                }}
+                aria-label={label}
+                title={label}
+            >
+                {icon}
+            </Button>
+        );
+    };
+
+    // Buttons for selecting source
+    const sourceSelectBar = (
+        <ButtonGroup style={{ height: '38px', paddingRight: '10px' }}>
+            {createSourceButton({
+                source: SourceEnum.MOBILE_STREAM,
+                label: 'Mobile',
+                icon: <Phone />,
+            })}
+            {createSourceButton({
+                source: SourceEnum.STREAM,
+                label: 'Stream',
+                icon: <BroadcastPin />,
+            })}
+            <WebcamDropdown
+                variant={getBtnVariant(selectedSource === SourceEnum.WEBCAM)}
+            />
+            {createSourceButton({
+                source: SourceEnum.IMAGE,
+                label: 'Image Upload',
+                icon: <FileEarmarkArrowUp />,
+                additionalOnClick: () => promptImageUpload(),
+            })}
+        </ButtonGroup>
+    );
+
     // Styling for rows to contain forms from createFormControl
     const secondaryRowStyle = {
         width: '100%',
@@ -187,55 +224,8 @@ export default function SourceSelect(props) {
         marginRight: 0,
     };
 
-    return (
+    const secondaryRow = (
         <>
-            <div>Source</div>
-            <div>
-                <ButtonGroup style={{ height: '38px', paddingRight: '10px' }}>
-                    <Button
-                        variant={getBtnVariant(
-                            selectedSource === SourceEnum.MOBILE_STREAM
-                        )}
-                        onClick={() =>
-                            dispatchSelectedSource(SourceEnum.MOBILE_STREAM)
-                        }
-                        aria-label={'Mobile'}
-                        title={'Mobile'}
-                    >
-                        <Phone />
-                    </Button>
-                    <Button
-                        variant={getBtnVariant(
-                            selectedSource === SourceEnum.STREAM
-                        )}
-                        onClick={() =>
-                            dispatchSelectedSource(SourceEnum.STREAM)
-                        }
-                        aria-label={'Stream'}
-                        title={'Stream'}
-                    >
-                        <BroadcastPin />
-                    </Button>
-                    <WebcamDropdown
-                        variant={getBtnVariant(
-                            selectedSource === SourceEnum.WEBCAM
-                        )}
-                    />
-
-                    <Button
-                        variant={getBtnVariant(
-                            selectedSource === SourceEnum.IMAGE
-                        )}
-                        aria-label={'Image Upload'}
-                        title={'Image Upload'}
-                        onClick={() => dispatchSelectedSource(SourceEnum.IMAGE)}
-                    >
-                        <FileEarmarkArrowUp />
-                    </Button>
-                </ButtonGroup>
-                {snapshotButton}
-            </div>
-
             {selectedSource === SourceEnum.STREAM && (
                 <Row style={secondaryRowStyle}>
                     {createFormControl({
@@ -247,7 +237,6 @@ export default function SourceSelect(props) {
                 </Row>
             )}
 
-            
             {selectedSource === SourceEnum.MOBILE_STREAM && (
                 <Row style={secondaryRowStyle}>
                     <Col style={{ paddingLeft: 0 }}>
@@ -266,6 +255,17 @@ export default function SourceSelect(props) {
                     </Col>
                 </Row>
             )}
+        </>
+    );
+
+    return (
+        <>
+            <div>Source</div>
+            <div>
+                {sourceSelectBar}
+                {snapshotButton}
+            </div>
+            {secondaryRow}
         </>
     );
 }
