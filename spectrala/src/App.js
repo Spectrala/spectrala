@@ -9,11 +9,11 @@ import { Beforeunload } from 'react-beforeunload';
 export default class App extends Component {
     render() {
         return (
-            // <Beforeunload onBeforeunload={(event) => event.preventDefault()}>
+            <Beforeunload onBeforeunload={(event) => event.preventDefault()}>
                 <DndProvider backend={HTML5Backend}>
                     <Dashboard />
                 </DndProvider>
-            // </Beforeunload>
+            </Beforeunload>
         );
     }
 }
