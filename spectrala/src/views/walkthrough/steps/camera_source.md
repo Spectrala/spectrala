@@ -25,7 +25,7 @@ Establish a visual of the spectrum inside the spectrometer.
 <p>
 <ol type="1">
   <li>In the source selection menu on the left side of the screen, select the icon second to the right that looks like a video camera.</li>
-  <li>Choose the desired webcam from the dropdown menu.</li>
+  <li>Choose the desired webcam from the dropdown menu. If no webcams appear, ensure you haven't accidentaly blocked Spectrala from accessing the webcam and that the camera is plugged into the computer.</li>
 </ol>
 </p>
 </details>

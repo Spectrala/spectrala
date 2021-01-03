@@ -129,7 +129,8 @@ export default function CalibrationPointsControl({
         (point, idx) => {
             if (
                 CalibPt.hasBeenPlaced(point) &&
-                CalibPt.wavelengthIsValid(point)
+                CalibPt.wavelengthIsValid(point) &&
+                canPlace
             ) {
                 return (
                     <Button
@@ -154,7 +155,7 @@ export default function CalibrationPointsControl({
             }
             return null;
         },
-        [dispatch]
+        [dispatch, canPlace]
     );
 
     const getDeleteButton = useCallback(

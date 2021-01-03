@@ -1,6 +1,1 @@
-Now that you're finished recording the reference spectrum, it's time to put other cuvettes into the spectrometer.
-## collapsible markdown?
-
-<details><summary>CLICK ME</summary>
-Hellow wolr
-</details>
+The "Spectrum" chart is still a live view of the spectrum inside the spectrometer like in the last section. With a reference spectrum recorded, live transmittance and absorbance values can be viewed by selecting them above the "Spectrum" chart.

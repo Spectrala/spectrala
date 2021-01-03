@@ -1,6 +1,6 @@
 import * as CalibPt from './calibration_point';
 export const MINIMUM_WAVELENGTH = 300;
-export const MAXIMUM_WAVELENGTH = 800;
+export const MAXIMUM_WAVELENGTH = 1000;
 export const calibrationPresetsOrder = ['custom', 'cfl'];
 
 export const calibrationPresets = [
@@ -12,7 +12,14 @@ export const calibrationPresets = [
         title: 'CFL Bulb',
         value: [436, 546, 604],
     },
+    {
+        title: 'Ch3A Lab Kit',
+        value: [400, 530, 875, 940],
+    },
 ];
+
+export const defaultCalibration = calibrationPresets[2];
+
 
 export const expandPresetDebug = (preset) => {
     console.warn("IN TEST MODE")

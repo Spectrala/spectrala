@@ -101,7 +101,7 @@ export const isLastActionIndex = (index) => index === lastActionIndex();
 export const walkthroughSlice = createSlice({
     name: 'walkthrough',
     initialState: {
-        activeIndex: 5,
+        activeIndex: 0,
     },
     reducers: {
         gotoNextAction: (state) => {

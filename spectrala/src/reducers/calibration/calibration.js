@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import * as CalibPt from './calibration_point';
-import { calibrationPresets, expandPreset } from './calibration_constants';
-
-export const defaultCalibration = calibrationPresets[1];
+import {
+    expandPreset,
+    defaultCalibration,
+} from './calibration_constants';
 
 /**
  * addNewCalibPt
