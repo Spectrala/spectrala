@@ -11,15 +11,14 @@
  */
 
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
-import camera_source from './steps/camera_source.md';
-import calibration_type from './steps/calibration_type.md';
-import create_reference from './steps/create_reference.md';
-import export_data from './steps/export_data.md';
-import identify_peaks from './steps/identify_peaks.md';
-import reader_line from './steps/reader_line.md';
-import record_test from './steps/record_test.md';
-import good_spectrum from './steps/good_spectrum.md';
+import camera_source from './steps/camera_source.js';
+import calibration_type from './steps/calibration_type.js';
+import create_reference from './steps/create_reference.js';
+import export_data from './steps/export_data.js';
+import identify_peaks from './steps/identify_peaks.js';
+import reader_line from './steps/reader_line.js';
+import record_test from './steps/record_test.js';
+import good_spectrum from './steps/good_spectrum.js';
 import PropTypes from 'prop-types';
 
 export const walkthroughSteps = {
@@ -33,60 +32,20 @@ export const walkthroughSteps = {
     EXPORT: export_data,
 };
 
-// Allows for the sizing of images, and creation of links
-const renderers = {
-    image: ({ alt, src }) => {
-        // Size to fit the parent view
-        return (
-            <img
-                alt={alt}
-                src={src}
-                style={{
-                    width: '100%',
-                    maxHeight: '300px',
-                    objectFit: 'contain',
-                    marginTop: '16px',
-                }}
-            />
-        );
-    },
-    link: ({ href, children }) => {
-        // Open link in a new tab
-        return (
-            <a href={href} target="_blank" rel="noopener noreferrer">
-                {children[0].props.children}
-            </a>
-        );
-    },
-};
 
+/**
+ * Markdown used to be a happy place where react-markdown was used.
+ * Unfortunately, things aren't that easy. We're doing HTML instead of markdown. 
+ * TODO: Change this to not be the "Markdown" class anymore
+ */
 class Markdown extends React.Component {
-    state = {
-        md: null,
-    };
-
-    componentDidMount() {
-        // Fetch the file and store it in the state
-        fetch(this.props.step)
-            .then((response) => response.text())
-            .then((text) => {
-                this.setState({ md: text });
-            });
-    }
-
     render() {
-        return (
-            <ReactMarkdown
-                renderers={renderers}
-                children={this.state.md}
-                allowDangerousHtml
-            />
-        );
+        return this.props.step;
     }
 }
 
 Markdown.propTypes = {
-    step: PropTypes.string.isRequired,
+    step: PropTypes.any.isRequired,
 };
 
 export default Markdown;

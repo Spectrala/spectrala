@@ -28,13 +28,19 @@ if (localserver / "static").exists():
     shutil.rmtree(localserver / "static")
 shutil.copytree(spectrala / "build", localserver / "static")
 
-# build app
+
+# need colon, not semicolon on MacOS/Windows for add-data call. Is this universal?
 if platform.system() == "Windows":
     icon_ext = "ico"
     add_data_separator = ":"
-else:
+elif platform.system() == "Darwin":
     icon_ext = "icns"  # only MacOS uses, other platforms will ignore
+    add_data_separator = ":"
+else:
+    icon_ext = "icns" # Assuming this works for Linux.
     add_data_separator = ";"
+
+# build app
 
 run(
     [
