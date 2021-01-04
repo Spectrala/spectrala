@@ -12,11 +12,6 @@
 
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import gfm from 'remark-gfm';
-import Tex from '@matejmazur/react-katex';
-import math from 'remark-math';
-import 'katex/dist/katex.min.css'; // `react-katex` does not import the CSS for you
-
 import camera_source from './steps/camera_source.md';
 import calibration_type from './steps/calibration_type.md';
 import create_reference from './steps/create_reference.md';
@@ -38,10 +33,8 @@ export const walkthroughSteps = {
     EXPORT: export_data,
 };
 
-// Allows the math plugin to work, sizing of images, and creation of links
+// Allows for the sizing of images, and creation of links
 const renderers = {
-    inlineMath: ({ value }) => <Tex math={value} />,
-    math: ({ value }) => <Tex block math={value} />,
     image: ({ alt, src }) => {
         // Size to fit the parent view
         return (
@@ -84,7 +77,6 @@ class Markdown extends React.Component {
     render() {
         return (
             <ReactMarkdown
-                plugins={[math, gfm]}
                 renderers={renderers}
                 children={this.state.md}
                 allowDangerousHtml
