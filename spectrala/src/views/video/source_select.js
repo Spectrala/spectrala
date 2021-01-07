@@ -19,6 +19,8 @@ export const SourceEnum = {
     MOBILE_STREAM: 'SOURCE_MOBILE_STREAM',
 };
 
+const isLocal = !window.location.hostname.includes('127.0.0.1');
+
 // Will be used for checking permissions when listing cameras
 // browser support here is weak but good enough
 // async function getCameraPermissions() {
@@ -118,8 +120,9 @@ export default function SourceSelect(props) {
                 mediaStream.getTracks().forEach((track) => track.stop());
             };
         } else if (
-            selectedSource === SourceEnum.STREAM ||
-            selectedSource === SourceEnum.MOBILE_STREAM
+            (selectedSource === SourceEnum.STREAM ||
+                selectedSource === SourceEnum.MOBILE_STREAM) &&
+            isLocal
         ) {
             let imageElement = document.createElement('img');
             imageElement.crossOrigin = 'anonymous';
@@ -194,16 +197,18 @@ export default function SourceSelect(props) {
     // Buttons for selecting source
     const sourceSelectBar = (
         <ButtonGroup style={{ height: '38px', paddingRight: '10px' }}>
-            {createSourceButton({
-                source: SourceEnum.MOBILE_STREAM,
-                label: 'Mobile',
-                icon: <Phone />,
-            })}
-            {createSourceButton({
-                source: SourceEnum.STREAM,
-                label: 'Stream',
-                icon: <BroadcastPin />,
-            })}
+            {isLocal &&
+                createSourceButton({
+                    source: SourceEnum.MOBILE_STREAM,
+                    label: 'Mobile',
+                    icon: <Phone />,
+                })}
+            {isLocal &&
+                createSourceButton({
+                    source: SourceEnum.STREAM,
+                    label: 'Stream',
+                    icon: <BroadcastPin />,
+                })}
             <WebcamDropdown
                 variant={getBtnVariant(selectedSource === SourceEnum.WEBCAM)}
             />
