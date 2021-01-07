@@ -4,10 +4,6 @@ If an aspiring scientist or an enthusiast creates a spectrometer, their best bet
 
 Caltech students are developing a new application called Spectrala which aims to be more intuitive and have more utility than existing applications.
 
-To install the software, download the attached zip file corresponding to your system. 
-
-If running the software on Mac, note that you'll have to go into System Preferences > Security & Privacy and click the lock on the bottom left to select "Open anyway" in order for the app to load. 
-
-On Windows, you may get a dialogue box "Windows protected your PC." To get through this, select "More info" then "Run anyway." 
+Click here to use the app: https://spectrala.netlify.app/
 
 Being a work in progress, this software is not guaranteed to work perfectly. Feedback is much appreciated. To give feedback, please email spectrala.feedback@gmail.com.
