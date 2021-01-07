@@ -19,7 +19,7 @@ export const SourceEnum = {
     MOBILE_STREAM: 'SOURCE_MOBILE_STREAM',
 };
 
-const isLocal = !window.location.hostname.includes('127.0.0.1');
+const isLocal = window.location.hostname.includes('127.0.0.1');
 
 // Will be used for checking permissions when listing cameras
 // browser support here is weak but good enough
