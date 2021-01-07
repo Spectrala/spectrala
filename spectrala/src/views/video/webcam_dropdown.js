@@ -9,23 +9,28 @@ import { SourceEnum } from './source_select';
 
 // The forwardRef is important!!
 // Dropdown needs access to the DOM node in order to position the Menu
-const CustomToggle = forwardRef(({ children, onClick, variant }, ref) => (
-    <Button
-        href=""
-        variant={children.variant}
-        style={{ borderRadius: 0 }}
-        ref={ref}
-        onClick={(e) => {
-            e.preventDefault();
-            onClick(e);
-        }}
-    >
-        {children.thumbnail}
-    </Button>
-));
+const CustomToggle = forwardRef(
+    ({ children, onClick, variant }, ref) => {
+        let style = {borderTopRightRadius: 0, borderBottomRightRadius: 0 }
+        if (!children.roundLeft) style = {borderTopLeftRadius: 0, borderBottomLeftRadius: 0, ...style};
+        return (
+            <Button
+                href=""
+                variant={children.variant}
+                style={style}
+                ref={ref}
+                onClick={(e) => {
+                    e.preventDefault();
+                    onClick(e);
+                }}
+            >
+                {children.thumbnail}
+            </Button>
+        );
+    }
+);
 
-
-function WebcamDropdown({ variant }) {
+function WebcamDropdown({ variant, roundLeft }) {
     const [devices, setDevices] = useState([]);
     const dispatch = useDispatch();
     const selectedWebcam = useSelector(selectWebcam);
@@ -61,6 +66,7 @@ function WebcamDropdown({ variant }) {
                 {{
                     thumbnail: <CameraVideo />,
                     variant: variant,
+                    roundLeft,
                 }}
             </Dropdown.Toggle>
 
