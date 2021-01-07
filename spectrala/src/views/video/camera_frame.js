@@ -1,26 +1,26 @@
 import React, { useRef, useState } from 'react';
-import { Alert, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import Camera from './camera';
 import { PointContainer } from './draggable_points/point_container';
 import SourceSelect from './source_select';
 import { cardStyle, cardHeaderStyle } from '../theme/styles';
 import PropTypes from 'prop-types';
 
-const ChannelEnum = {
-    RED: 'CHANNEL_RED',
-    GREEN: 'CHANNEL_GREEN',
-    BLUE: 'CHANNEL_BLUE',
-};
+// const ChannelEnum = {
+//     RED: 'CHANNEL_RED',
+//     GREEN: 'CHANNEL_GREEN',
+//     BLUE: 'CHANNEL_BLUE',
+// };
 
-const ChannelToText = {
-    [ChannelEnum.RED]: 'Red',
-    [ChannelEnum.GREEN]: 'Green',
-    [ChannelEnum.BLUE]: 'Blue',
-};
+// const ChannelToText = {
+//     [ChannelEnum.RED]: 'Red',
+//     [ChannelEnum.GREEN]: 'Green',
+//     [ChannelEnum.BLUE]: 'Blue',
+// };
 
 const CameraFrame = ({ showsLine, showsPoints }) => {
     // TODO: detect saturated channels in the SetInterval call
-    const [saturatedChannels, _setSaturatedChannels] = useState([]);
+    // const [saturatedChannels, _setSaturatedChannels] = useState([]);
 
     const [videoSrc, setVideoSrc] = useState(null);
     const videoRef = useRef(null);
@@ -37,13 +37,13 @@ const CameraFrame = ({ showsLine, showsPoints }) => {
                     inSaveMode={inSaveMode}
                 />
             </Card.Header>
-            {saturatedChannels.length > 0 && (
+            {/* {saturatedChannels.length > 0 && (
                 <Alert variant={'warning'} style={{ marginBottom: '0px' }}>
                     {'Oversaturation in channel(s) '}
                     {saturatedChannels.map((e) => ChannelToText[e]).join(', ')}.
                     <Alert.Link>Learn more</Alert.Link>.
                 </Alert>
-            )}
+            )} */}
             <PointContainer expectedHeight={'450px'} showsLine={showsLine} showsPoints={showsPoints}>
                 <Camera
                     props={{

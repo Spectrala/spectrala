@@ -130,6 +130,7 @@ export default class Dashboard extends React.Component {
                             style={{ color: '#555' }}
                             href={feedbackEmail}
                             target={"_blank"}
+                            rel ={"noopener noreferrer"}
                         >
                             Submit feedback
                         </a>
