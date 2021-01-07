@@ -1,6 +1,12 @@
-import { downloadToFile, arrayOfColumnsToCSV } from './persistence';
+import {
+    downloadToFile,
+    downloadBlob,
+    arrayOfColumnsToCSV,
+} from './persistence';
 import { computeTransmittance, computeAbsorbance } from '../reducers/spectrum';
-export const downloadSpectrum = (recordedSpectra, targetIndex) => {
+import JSZip from 'jszip';
+
+const spectraToCsv = (recordedSpectra, targetIndex) => {
     const idx = targetIndex;
     const this_spectra = recordedSpectra[idx];
     const reference_spectrum = recordedSpectra.find((s) => s.isReference);
@@ -33,14 +39,32 @@ export const downloadSpectrum = (recordedSpectra, targetIndex) => {
         );
     }
 
-    downloadToFile(
-        arrayOfColumnsToCSV(csv_columns),
-        this_spectra.name + '.csv',
-        'text/csv'
-    );
+    return {
+        filename: this_spectra.name + '.csv',
+        content: arrayOfColumnsToCSV(csv_columns),
+    };
+};
+
+export const downloadSpectrum = (recordedSpectra, targetIndex) => {
+    const { filename, content } = spectraToCsv(recordedSpectra, targetIndex);
+    downloadToFile(content, filename, 'text/csv');
 };
 
 export const downloadAllSpectra = (recordedSpectra) => {
-    // TODO: Convert to downloading a folder, zipped
-    recordedSpectra.forEach((_, idx) => downloadSpectrum(recordedSpectra, idx));
+    // Save all spectra into a single zip file
+    const zip = new JSZip();
+    debugger;
+    recordedSpectra.forEach((_, idx) => {
+        const { filename, content } = spectraToCsv(recordedSpectra, idx);
+        zip.file(filename, content);
+    });
+    let run_download = async () => {
+        const blob = await zip.generateAsync({
+            type: 'blob',
+            compression: 'STORE', // no compression
+            comment: 'Spectrala Download Zip',
+        });
+        downloadBlob(blob, 'spectrala_all.zip');
+    };
+    run_download();
 };

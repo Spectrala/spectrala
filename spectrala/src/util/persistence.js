@@ -24,16 +24,20 @@ export const arrayOfColumnsToCSV = (data) => {
     return csv;
 };
 
-// helper to download a file with the given string contents
-export const downloadToFile = (content, filename, contentType) => {
+export const downloadBlob = (blob, filename) => {
     const a = document.createElement('a');
-    const file = new Blob([content], { type: contentType });
 
-    a.href = URL.createObjectURL(file);
+    a.href = URL.createObjectURL(blob);
     a.download = filename;
     a.click();
 
     URL.revokeObjectURL(a.href);
+};
+
+// helper to download a file with the given string contents
+export const downloadToFile = (content, filename, contentType) => {
+    const file = new Blob([content], { type: contentType });
+    downloadBlob(file, filename);
 };
 
 export const downloadImage = async (ref, filename) => {
@@ -43,6 +47,6 @@ export const downloadImage = async (ref, filename) => {
     link.href = url;
 
     // Don't download an empty image
-    if (url === "data:,") return;
+    if (url === 'data:,') return;
     link.click();
 };
