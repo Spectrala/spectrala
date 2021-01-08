@@ -9,26 +9,26 @@ import { SourceEnum } from './source_select';
 
 // The forwardRef is important!!
 // Dropdown needs access to the DOM node in order to position the Menu
-const CustomToggle = forwardRef(
-    ({ children, onClick, variant }, ref) => {
-        let style = {borderTopRightRadius: 0, borderBottomRightRadius: 0 }
-        if (!children.roundLeft) style = {borderTopLeftRadius: 0, borderBottomLeftRadius: 0, ...style};
-        return (
-            <Button
-                href=""
-                variant={children.variant}
-                style={style}
-                ref={ref}
-                onClick={(e) => {
-                    e.preventDefault();
-                    onClick(e);
-                }}
-            >
-                {children.thumbnail}
-            </Button>
-        );
-    }
-);
+const CustomToggle = forwardRef(({ children, onClick, variant }, ref) => {
+    let style = { borderTopRightRadius: 0, borderBottomRightRadius: 0 };
+    if (!children.roundLeft)
+        style = { borderTopLeftRadius: 0, borderBottomLeftRadius: 0, ...style };
+    return (
+        <Button
+            href=""
+            variant={children.variant}
+            style={style}
+            ref={ref}
+            onClick={(e) => {
+                e.preventDefault();
+                onClick(e);
+                children.updateDeviceList();
+            }}
+        >
+            {children.thumbnail}
+        </Button>
+    );
+});
 
 function WebcamDropdown({ variant, roundLeft }) {
     const [devices, setDevices] = useState([]);
@@ -55,9 +55,12 @@ function WebcamDropdown({ variant, roundLeft }) {
 
     useEffect(() => {
         updateDeviceList();
-        navigator.mediaDevices.ondevicechange = function (event) {
-            updateDeviceList();
-        };
+        navigator.mediaDevices.addEventListener(
+            'devicechange',
+            function (event) {
+                updateDeviceList();
+            }
+        );
     }, [updateDeviceList]);
 
     return (
@@ -67,6 +70,7 @@ function WebcamDropdown({ variant, roundLeft }) {
                     thumbnail: <CameraVideo />,
                     variant: variant,
                     roundLeft,
+                    updateDeviceList,
                 }}
             </Dropdown.Toggle>
 
