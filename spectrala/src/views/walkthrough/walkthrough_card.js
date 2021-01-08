@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     selectActiveIndex,
@@ -11,24 +11,29 @@ import Markdown from './markdown';
 
 const ActionButton = (cardIndex, activeIndex, lastIndex) => {
     const dispatch = useDispatch();
-    const style = { padding: '0px' };
+    const style = {};
 
     if (cardIndex < activeIndex)
         return (
-            <label
+            <Button
+                variant="outline-dark"
                 style={style}
                 onClick={() =>
                     dispatch(rewindToAction({ targetIndex: cardIndex }))
                 }
             >
                 Redo
-            </label>
+            </Button>
         );
     if (cardIndex === activeIndex && cardIndex < lastIndex)
         return (
-            <label style={style} onClick={() => dispatch(gotoNextAction())}>
+            <Button
+                variant="outline-dark"
+                style={style}
+                onClick={() => dispatch(gotoNextAction())}
+            >
                 Done
-            </label>
+            </Button>
         );
 };
 
