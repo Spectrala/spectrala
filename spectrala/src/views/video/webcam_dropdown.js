@@ -56,12 +56,52 @@ function WebcamDropdown({ variant, roundLeft }) {
     useEffect(() => {
         updateDeviceList();
         navigator.mediaDevices.addEventListener(
-            'devicechange',
-            function (event) {
-                updateDeviceList();
-            }
+            'devicechanged',
+            updateDeviceList
         );
+        return () =>
+            navigator.mediaDevices.removeEventListener(
+                'devicechanged',
+                updateDeviceList
+            );
     }, [updateDeviceList]);
+
+    const getDeviceList = useCallback(() => {
+        // Return warning if there are no detected devices.
+        // It's possible that there's one device, yet it has a blank ID and name, so also detect this.
+        if (devices.length === 0 || devices.map((d) => d.id).join('').length===0) {
+            return (
+                <Dropdown.Menu>
+                    <label style={{padding: '10px'}}>
+                        No webcam detected. If you're sure one is connected,
+                        make sure you've allowed your browser to use the webcam
+                        in your privacy settings.
+                    </label>
+                </Dropdown.Menu>
+            );
+        }
+
+        return (
+            <Dropdown.Menu>
+                {devices.map((device, idx) => (
+                    <Dropdown.Item
+                        key={idx}
+                        active={device.id === selectedWebcam}
+                        onClick={() => {
+                            dispatch(
+                                setSelectedSource({
+                                    value: SourceEnum.WEBCAM,
+                                    webcam: device.id,
+                                })
+                            );
+                        }}
+                    >
+                        {device.name}
+                    </Dropdown.Item>
+                ))}
+            </Dropdown.Menu>
+        );
+    }, [devices, dispatch, selectedWebcam]);
 
     return (
         <Dropdown>
@@ -73,27 +113,7 @@ function WebcamDropdown({ variant, roundLeft }) {
                     updateDeviceList,
                 }}
             </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-                {devices.map((device, idx) => {
-                    return (
-                        <Dropdown.Item
-                            key={idx}
-                            active={device.id === selectedWebcam}
-                            onClick={() => {
-                                dispatch(
-                                    setSelectedSource({
-                                        value: SourceEnum.WEBCAM,
-                                        webcam: device.id,
-                                    })
-                                );
-                            }}
-                        >
-                            {device.name}
-                        </Dropdown.Item>
-                    );
-                })}
-            </Dropdown.Menu>
+            {getDeviceList()}
         </Dropdown>
     );
 }
