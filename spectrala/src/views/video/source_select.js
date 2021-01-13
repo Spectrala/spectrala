@@ -4,6 +4,8 @@ import {
     setSelectedSource,
     selectSource,
     selectWebcam,
+    setUploadedImage,
+    selectUploadedImage,
 } from '../../reducers/video';
 import { Button, FormControl, ButtonGroup, Row, Col } from 'react-bootstrap';
 import { CameraFill } from 'react-bootstrap-icons';
@@ -30,6 +32,8 @@ export const isLocal = window.location.hostname.includes('127.0.0.1');
 export default function SourceSelect(props) {
     const selectedSource = useSelector(selectSource);
     const selectedWebcam = useSelector(selectWebcam);
+    const uploadedImage = useSelector(selectUploadedImage);
+
     const saveOverlayTarget = useRef(null);
 
     const dispatch = useDispatch();
@@ -58,7 +62,7 @@ export default function SourceSelect(props) {
             onChange(e);
             window.testvideoelem = e;
         },
-        [onChange /*, setMediaElement*/]
+        [onChange]
     );
 
     const promptImageUpload = () => {
@@ -75,6 +79,7 @@ export default function SourceSelect(props) {
                     URL.revokeObjectURL(img.src);
                 };
                 staticImage = img;
+                dispatch(setUploadedImage({image: staticImage}))
                 updateMediaElement(staticImage);
             });
             picker.click();
@@ -137,7 +142,8 @@ export default function SourceSelect(props) {
                 imageElement.removeAttribute('srcObject');
             };
         } else {
-            updateMediaElement(null);
+            // Is file upload
+            updateMediaElement(uploadedImage);
         }
     }, [
         selectedSource,
@@ -146,6 +152,8 @@ export default function SourceSelect(props) {
         streamIP,
         streamPort,
         selectedWebcam,
+        uploadedImage,
+        dispatch,
     ]);
 
     // Button that looks like a camera for downloading the image on screen

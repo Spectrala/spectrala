@@ -29,6 +29,7 @@ export const videoSlice = createSlice({
             highY: 0.5,
         },
         selectedSource: SourceEnum.WEBCAM,
+        uploadedImage: undefined,
         selectedWebcam: undefined,
     },
     reducers: {
@@ -71,6 +72,11 @@ export const videoSlice = createSlice({
             state.selectedSource = action.payload.value;
             state.selectedWebcam = action.payload.webcam;
         },
+        setUploadedImage: (state, action) => {
+            // Done because going to data upload makes image blank.
+            state.uploadedImage = action.payload.image;
+
+        }
     },
 });
 
@@ -79,7 +85,11 @@ export const {
     updateLineCoords,
     updateAllLineCoords,
     setSelectedSource,
+    setUploadedImage,
 } = videoSlice.actions;
+
+
+export const selectUploadedImage = (state) => state.video.uploadedImage;
 
 export const selectIntensities = (state) => {
     const pixels = state.video.pixelLineHistory;
