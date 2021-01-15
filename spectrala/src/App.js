@@ -9,12 +9,11 @@ import { Beforeunload } from 'react-beforeunload';
 export default class App extends Component {
     componentDidMount() {
         const sUsrAg = navigator.userAgent;
-        // TODO: Make this much less hacky. 
+        // TODO: Make this much less hacky.
         // TODO: Support all browsers.
         if (sUsrAg.indexOf('Chrome') === -1) {
             window.alert(
-                'Please use Chrome to have the best experience spectrala.net. \
-Some features may not be availible in this browser.'
+                'Please use Chrome to have the best experience spectrala.net. Some features may not be availible in this browser.'
             );
         }
     }
