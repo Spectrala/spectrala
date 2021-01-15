@@ -1,4 +1,4 @@
 [build]
     base = "spectrala/"
     publish = "build/"
-    command = "yarn install && yarn build"
+    command = "yarn git-info && yarn install && yarn build"
