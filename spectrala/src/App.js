@@ -13,7 +13,7 @@ export default class App extends Component {
         // TODO: Support all browsers.
         if (sUsrAg.indexOf('Chrome') === -1) {
             window.alert(
-                'Please use Chrome to have the best experience spectrala.net. Some features may not be availible in this browser.'
+                'Please use Chrome to have the best experience on spectrala.net. Some features may not be availible in this browser.'
             );
         }
     }
