@@ -2,3 +2,9 @@
     base = "spectrala/"
     publish = "build/"
     command = "yarn git-info && yarn install && yarn build"
+
+[[redirects]]
+    from = "https://spectrala.net/*"
+    to = "https://spectrala.app/:splat"
+    force = true
+    status = 301
