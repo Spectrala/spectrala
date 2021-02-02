@@ -8,3 +8,9 @@
     to = "https://spectrala.app/:splat"
     force = true
     status = 301
+
+[[redirects]]
+    from = "https://www.spectrala.net/*"
+    to = "https://www.spectrala.app/:splat"
+    force = true
+    status = 301
