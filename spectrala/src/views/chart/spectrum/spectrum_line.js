@@ -154,11 +154,6 @@ export const SpectrumLine = ({ height, spectrumData, spectrumViewOption }) => {
             spectrumViewOption === SPECTRUM_OPTIONS.INTENSITY
                 ? [0, 100]
                 : [undefined, undefined];
-        // if (spectrumViewOption === SPECTRUM_OPTIONS.TRANSMITTANCE) {
-        //     y_range = [0, 4];
-        // } else if (spectrumViewOption === SPECTRUM_OPTIONS.ABSORBANCE) {
-        //     y_range = [-0.5, 1];
-        // }
 
         return (
             <div
