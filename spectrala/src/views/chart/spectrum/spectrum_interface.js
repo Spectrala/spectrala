@@ -79,7 +79,7 @@ export default function SpectrumChart({
                     {getHeader()}
                     {isCollapsed() ? null : (
                         <div style={{ height: height }}>
-                            <SpectrumLine height={height} spectrumData={data} />
+                            <SpectrumLine height={height} spectrumData={data} spectrumViewOption={viewSpect}/>
                         </div>
                     )}
                 </Card>
