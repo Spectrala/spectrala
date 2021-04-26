@@ -1,9 +1,0 @@
-Notes on running the software
-
-If an aspiring scientist or an enthusiast creates a spectrometer, their best bets for software to work with it are Spectral Workbench (spectralworkbench.org) or Theremino Spectrometer (https://www.theremino.com/en/downloads/automation). Neither application is very intuitive, and Theremino Spectrometer is Windows-only. 
-
-Caltech students are developing a new application called Spectrala which aims to be more intuitive and have more utility than existing applications.
-
-Click here to use the app: https://spectrala.netlify.app/
-
-Being a work in progress, this software is not guaranteed to work perfectly. Feedback is much appreciated. To give feedback, please email spectrala.feedback@gmail.com.
