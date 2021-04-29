@@ -12,7 +12,6 @@ import {
 import SpectrumControl from './spectrum_control';
 import { cardStyle, cardHeaderStyle } from '../../theme/styles';
 
-
 export default function SpectrumTools({ height, isCollapsed }) {
     const dispatch = useDispatch();
     const spectra = useSelector(selectRecordedSpectra);
@@ -30,7 +29,7 @@ export default function SpectrumTools({ height, isCollapsed }) {
      */
     const capture = (
         <Button
-            disabled={!valid.isValid()} 
+            disabled={!valid.isValid()}
             onClick={() => {
                 dispatch(recordSpectrum({ data: intensities }));
             }}
