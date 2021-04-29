@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Line } from 'react-chartjs-2';
+import { SPECTRUM_OPTIONS } from '../../../reducers/spectrum';
 
 // How many digits are skipped when creating color stops.
 const GRADIENT_GRANULARITY = 3;
@@ -15,7 +16,7 @@ const AREA_OPACITY = 'CC';
  */
 
 // TODO: Fix somewhat sketchy color settings.
-export const SpectrumLine = ({ height, spectrumData }) => {
+export const SpectrumLine = ({ height, spectrumData, spectrumViewOption }) => {
     if (!spectrumData) {
         return getLoadingScreen();
     } else if (!spectrumData.isValid()) {
@@ -149,6 +150,10 @@ export const SpectrumLine = ({ height, spectrumData }) => {
 
         const min_x_value = data[0].x;
         const max_x_value = data[data.length - 1].x;
+        let y_range =
+            spectrumViewOption === SPECTRUM_OPTIONS.INTENSITY
+                ? [0, 100]
+                : [undefined, undefined];
 
         return (
             <div
@@ -176,6 +181,8 @@ export const SpectrumLine = ({ height, spectrumData }) => {
                                         beginAtZero: true,
                                         steps: 10,
                                         stepValue: 5,
+                                        min: y_range[0],
+                                        max: y_range[1],
                                     },
                                 },
                             ],
